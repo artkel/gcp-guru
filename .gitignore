@@ -76,3 +76,34 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Node.js / NPM
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+.vercel
+*.tsbuildinfo
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env.production.local
+frontend/.vercel
+
+# Package lock files (optional - some teams prefer to include these)
+# package-lock.json
+# yarn.lock
+
+# Production builds
+/build
+/dist
