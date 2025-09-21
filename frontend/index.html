@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Guru - Flashcard Learning</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Header -->
+        <header class="header">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>GCP Guru</h1>
+                    <span class="subtitle">Professional Cloud Architect Prep</span>
+                </div>
+                <div class="nav-controls">
+                    <button id="theme-toggle" class="theme-btn">🌙</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Start Screen -->
+                <div id="start-screen" class="screen active">
+                    <div class="start-menu">
+                        <h2>GCP Professional Cloud Architect</h2>
+                        <div class="menu-options">
+                            <button id="start-training" class="menu-btn primary">
+                                <span class="btn-icon">🎯</span>
+                                <span class="btn-text">Start Training Session</span>
+                                <span class="btn-desc">Practice questions and improve your skills</span>
+                            </button>
+                            <button id="view-progress" class="menu-btn">
+                                <span class="btn-icon">📊</span>
+                                <span class="btn-text">My Progress</span>
+                                <span class="btn-desc">View analytics and performance</span>
+                            </button>
+                            <button id="browse-questions" class="menu-btn">
+                                <span class="btn-icon">📚</span>
+                                <span class="btn-text">Browse Questions</span>
+                                <span class="btn-desc">Search and manage all questions</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain Selection Screen -->
+                <div id="domain-selection-screen" class="screen">
+                    <div class="domain-header">
+                        <button id="back-to-start-domain" class="back-btn">← Back</button>
+                        <h2>Select Training Domains</h2>
+                    </div>
+
+                    <div class="domain-content">
+                        <p>Choose which topics you'd like to practice, or select all questions:</p>
+                        <div class="domain-options">
+                            <label class="domain-checkbox">
+                                <input type="checkbox" value="all" id="all-domains">
+                                <span class="checkmark"></span>
+                                <span class="domain-name">All Questions</span>
+                            </label>
+                            <div id="domain-list" class="domain-list">
+                                <!-- Domain checkboxes will be populated -->
+                            </div>
+                        </div>
+                        <div class="domain-controls">
+                            <button id="start-domain-training" class="submit-btn">Start Training</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Session Screen -->
+                <div id="training-screen" class="screen">
+                    <div class="training-header">
+                        <div class="header-left">
+                            <button id="back-to-start" class="back-btn">← Back</button>
+                            <button id="end-session" class="end-session-btn">End Session</button>
+                        </div>
+                        <div class="session-info">
+                            <span id="session-stats">Questions: 0 | Correct: 0 | Accuracy: 0%</span>
+                            <span id="session-timer">Time: 00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-meta">
+                                <span id="question-number">Question #1</span>
+                                <div class="question-tags" id="question-tags"></div>
+                            </div>
+                            <div class="question-actions">
+                                <button id="hint-btn" class="action-btn">💡 Hint</button>
+                                <button id="star-btn" class="action-btn">⭐ Star</button>
+                                <button id="note-btn" class="action-btn">📝 Note</button>
+                            </div>
+                        </div>
+
+                        <div class="question-content">
+                            <h3 id="question-text">Loading question...</h3>
+                        </div>
+
+                        <div class="answers-container" id="answers-container">
+                            <!-- Answers will be populated by JavaScript -->
+                        </div>
+
+                        <div class="question-controls">
+                            <button id="submit-answer" class="submit-btn" disabled>Submit Answer</button>
+                            <button id="get-explanation" class="explain-btn" style="display: none;">Get Explanation</button>
+                            <button id="next-question" class="next-btn" style="display: none;">Next Question</button>
+                        </div>
+
+                        <div id="feedback-container" class="feedback-container" style="display: none;">
+                            <!-- Feedback will be shown here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Screen -->
+                <div id="progress-screen" class="screen">
+                    <div class="progress-header">
+                        <button id="back-to-start-progress" class="back-btn">← Back</button>
+                        <h2>Your Progress</h2>
+                    </div>
+
+                    <div class="progress-content">
+                        <div class="progress-cards">
+                            <div class="progress-card">
+                                <h3>Last Session</h3>
+                                <div id="last-session-progress">
+                                    <!-- Session stats will be populated -->
+                                </div>
+                            </div>
+                            <div class="progress-card">
+                                <h3>Overall Progress</h3>
+                                <div id="overall-progress">
+                                    <!-- Overall stats will be populated -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tag-progress">
+                            <h3>Progress by Topic</h3>
+                            <div id="tag-progress-container">
+                                <!-- Tag progress will be populated -->
+                            </div>
+                        </div>
+
+                        <div class="session-history">
+                            <h3>Session History (Last 30 Days)</h3>
+                            <div class="chart-container">
+                                <canvas id="session-chart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="progress-actions">
+                            <button id="reset-progress" class="danger-btn">Reset All Progress</button>
+                            <button id="clear-explanations" class="danger-btn">Delete All Explanations</button>
+                            <button id="clear-hints" class="danger-btn">Delete All Hints</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Browse Questions Screen -->
+                <div id="browse-screen" class="screen">
+                    <div class="browse-header">
+                        <button id="back-to-start-browse" class="back-btn">← Back</button>
+                        <h2>Browse Questions</h2>
+                    </div>
+
+                    <div class="browse-filters">
+                        <input type="text" id="search-input" placeholder="Search questions..." class="search-input">
+                        <select id="tag-filter" class="tag-select">
+                            <option value="">All Topics</option>
+                        </select>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="starred-only">
+                            <span>Starred Only</span>
+                        </label>
+                        <select id="sort-filter" class="sort-select">
+                            <option value="question_number">Sort by Question #</option>
+                            <option value="score">Sort by Score</option>
+                        </select>
+                    </div>
+
+                    <div id="questions-list" class="questions-list">
+                        <!-- Questions will be populated -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal for hints, explanations, and notes -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Hint</h3>
+                    <button id="close-modal" class="close-btn">×</button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Content will be populated -->
+                </div>
+                <div class="modal-footer" id="modal-footer" style="display: none;">
+                    <!-- Footer for note editing -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Detail Modal -->
+        <div id="question-detail-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="question-detail-title">Question Details</h3>
+                    <button id="close-question-detail" class="close-btn">×</button>
+                </div>
+                <div class="modal-body" id="question-detail-body">
+                    <!-- Question detail content will be populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>Loading...</span>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
