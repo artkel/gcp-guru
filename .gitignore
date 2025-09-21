@@ -70,8 +70,8 @@ Thumbs.db
 logs/
 
 # Data files (optional - you might want to include some sample data)
-data/*.json
-!data/sample_*.json
+#data/*.json
+#!data/sample_*.json
 
 # Temporary files
 *.tmp
