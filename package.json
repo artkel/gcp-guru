@@ -1,0 +1,31 @@
+{
+  "name": "gcp-guru",
+  "version": "1.0.0",
+  "description": "GCP Professional Cloud Architect Exam Prep - Full Stack Application",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start": "concurrently \"npm run backend:prod\" \"npm run frontend:prod\"",
+    "backend": "cd backend && source venv/bin/activate && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "backend:prod": "cd backend && source venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000",
+    "frontend": "cd frontend && npm run dev",
+    "frontend:prod": "cd frontend && npm run build && npm run start",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && python3 -m pip install -r ../requirements.txt",
+    "install:frontend": "cd frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "test": "cd frontend && npm run lint && npm run type-check"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "gcp",
+    "certification",
+    "flashcards",
+    "nextjs",
+    "fastapi",
+    "learning"
+  ],
+  "author": "GCP Guru",
+  "license": "MIT"
+}
