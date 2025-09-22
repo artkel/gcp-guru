@@ -115,4 +115,5 @@ export interface AppState {
   startSessionTimer: () => void;
   stopSessionTimer: () => void;
   resetSessionStats: () => void;
+  restoreSessionTimer: () => void;
 }

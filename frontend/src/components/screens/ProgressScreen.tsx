@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Clock, Target, Trophy, Star, FileText } from 'lucide-react';
+import { ArrowLeft, Clock, Target, Trophy, Star, FileText, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from '@/components/ui/Modal';
+import { useConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { SessionHistoryChart } from '@/components/charts/SessionHistoryChart';
 import { useAppStore } from '@/lib/store';
 import { useProgress, useResetProgress, useClearExplanations, useClearHints } from '@/hooks/useApi';
 import { formatDuration, formatTrainingTime, getMasteryClass } from '@/lib/utils';
@@ -20,11 +22,20 @@ export function ProgressScreen() {
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [resetOptions, setResetOptions] = useState({
+    scores: true,
+    sessionHistory: true,
+    stars: true,
+    notes: true,
+    trainingTime: true
+  });
+
+  const { showConfirm, ConfirmDialog } = useConfirmDialog();
 
   const handleResetProgress = async () => {
     setIsResetting(true);
     try {
-      await resetProgress();
+      await resetProgress(resetOptions);
       await mutate(); // Refresh progress data
       setShowResetModal(false);
     } catch (error) {
@@ -34,26 +45,47 @@ export function ProgressScreen() {
     }
   };
 
+  const handleResetOptionChange = (option: keyof typeof resetOptions) => {
+    setResetOptions(prev => ({
+      ...prev,
+      [option]: !prev[option]
+    }));
+  };
+
+  const hasAnyResetOption = Object.values(resetOptions).some(Boolean);
+
   const handleClearExplanations = async () => {
-    if (confirm('Are you sure you want to delete all explanations? This action cannot be undone.')) {
-      try {
-        await clearExplanations();
-        await mutate();
-      } catch (error) {
-        console.error('Failed to clear explanations:', error);
-      }
-    }
+    showConfirm({
+      title: 'Clear All Explanations',
+      description: 'Are you sure you want to delete all explanations? This action cannot be undone.',
+      confirmText: 'Clear Explanations',
+      variant: 'destructive',
+      onConfirm: async () => {
+        try {
+          await clearExplanations();
+          await mutate();
+        } catch (error) {
+          console.error('Failed to clear explanations:', error);
+        }
+      },
+    });
   };
 
   const handleClearHints = async () => {
-    if (confirm('Are you sure you want to delete all hints? This action cannot be undone.')) {
-      try {
-        await clearHints();
-        await mutate();
-      } catch (error) {
-        console.error('Failed to clear hints:', error);
-      }
-    }
+    showConfirm({
+      title: 'Clear All Hints',
+      description: 'Are you sure you want to delete all hints? This action cannot be undone.',
+      confirmText: 'Clear Hints',
+      variant: 'destructive',
+      onConfirm: async () => {
+        try {
+          await clearHints();
+          await mutate();
+        } catch (error) {
+          console.error('Failed to clear hints:', error);
+        }
+      },
+    });
   };
 
   if (isLoading) {
@@ -261,6 +293,19 @@ export function ProgressScreen() {
             </CardContent>
           </Card>
 
+          {/* Session History Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <BarChart3 className="h-5 w-5" />
+                <span>Session History (Last 30 Days)</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SessionHistoryChart sessionHistory={progress.session_history} />
+            </CardContent>
+          </Card>
+
           {/* Actions */}
           <Card>
             <CardHeader>
@@ -270,7 +315,16 @@ export function ProgressScreen() {
               <div className="flex flex-wrap gap-4">
                 <Button
                   variant="destructive"
-                  onClick={() => setShowResetModal(true)}
+                  onClick={() => {
+                    setResetOptions({
+                      scores: true,
+                      sessionHistory: true,
+                      stars: true,
+                      notes: true,
+                      trainingTime: true
+                    });
+                    setShowResetModal(true);
+                  }}
                 >
                   Reset All Progress
                 </Button>
@@ -298,16 +352,69 @@ export function ProgressScreen() {
           <ModalHeader>
             <ModalTitle>Reset All Progress</ModalTitle>
             <ModalDescription>
-              Are you sure you want to reset all progress? This action cannot be undone and will:
+              Are you sure you want to reset the selected progress data? This action cannot be undone.
             </ModalDescription>
           </ModalHeader>
           <div className="p-4 space-y-4">
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-              <li>Reset all question scores to 0</li>
-              <li>Clear all session history</li>
-              <li>Remove all stars and notes</li>
-              <li>Reset training time statistics</li>
-            </ul>
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">Select which data to reset:</p>
+
+              <div className="space-y-3">
+                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={resetOptions.scores}
+                    onChange={() => handleResetOptionChange('scores')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm">Reset all question scores to 0</span>
+                </label>
+
+                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={resetOptions.sessionHistory}
+                    onChange={() => handleResetOptionChange('sessionHistory')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm">Clear all session history</span>
+                </label>
+
+                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={resetOptions.stars}
+                    onChange={() => handleResetOptionChange('stars')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm">Remove all stars</span>
+                </label>
+
+                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={resetOptions.notes}
+                    onChange={() => handleResetOptionChange('notes')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm">Remove all notes</span>
+                </label>
+
+                <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={resetOptions.trainingTime}
+                    onChange={() => handleResetOptionChange('trainingTime')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm">Reset training time statistics</span>
+                </label>
+              </div>
+
+              {!hasAnyResetOption && (
+                <p className="text-sm text-destructive">Please select at least one option to reset.</p>
+              )}
+            </div>
             <div className="flex justify-end space-x-2">
               <Button
                 variant="outline"
@@ -319,7 +426,7 @@ export function ProgressScreen() {
               <Button
                 variant="destructive"
                 onClick={handleResetProgress}
-                disabled={isResetting}
+                disabled={isResetting || !hasAnyResetOption}
               >
                 {isResetting ? (
                   <>
@@ -334,6 +441,9 @@ export function ProgressScreen() {
           </div>
         </ModalContent>
       </Modal>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog />
     </>
   );
 }

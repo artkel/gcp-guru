@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { LoadingSpinner, LoadingOverlay } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from '@/components/ui/Modal';
+import { useConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useAppStore } from '@/lib/store';
 import {
   useSubmitAnswer,
@@ -45,6 +46,9 @@ export function TrainingScreen() {
   const [note, setNote] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
   const [showExplanation, setShowExplanation] = useState(false);
+
+  // Confirmation dialog hook
+  const { showConfirm, ConfirmDialog } = useConfirmDialog();
 
   const submitAnswer = useSubmitAnswer();
   const getHint = useGetHint();
@@ -206,12 +210,18 @@ export function TrainingScreen() {
 
   const handleBackToStart = async () => {
     if (sessionStats.total > 0) {
-      if (confirm('End your session? Your progress will be saved but no session metrics will be shown.')) {
-        stopSessionTimer();
-        await startNewSession();
-        resetSessionStats();
-        setCurrentScreen('start');
-      }
+      showConfirm({
+        title: 'End Session',
+        description: 'End your session? Your progress will be saved but no session metrics will be shown.',
+        confirmText: 'End Session',
+        variant: 'warning',
+        onConfirm: async () => {
+          stopSessionTimer();
+          await startNewSession();
+          resetSessionStats();
+          setCurrentScreen('start');
+        },
+      });
     } else {
       stopSessionTimer();
       setCurrentScreen('start');
@@ -219,10 +229,16 @@ export function TrainingScreen() {
   };
 
   const handleEndSession = async () => {
-    if (confirm('Are you sure you want to end your current session? Your progress will be saved and you will see your session metrics.')) {
-      stopSessionTimer();
-      setShowSessionComplete(true);
-    }
+    showConfirm({
+      title: 'End Session',
+      description: 'Are you sure you want to end your current session? Your progress will be saved and you will see your session metrics.',
+      confirmText: 'End Session',
+      variant: 'info',
+      onConfirm: () => {
+        stopSessionTimer();
+        setShowSessionComplete(true);
+      },
+    });
   };
 
   const handleSessionCompleteClose = async () => {
@@ -324,8 +340,8 @@ export function TrainingScreen() {
                         !questionAnswered && 'hover:bg-accent',
                         questionAnswered && 'cursor-default',
                         isSelected && !questionAnswered && 'bg-primary/10 border-primary',
-                        showCorrect && 'bg-success/10 border-success text-success-foreground',
-                        isIncorrect && 'bg-destructive/10 border-destructive text-destructive-foreground'
+                        showCorrect && 'bg-success/10 border-success',
+                        isIncorrect && 'bg-destructive/10 border-destructive'
                       )}
                       onClick={() => handleAnswerSelection(answerId)}
                     >
@@ -346,8 +362,8 @@ export function TrainingScreen() {
                 <div className={cn(
                   'rounded-lg border p-4',
                   answerResult.is_correct
-                    ? 'bg-success/10 border-success text-success-foreground'
-                    : 'bg-destructive/10 border-destructive text-destructive-foreground'
+                    ? 'bg-success/10 border-success'
+                    : 'bg-destructive/10 border-destructive'
                 )}>
                   <div className="flex items-center space-x-2 mb-2">
                     {answerResult.is_correct ? (
@@ -468,6 +484,9 @@ export function TrainingScreen() {
           </div>
         </ModalContent>
       </Modal>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog />
     </>
   );
 }

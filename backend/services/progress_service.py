@@ -308,6 +308,51 @@ class ProgressService:
         self.daily_history = []
         self.save_session_history()
 
+    def reset_selective_progress(self, options: dict):
+        """Reset selected progress data based on options"""
+        questions = question_service.get_all_questions()
+        questions_modified = False
+
+        for question in questions:
+            # Reset scores to 0 if requested
+            if options.get('scores', False):
+                question.score = 0
+                questions_modified = True
+
+            # Remove stars if requested
+            if options.get('stars', False):
+                question.starred = False
+                questions_modified = True
+
+            # Remove notes if requested
+            if options.get('notes', False):
+                question.note = ""
+                questions_modified = True
+
+        # Save questions if any were modified
+        if questions_modified:
+            question_service.save_questions()
+
+        # Reset session history if requested
+        if options.get('sessionHistory', False):
+            self.daily_history = []
+            self.save_session_history()
+
+        # Reset training time (part of session history) if requested
+        if options.get('trainingTime', False):
+            # This is handled by resetting session history since training time is calculated from it
+            # If sessionHistory is not being reset but trainingTime is, we need to reset durations
+            if not options.get('sessionHistory', False):
+                for session in self.daily_history:
+                    session.duration_minutes = 0.0
+                self.save_session_history()
+
+        # Always reset current session when any reset is performed
+        if any(options.values()):
+            self.current_session = SessionStats(session_start=datetime.now())
+            self.current_session_questions = set()
+            self.current_session_tags = set()
+
     def get_session_summary(self) -> Dict:
         """Get a summary of the current session"""
         return {

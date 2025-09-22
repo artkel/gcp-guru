@@ -101,7 +101,7 @@ export function BrowseScreen() {
                   className={cn(
                     'flex items-center space-x-3 rounded-lg border p-4',
                     answer.status === 'correct'
-                      ? 'bg-success/10 border-success text-success-foreground'
+                      ? 'bg-success/10 border-success'
                       : 'bg-secondary'
                   )}
                 >

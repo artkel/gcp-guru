@@ -1,7 +1,16 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
+from typing import Optional
 from models.progress import UserProgress
 from services.progress_service import progress_service
 from services.question_service import question_service
+
+class ResetOptions(BaseModel):
+    scores: bool = True
+    sessionHistory: bool = True
+    stars: bool = True
+    notes: bool = True
+    trainingTime: bool = True
 
 router = APIRouter()
 
@@ -22,10 +31,14 @@ async def start_new_session():
     return {"success": True, "message": "New session started"}
 
 @router.post("/progress/reset")
-async def reset_progress():
-    """Reset all progress data"""
-    progress_service.reset_all_progress()
-    return {"success": True, "message": "All progress has been reset"}
+async def reset_progress(options: Optional[ResetOptions] = None):
+    """Reset selected progress data"""
+    if options is None:
+        # Default behavior: reset everything for backward compatibility
+        options = ResetOptions()
+
+    progress_service.reset_selective_progress(options.model_dump())
+    return {"success": True, "message": "Selected progress has been reset"}
 
 @router.post("/progress/clear-explanations")
 async def clear_explanations():

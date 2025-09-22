@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from models.question import Question, AnswerSubmission, QuestionResponse
 from services.question_service import question_service
-from services.ai_service import ai_service
+from services.ai_service import get_ai_service
 from services.progress_service import progress_service
 
 router = APIRouter()
@@ -75,7 +75,7 @@ async def submit_answer(question_id: int, submission: AnswerSubmission):
     # Get explanation if requested
     explanation = None
     if submission.request_explanation:
-        explanation = ai_service.generate_explanation(
+        explanation = get_ai_service().generate_explanation(
             question, submission.selected_answers, result["correct_answers"]
         )
 
@@ -96,7 +96,7 @@ async def get_hint(question_id: int):
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
 
-    hint = ai_service.generate_hint(question)
+    hint = get_ai_service().generate_hint(question)
     return {"hint": hint}
 
 @router.get("/questions/{question_id}/explanation")
@@ -109,7 +109,7 @@ async def get_explanation(question_id: int, regenerate: bool = Query(False)):
     # For getting explanation without answering, we need the correct answers
     correct_answers = [key for key, answer in question.answers.items() if answer.status == "correct"]
 
-    explanation = ai_service.generate_explanation(question, [], correct_answers, force_regenerate=regenerate)
+    explanation = get_ai_service().generate_explanation(question, [], correct_answers, force_regenerate=regenerate)
     return {"explanation": explanation}
 
 @router.post("/questions/{question_id}/star")

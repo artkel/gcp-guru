@@ -151,9 +151,16 @@ export const api = {
       });
     },
 
-    reset: async (): Promise<{ success: boolean; message: string }> => {
+    reset: async (options?: {
+      scores?: boolean;
+      sessionHistory?: boolean;
+      stars?: boolean;
+      notes?: boolean;
+      trainingTime?: boolean;
+    }): Promise<{ success: boolean; message: string }> => {
       return request<{ success: boolean; message: string }>('/progress/reset', {
         method: 'POST',
+        body: options ? JSON.stringify(options) : undefined,
       });
     },
 

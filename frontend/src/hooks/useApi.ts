@@ -96,8 +96,14 @@ export function useStartNewSession() {
 }
 
 export function useResetProgress() {
-  return async () => {
-    return api.progress.reset();
+  return async (options?: {
+    scores?: boolean;
+    sessionHistory?: boolean;
+    stars?: boolean;
+    notes?: boolean;
+    trainingTime?: boolean;
+  }) => {
+    return api.progress.reset(options);
   };
 }
 

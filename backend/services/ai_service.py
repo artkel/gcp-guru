@@ -6,9 +6,17 @@ from dotenv import load_dotenv
 
 class AIService:
     def __init__(self):
-        # Load environment variables from parent directory
-        env_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
-        load_dotenv(env_path)
+        # Try multiple paths to load environment variables
+        possible_env_paths = [
+            os.path.join(os.path.dirname(__file__), '..', '..', '.env'),  # Project root from services
+            os.path.join(os.getcwd(), '.env'),  # Current working directory
+            os.path.join(os.getcwd(), '..', '.env'),  # Parent of current working directory
+        ]
+
+        for env_path in possible_env_paths:
+            if os.path.exists(env_path):
+                load_dotenv(env_path)
+                break
 
         # Configure Gemini API
         api_key = os.getenv("GOOGLE_API_KEY")
@@ -107,5 +115,11 @@ Provide just the hint, nothing else.
             print(f"Error generating hint: {e}")
             return "Think about which GCP service would best address the specific requirements mentioned in the question."
 
-# Global instance
-ai_service = AIService()
+# Global instance - lazy loaded
+ai_service = None
+
+def get_ai_service():
+    global ai_service
+    if ai_service is None:
+        ai_service = AIService()
+    return ai_service

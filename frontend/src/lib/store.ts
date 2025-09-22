@@ -100,11 +100,47 @@ export const useAppStore = create<AppState>()(
           selectedAnswers: new Set(),
           currentQuestion: null,
         }),
+
+      // Restore session timer after page refresh
+      restoreSessionTimer: () => {
+        const { sessionStats, currentScreen } = get();
+        // Only restore timer if we're in training mode and have an active session
+        if (currentScreen === 'training' && sessionStats.total > 0) {
+          const interval = setInterval(() => {
+            set((state) => ({
+              sessionTimer: Date.now() - state.sessionStats.sessionStart,
+            }));
+          }, 1000);
+          set({ sessionTimer: interval as any });
+        }
+      },
     }),
     {
       name: 'gcp-guru-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ theme: state.theme }),
+      storage: createJSONStorage(() => localStorage, {
+        reviver: (key, value) => {
+          // Restore Set from Array when deserializing
+          if (key === 'selectedAnswers' && Array.isArray(value)) {
+            return new Set(value);
+          }
+          return value;
+        },
+        replacer: (key, value) => {
+          // Convert Set to Array when serializing
+          if (value instanceof Set) {
+            return Array.from(value);
+          }
+          return value;
+        },
+      }),
+      partialize: (state) => ({
+        theme: state.theme,
+        currentScreen: state.currentScreen,
+        sessionStats: state.sessionStats,
+        selectedDomains: state.selectedDomains,
+        currentQuestion: state.currentQuestion,
+        selectedAnswers: state.selectedAnswers, // Will be converted by replacer
+      }),
     }
   )
 );
