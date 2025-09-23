@@ -1,7 +1,7 @@
 import { Question, QuestionResponse, AnswerSubmission, UserProgress } from '@/types';
 
-// Always use the full backend URL to avoid Next.js API route conflicts
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://gcp-guru-backend-dn3y6uo53q-uc.a.run.app';
+// For production, use the backend URL directly; for development, use relative path
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 // Debug logging
 if (typeof window !== 'undefined') {
