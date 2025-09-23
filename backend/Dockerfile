@@ -4,11 +4,11 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copy requirements and install dependencies
-COPY ./requirements.txt /app/requirements.txt
+COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-# Copy backend source code
-COPY . /app
+# Copy backend source code only
+COPY backend/ /app/
 
 # Expose port and run the application
 EXPOSE 8080
