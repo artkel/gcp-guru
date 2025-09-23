@@ -69,6 +69,8 @@ export interface SessionHistory {
   correct_answers: number;
   incorrect_answers: number;
   accuracy: number;
+  duration_minutes: number;
+  tags: string[];
 }
 
 export interface UserProgress {

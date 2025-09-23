@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 import { format, subDays } from 'date-fns';
 
-interface DailySessionHistory {
+export interface DailySessionHistory {
   date: string;
   total_questions: number;
   correct_answers: number;
