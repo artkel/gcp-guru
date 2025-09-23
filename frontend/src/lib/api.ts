@@ -2,6 +2,10 @@ import { Question, QuestionResponse, AnswerSubmission, UserProgress } from '@/ty
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
+// Debug logging
+console.log('Frontend Debug - NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+console.log('Frontend Debug - API_BASE_URL:', API_BASE_URL);
+
 class APIError extends Error {
   status: number;
 

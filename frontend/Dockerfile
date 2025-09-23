@@ -21,9 +21,13 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
-# The root build script is "cd frontend && npm run build", which is what we want.
-# This will now work because frontend dependencies are installed.
+# Debug: Print the environment variable
+RUN echo "Building with NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}"
+
+# Build the frontend directly in the frontend directory
+WORKDIR /app/frontend
 RUN npm run build
+WORKDIR /app
 
 # ---
 
