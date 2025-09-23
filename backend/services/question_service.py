@@ -8,7 +8,13 @@ from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blo
 class QuestionService:
     def __init__(self):
         self.questions: List[Question] = []
-        self.load_questions()
+        self._questions_loaded = False
+
+    def _ensure_questions_loaded(self):
+        """Ensure questions are loaded from GCS (lazy loading)"""
+        if not self._questions_loaded:
+            self.load_questions()
+            self._questions_loaded = True
 
     def load_questions(self):
         """Load questions from GCS bucket"""
@@ -44,10 +50,12 @@ class QuestionService:
 
     def get_all_questions(self) -> List[Question]:
         """Get all questions"""
+        self._ensure_questions_loaded()
         return self.questions
 
     def get_question_by_id(self, question_id: int) -> Optional[Question]:
         """Get a specific question by ID"""
+        self._ensure_questions_loaded()
         for q in self.questions:
             if q.question_number == question_id:
                 return q
