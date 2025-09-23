@@ -8,10 +8,21 @@ import { Badge } from '@/components/ui/Badge';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from '@/components/ui/Modal';
 import { useConfirmDialog } from '@/components/ui/ConfirmDialog';
-import { SessionHistoryChart } from '@/components/charts/SessionHistoryChart';
+import { SessionHistoryChart, DailySessionHistory } from '@/components/charts/SessionHistoryChart';
 import { useAppStore } from '@/lib/store';
 import { useProgress, useResetProgress, useClearExplanations, useClearHints } from '@/hooks/useApi';
 import { formatDuration, formatTrainingTime, getMasteryClass } from '@/lib/utils';
+import { SessionHistory } from '@/types';
+
+// Helper function to transform session history data for the chart
+const transformSessionHistoryForChart = (history: SessionHistory[]): DailySessionHistory[] => {
+  return history.map(session => ({
+    ...session,
+    // Add dummy or default values for the missing properties
+    duration_minutes: session.duration_minutes || 0, 
+    tags: session.tags || [],
+  }));
+};
 
 export function ProgressScreen() {
   const { setCurrentScreen } = useAppStore();
@@ -302,7 +313,7 @@ export function ProgressScreen() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <SessionHistoryChart sessionHistory={progress.session_history} />
+              <SessionHistoryChart sessionHistory={transformSessionHistoryForChart(progress.session_history)} />
             </CardContent>
           </Card>
 
