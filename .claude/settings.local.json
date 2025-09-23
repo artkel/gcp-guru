@@ -24,7 +24,9 @@
       "Bash(lsof:*)",
       "Bash(kill:*)",
       "Bash(pkill:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(find:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

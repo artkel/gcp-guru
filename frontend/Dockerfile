@@ -44,4 +44,5 @@ COPY --from=builder /app/frontend/next.config.js ./
 EXPOSE 3000
 
 # The start command is in the frontend's package.json ("next start")
-CMD ["npm", "start"]
+# Honor the Cloud Run PORT env var and bind to 0.0.0.0
+CMD ["sh", "-c", "npm start -- --port ${PORT:-3000}"]
