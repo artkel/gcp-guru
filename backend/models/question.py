@@ -15,6 +15,7 @@ class Question(BaseModel):
     score: int = 0
     starred: bool = False
     note: str = ""
+    active: bool = True
     placeholder_1: str = ""
     placeholder_2: str = ""
     placeholder_3: str = ""
