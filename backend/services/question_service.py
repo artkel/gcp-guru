@@ -3,6 +3,7 @@ import random
 from typing import List, Optional, Dict
 from models.question import Question, Answer
 import os
+from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blob_exists
 
 class QuestionService:
     def __init__(self):
@@ -10,29 +11,36 @@ class QuestionService:
         self.load_questions()
 
     def load_questions(self):
-        """Load questions from JSON file"""
-        questions_file = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'gcp-pca-questions.json')
+        """Load questions from GCS bucket"""
+        blob_name = 'gcp-pca-questions.json'
         try:
-            with open(questions_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                self.questions = [Question(**q) for q in data]
-                print(f"Loaded {len(self.questions)} questions from {questions_file}")
-        except FileNotFoundError:
-            print(f"Questions file not found: {questions_file}")
-            self.questions = []
+            if blob_exists(blob_name):
+                data = download_json_from_gcs(blob_name)
+                if data:
+                    self.questions = [Question(**q) for q in data]
+                    print(f"Loaded {len(self.questions)} questions from GCS: {blob_name}")
+                else:
+                    print(f"No data found in GCS blob: {blob_name}")
+                    self.questions = []
+            else:
+                print(f"Questions file not found in GCS: {blob_name}")
+                self.questions = []
         except Exception as e:
-            print(f"Error loading questions: {e}")
+            print(f"Error loading questions from GCS: {e}")
             self.questions = []
 
     def save_questions(self):
-        """Save questions back to JSON file"""
-        questions_file = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'gcp-pca-questions.json')
+        """Save questions back to GCS bucket"""
+        blob_name = 'gcp-pca-questions.json'
         try:
             data = [q.dict() for q in self.questions]
-            with open(questions_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
+            success = upload_json_to_gcs(data, blob_name)
+            if success:
+                print(f"Successfully saved {len(self.questions)} questions to GCS: {blob_name}")
+            else:
+                print(f"Failed to save questions to GCS: {blob_name}")
         except Exception as e:
-            print(f"Error saving questions: {e}")
+            print(f"Error saving questions to GCS: {e}")
 
     def get_all_questions(self) -> List[Question]:
         """Get all questions"""
@@ -151,15 +159,18 @@ class QuestionService:
         return False
 
     def get_questions_by_tags(self, tags: List[str]) -> List[Question]:
-        """Get questions filtered by tags"""
-        return [q for q in self.questions if any(tag in q.tag for tag in tags)]
+        """Get questions filtered by tags (only active questions)"""
+        return [q for q in self.questions if q.active and any(tag in q.tag for tag in tags)]
 
     def search_questions(self, query: str) -> List[Question]:
-        """Search questions by text content"""
+        """Search questions by text content (only active questions)"""
         query_lower = query.lower()
         results = []
 
         for q in self.questions:
+            if not q.active:  # Skip inactive questions
+                continue
+
             if query_lower in q.question_text.lower():
                 results.append(q)
                 continue
@@ -173,10 +184,11 @@ class QuestionService:
         return results
 
     def clear_all_explanations(self) -> bool:
-        """Clear all explanations from all questions"""
+        """Clear all explanations from active questions only"""
         try:
             for question in self.questions:
-                question.explanation = ""
+                if question.active:  # Only clear explanations from active questions
+                    question.explanation = ""
             self.save_questions()
             return True
         except Exception as e:
@@ -184,10 +196,11 @@ class QuestionService:
             return False
 
     def clear_all_hints(self) -> bool:
-        """Clear all hints from all questions"""
+        """Clear all hints from active questions only"""
         try:
             for question in self.questions:
-                question.hint = ""
+                if question.active:  # Only clear hints from active questions
+                    question.hint = ""
             self.save_questions()
             return True
         except Exception as e:

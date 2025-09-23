@@ -4,13 +4,14 @@ import json
 import os
 from models.progress import SessionStats, TagProgress, OverallProgress, UserProgress, DailySessionHistory
 from services.question_service import question_service
+from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blob_exists
 
 class ProgressService:
     def __init__(self):
         self.current_session = SessionStats(session_start=datetime.now())
         self.session_history: List[SessionStats] = []
         self.daily_history: List[DailySessionHistory] = []
-        self.history_file = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'session_history.json')
+        self.history_blob_name = 'session_history.json'
         # Track questions shown in current session to prevent repetition
         self.current_session_questions: set[int] = set()
         # Track current session tags for last session display
@@ -18,11 +19,11 @@ class ProgressService:
         self.load_session_history()
 
     def load_session_history(self):
-        """Load session history from file"""
+        """Load session history from GCS bucket"""
         try:
-            if os.path.exists(self.history_file):
-                with open(self.history_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
+            if blob_exists(self.history_blob_name):
+                data = download_json_from_gcs(self.history_blob_name)
+                if data:
                     # Convert date strings back to date objects and add missing fields for backward compatibility
                     for item in data:
                         if isinstance(item['date'], str):
@@ -33,22 +34,31 @@ class ProgressService:
                         if 'tags' not in item:
                             item['tags'] = []
                     self.daily_history = [DailySessionHistory(**item) for item in data]
+                    print(f"Loaded {len(self.daily_history)} session history entries from GCS")
+                else:
+                    print("No session history data found in GCS")
+                    self.daily_history = []
+            else:
+                print(f"Session history file not found in GCS: {self.history_blob_name}")
+                self.daily_history = []
         except Exception as e:
-            print(f"Error loading session history: {e}")
+            print(f"Error loading session history from GCS: {e}")
             self.daily_history = []
 
     def save_session_history(self):
-        """Save session history to file"""
+        """Save session history to GCS bucket"""
         try:
-            os.makedirs(os.path.dirname(self.history_file), exist_ok=True)
             data = [item.dict() for item in self.daily_history]
             # Convert date objects to strings for JSON serialization
             for item in data:
                 item['date'] = item['date'].isoformat()
-            with open(self.history_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
+            success = upload_json_to_gcs(data, self.history_blob_name)
+            if success:
+                print(f"Successfully saved {len(self.daily_history)} session history entries to GCS")
+            else:
+                print(f"Failed to save session history to GCS: {self.history_blob_name}")
         except Exception as e:
-            print(f"Error saving session history: {e}")
+            print(f"Error saving session history to GCS: {e}")
 
     def start_new_session(self):
         """Start a new learning session"""
@@ -149,7 +159,7 @@ class ProgressService:
         return question_id in self.current_session_questions
 
     def get_available_questions_for_tags(self, tags: List[str] = None) -> List:
-        """Get questions available for selection (not shown in session and score < 4)"""
+        """Get questions available for selection (not shown in session, score < 4, and active)"""
         from services.question_service import question_service
 
         # Get all questions matching tags
@@ -161,16 +171,16 @@ class ProgressService:
         else:
             filtered_questions = all_questions
 
-        # Filter out questions with score >= 4 (mastered) and already shown in session
+        # Filter out questions with score >= 4 (mastered), already shown in session, and inactive questions
         available_questions = [
             q for q in filtered_questions
-            if q.score < 4 and not self.is_question_shown_in_session(q.question_number)
+            if q.score < 4 and not self.is_question_shown_in_session(q.question_number) and q.active
         ]
 
         return available_questions
 
     def are_all_questions_mastered_for_tags(self, tags: List[str] = None) -> bool:
-        """Check if all questions for given tags are mastered (score >= 4)"""
+        """Check if all active questions for given tags are mastered (score >= 4)"""
         from services.question_service import question_service
 
         # Get all questions matching tags
@@ -182,20 +192,26 @@ class ProgressService:
         else:
             filtered_questions = all_questions
 
-        # If no questions match the tags, consider it as "not mastered"
-        if not filtered_questions:
+        # Only consider active questions
+        active_questions = [q for q in filtered_questions if q.active]
+
+        # If no active questions match the tags, consider it as "not mastered"
+        if not active_questions:
             return False
 
-        # Check if ALL questions for these tags have score >= 4
-        return all(q.score >= 4 for q in filtered_questions)
+        # Check if ALL active questions for these tags have score >= 4
+        return all(q.score >= 4 for q in active_questions)
 
     def get_tag_progress(self) -> List[TagProgress]:
-        """Calculate progress for each tag/domain with new categories"""
+        """Calculate progress for each tag/domain with new categories (only active questions)"""
         tag_stats = {}
         questions = question_service.get_all_questions()
 
+        # Only consider active questions
+        active_questions = [q for q in questions if q.active]
+
         # Initialize tag stats
-        for question in questions:
+        for question in active_questions:
             for tag in question.tag:
                 if tag not in tag_stats:
                     tag_stats[tag] = {
@@ -207,7 +223,7 @@ class ProgressService:
                     }
 
         # Count questions per tag by category
-        for question in questions:
+        for question in active_questions:
             for tag in question.tag:
                 tag_stats[tag]['total'] += 1
 
@@ -241,18 +257,21 @@ class ProgressService:
         return sorted(progress_list, key=lambda x: x.tag)
 
     def get_overall_progress(self) -> OverallProgress:
-        """Calculate overall learning progress with new categories"""
+        """Calculate overall learning progress with new categories (only active questions)"""
         questions = question_service.get_all_questions()
-        total_questions = len(questions)
+
+        # Only consider active questions
+        active_questions = [q for q in questions if q.active]
+        total_questions = len(active_questions)
 
         # Count questions by new categories
-        mistakes_count = len([q for q in questions if q.score == -1])
-        learning_count = len([q for q in questions if 0 <= q.score <= 1])
-        mastered_count = len([q for q in questions if 2 <= q.score <= 3])
-        perfected_count = len([q for q in questions if q.score >= 4])
+        mistakes_count = len([q for q in active_questions if q.score == -1])
+        learning_count = len([q for q in active_questions if 0 <= q.score <= 1])
+        mastered_count = len([q for q in active_questions if 2 <= q.score <= 3])
+        perfected_count = len([q for q in active_questions if q.score >= 4])
 
-        starred = len([q for q in questions if q.starred])
-        with_notes = len([q for q in questions if q.note.strip()])
+        starred = len([q for q in active_questions if q.starred])
+        with_notes = len([q for q in active_questions if q.note.strip()])
 
         # Calculate total training time from session history
         total_training_time = sum(session.duration_minutes for session in self.daily_history)
@@ -290,15 +309,16 @@ class ProgressService:
         )
 
     def reset_all_progress(self):
-        """Reset all progress data"""
-        # Reset all question scores, stars, and notes
+        """Reset all progress data (only active questions)"""
+        # Reset all active question scores, stars, and notes
         questions = question_service.get_all_questions()
         for question in questions:
-            question.score = 0
-            question.starred = False
-            question.note = ""
-            question.explanation = ""
-            question.hint = ""
+            if question.active:  # Only reset active questions
+                question.score = 0
+                question.starred = False
+                question.note = ""
+                question.explanation = ""
+                question.hint = ""
 
         question_service.save_questions()
 
@@ -309,25 +329,26 @@ class ProgressService:
         self.save_session_history()
 
     def reset_selective_progress(self, options: dict):
-        """Reset selected progress data based on options"""
+        """Reset selected progress data based on options (only active questions)"""
         questions = question_service.get_all_questions()
         questions_modified = False
 
         for question in questions:
-            # Reset scores to 0 if requested
-            if options.get('scores', False):
-                question.score = 0
-                questions_modified = True
+            if question.active:  # Only reset active questions
+                # Reset scores to 0 if requested
+                if options.get('scores', False):
+                    question.score = 0
+                    questions_modified = True
 
-            # Remove stars if requested
-            if options.get('stars', False):
-                question.starred = False
-                questions_modified = True
+                # Remove stars if requested
+                if options.get('stars', False):
+                    question.starred = False
+                    questions_modified = True
 
-            # Remove notes if requested
-            if options.get('notes', False):
-                question.note = ""
-                questions_modified = True
+                # Remove notes if requested
+                if options.get('notes', False):
+                    question.note = ""
+                    questions_modified = True
 
         # Save questions if any were modified
         if questions_modified:

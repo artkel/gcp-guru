@@ -14,15 +14,20 @@ async def get_questions(
     search: Optional[str] = Query(None),
     starred_only: bool = Query(False)
 ):
-    """Get questions with optional filtering"""
+    """Get questions with optional filtering (only active questions)"""
     questions = question_service.get_all_questions()
+
+    # Filter out inactive questions first
+    questions = [q for q in questions if q.active]
 
     # Apply filters
     if tags:
         questions = [q for q in questions if any(tag in q.tag for tag in tags)]
 
     if search:
-        questions = question_service.search_questions(search)
+        # For search, we need to filter search results to only active questions
+        search_results = question_service.search_questions(search)
+        questions = [q for q in search_results if q.active]
 
     if starred_only:
         questions = [q for q in questions if q.starred]
@@ -130,9 +135,10 @@ async def update_note(question_id: int, note: str = Query(...)):
 
 @router.get("/tags")
 async def get_available_tags():
-    """Get all available question tags"""
+    """Get all available question tags (only from active questions)"""
     questions = question_service.get_all_questions()
     tags = set()
     for question in questions:
-        tags.update(question.tag)
+        if question.active:  # Only include tags from active questions
+            tags.update(question.tag)
     return {"tags": sorted(list(tags))}
