@@ -1,6 +1,6 @@
 import { Question, QuestionResponse, AnswerSubmission, UserProgress } from '@/types';
 
-// For production, use the backend URL directly; for development, use relative path
+// Always use the full backend URL to avoid Next.js API route conflicts
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://gcp-guru-backend-dn3y6uo53q-uc.a.run.app';
 
 // Debug logging
@@ -19,7 +19,9 @@ class APIError extends Error {
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // Ensure we include /api in the path when using full backend URL
+  const apiPath = API_BASE_URL.includes('http') ? '/api' : '';
+  const url = `${API_BASE_URL}${apiPath}${endpoint}`;
   const config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
