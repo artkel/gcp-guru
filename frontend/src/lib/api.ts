@@ -1,10 +1,13 @@
 import { Question, QuestionResponse, AnswerSubmission, UserProgress } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+// For production, use the backend URL directly; for development, use relative path
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://gcp-guru-backend-dn3y6uo53q-uc.a.run.app';
 
 // Debug logging
-console.log('Frontend Debug - NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-console.log('Frontend Debug - API_BASE_URL:', API_BASE_URL);
+if (typeof window !== 'undefined') {
+  console.log('Frontend Debug - NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  console.log('Frontend Debug - API_BASE_URL:', API_BASE_URL);
+}
 
 class APIError extends Error {
   status: number;
