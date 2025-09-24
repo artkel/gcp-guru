@@ -36,7 +36,7 @@ gcloud run deploy gcp-guru-backend \
     --platform=managed \
     --region=${REGION} \
     --allow-unauthenticated \
-    --min-instances=1 \
+    --min-instances=0 \
     --max-instances=10 \
     --cpu=2 \
     --memory=1Gi \
@@ -57,7 +57,7 @@ gcloud run deploy gcp-guru-frontend \
     --platform=managed \
     --region=${REGION} \
     --allow-unauthenticated \
-    --min-instances=1 \
+    --min-instances=0 \
     --max-instances=10 \
     --cpu=2 \
     --memory=1Gi \

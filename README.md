@@ -52,6 +52,7 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 - **Charts**: Recharts for interactive data visualization
 - **AI Integration**: Google Gemini API with robust error handling
 - **Data Storage**: JSON-based with automatic session persistence
+- **Cloud Deployment**: Google Cloud Run with cost-optimized scaling
 
 ## Quick Start
 
@@ -60,11 +61,20 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 - **Python** 3.8+ (for backend)
 - **Google Gemini API key** (for AI features)
 
-### Installation
+### Deployment Options
+
+**🌍 Live Version**: Access the deployed app at [graspdatascience.com](https://graspdatascience.com)
+- Deployed on Google Cloud Platform (Europe-West3 region)
+- Cost-optimized with zero scaling (near $0 monthly cost)
+- May have 2-3 second cold start on first request after inactivity
+
+**💻 Local Development**: Run on your machine for development
+
+### Local Installation
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/gcp-guru.git
+   git clone https://github.com/artkel/gcp-guru.git
    cd gcp-guru
    ```
 
@@ -126,11 +136,13 @@ gcp-guru/
 │   │   └── progress.py        # Progress tracking and analytics
 │   ├── services/              # Business logic
 │   │   ├── ai_service.py      # Gemini AI integration
+│   │   ├── gcs_service.py     # Google Cloud Storage integration
 │   │   ├── question_service.py # Question management
 │   │   └── progress_service.py # Session and progress tracking
 │   ├── main.py                # FastAPI application entry point
 │   ├── requirements.txt       # Python dependencies
-│   └── venv/                  # Python virtual environment
+│   ├── Dockerfile            # Docker container configuration
+│   └── venv/                  # Python virtual environment (local only)
 ├── frontend/                   # Next.js Frontend
 │   ├── src/
 │   │   ├── app/               # App router pages
@@ -143,10 +155,15 @@ gcp-guru/
 │   │   └── types/             # TypeScript type definitions
 │   ├── package.json           # Node.js dependencies
 │   ├── tailwind.config.js     # Tailwind CSS configuration
-│   └── next.config.js         # Next.js configuration
-├── data/                      # Application data
+│   ├── next.config.js         # Next.js configuration
+│   └── Dockerfile            # Docker container configuration
+├── data/                      # Application data (local development)
 │   ├── gcp-pca-questions.json # Question database (290+ questions)
 │   └── session_history.json  # Session tracking data
+├── documentation/             # Deployment and setup guides
+│   └── DEPLOYMENT_GUIDE.md   # Complete GCP deployment instructions
+├── deploy.sh                  # Automated deployment script
+├── DEPLOY_README.md          # Deployment quick start guide
 ├── .env                       # Environment configuration
 ├── package.json               # Root package.json for dev scripts
 └── README.md                  # This file
@@ -264,18 +281,33 @@ python -m uvicorn main:app --reload  # Development server
 #### Tags
 - `GET /api/tags` - Get available question tags/domains
 
+## Cloud Deployment
+
+**🚀 Live Production Version**: [graspdatascience.com](https://graspdatascience.com)
+
+The application is deployed on Google Cloud Platform with:
+- **Backend**: FastAPI on Cloud Run (europe-west3 region)
+- **Frontend**: Next.js on Cloud Run (europe-west3 region)
+- **Storage**: Google Cloud Storage for question data and session history
+- **Cost Optimization**: Auto-scales to zero when unused (near $0 monthly cost)
+
+For detailed deployment instructions, see:
+- [`documentation/DEPLOYMENT_GUIDE.md`](documentation/DEPLOYMENT_GUIDE.md) - Complete deployment walkthrough
+- [`DEPLOY_README.md`](DEPLOY_README.md) - Quick deployment reference
+- [`deploy.sh`](deploy.sh) - Automated deployment script
+
 ## Troubleshooting
 
 ### Common Issues
 
 **AI features not working:**
-1. Verify your `GOOGLE_API_KEY` in `.env`
+1. Verify your `GOOGLE_API_KEY` in `.env` (local) or environment variables (cloud)
 2. Check the API key format (no spaces around `=`)
 3. Restart the backend server after changing `.env`
 
 **Session history chart not showing data:**
 1. Complete at least one training session
-2. Check `data/session_history.json` exists
+2. Check `data/session_history.json` exists (local) or GCS bucket (cloud)
 3. Refresh the page to reload data
 
 **Page refresh goes to start screen:**
@@ -283,9 +315,15 @@ python -m uvicorn main:app --reload  # Development server
 2. Hard refresh the page (Ctrl+Shift+R / Cmd+Shift+R)
 
 **Frontend not connecting to backend:**
-1. Ensure backend is running on port 8000
-2. Check Next.js proxy configuration in `next.config.js`
-3. Verify no CORS issues in browser console
+1. **Local**: Ensure backend is running on port 8000
+2. **Local**: Check Next.js proxy configuration in `next.config.js`
+3. **Cloud**: Check environment variable `NEXT_PUBLIC_API_URL` is set correctly
+4. Verify no CORS issues in browser console
+
+**Cold start delays (Cloud deployment):**
+1. First request after inactivity may take 2-3 seconds (normal behavior)
+2. Subsequent requests will be fast while container is warm
+3. This is expected with cost-optimized `min-instances=0` configuration
 
 ### Development Tips
 
@@ -325,6 +363,16 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
+## Live Application
+
+**🌐 [graspdatascience.com](https://graspdatascience.com)** - Start studying immediately!
+
 **Ready to ace your GCP Professional Cloud Architect certification? Start learning with GCP Guru today!** 🚀
 
 *Built with ❤️ for the GCP community*
+
+### Performance Notes
+- **First visit**: May take 2-3 seconds to load (cold start)
+- **Subsequent usage**: Fast and responsive
+- **Cost-optimized**: Scales to zero when unused
+- **Region**: Deployed in Europe-West3 (Frankfurt) for optimal European access
