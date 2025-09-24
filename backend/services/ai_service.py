@@ -132,20 +132,50 @@ class AIService:
         if question.hint:
             return question.hint
 
-        prompt = f"""
-        You are a helpful GCP exam coach. Provide a subtle hint for this question without revealing the answer directly.
+        # Check if this is a case study question
+        case_study_name = getattr(question, 'case_study', None)
 
-        Question: {question.question_text}
+        if case_study_name and case_study_name in self.CASE_STUDY_MAPPING:
+            # Load case study content
+            case_study_content = self._load_case_study_content(case_study_name)
+            case_study_file = self.CASE_STUDY_MAPPING.get(case_study_name, "")
 
-        The hint should:
-        1. Point toward the correct GCP concept or service
-        2. NOT directly state the answer
-        3. Help the student think through the problem
-        4. Be 1-2 sentences maximum
-        5. Focus on key keywords or concepts they should consider
+            prompt = f"""
+You are a helpful GCP exam coach. Please review the relevant case study material from `{case_study_file}` before providing a hint.
 
-        Provide just the hint, nothing else.
-        """
+**Case Study:** {case_study_name}
+
+{case_study_content}
+
+---
+
+**Question:** {question.question_text}
+
+Provide a subtle hint for this question without revealing the answer directly. Your hint should:
+1. Point toward the correct GCP concept or service relevant to this case study
+2. NOT directly state the answer
+3. Help the student think through the problem in the context of the case study requirements
+4. Be 1-2 sentences maximum
+5. Focus on key keywords or concepts from the case study they should consider
+
+Provide just the hint, nothing else.
+"""
+        else:
+            # Standard hint prompt for non-case-study questions
+            prompt = f"""
+You are a helpful GCP exam coach. Provide a subtle hint for this question without revealing the answer directly.
+
+**Question:** {question.question_text}
+
+The hint should:
+1. Point toward the correct GCP concept or service
+2. NOT directly state the answer
+3. Help the student think through the problem
+4. Be 1-2 sentences maximum
+5. Focus on key keywords or concepts they should consider
+
+Provide just the hint, nothing else.
+"""
         try:
             response = self.model.generate_content(prompt)
             hint = response.text.strip()
