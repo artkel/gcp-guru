@@ -24,7 +24,15 @@ export BACKEND_IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/gc
 export FRONTEND_IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/gcp-guru-frontend:latest"
 
 # Get the Google API key from environment or prompt user
-export GOOGLE_API_KEY="AIzaSyAKIaCr9kPbGW7N24H3_bLYt-PXjU9egJw"
+if [ -z "$GOOGLE_API_KEY" ]; then
+    read -s -p "🔑 Please enter your Google API Key (GOOGLE_API_KEY): " GOOGLE_API_KEY
+    echo ""
+    if [ -z "$GOOGLE_API_KEY" ]; then
+        echo "❌ GOOGLE_API_KEY is required. Exiting."
+        exit 1
+    fi
+    export GOOGLE_API_KEY
+fi
 
 echo "📍 Deploying to region: ${REGION}"
 echo "🏗️  Project ID: ${PROJECT_ID}"
@@ -74,7 +82,7 @@ echo ""
 echo "🎉 Deployment complete!"
 echo "📊 Performance optimizations applied:"
 echo "   - Region: ${REGION} (Frankfurt - closest to Hamburg)"
-echo "   - Min instances: 1 (eliminates cold starts)"
+echo "   - Min instances: 0"
 echo "   - CPU: 2 cores (faster processing)"
 echo "   - Memory: 1Gi (ample resources)"
 echo "   - High concurrency: 100 requests per instance"
