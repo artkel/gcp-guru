@@ -16,8 +16,7 @@ class Question(BaseModel):
     starred: bool = False
     note: str = ""
     active: bool = True
-    placeholder_1: str = ""
-    placeholder_2: str = ""
+    case_study: Optional[str] = ""
     placeholder_3: str = ""
 
 class QuestionResponse(BaseModel):
