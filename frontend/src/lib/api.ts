@@ -135,6 +135,15 @@ export const api = {
         }
       );
     },
+
+    skip: async (questionId: number): Promise<{ success: boolean; skipped: boolean }> => {
+      return request<{ success: boolean; skipped: boolean }>(
+        `/questions/${questionId}/skip`,
+        {
+          method: 'POST',
+        }
+      );
+    },
   },
 
   // Tags endpoint

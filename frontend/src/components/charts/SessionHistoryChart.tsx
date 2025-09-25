@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts';
 import { format, subDays } from 'date-fns';
 
@@ -59,6 +60,25 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           </p>
         </div>
       </div>
+    );
+  }
+  return null;
+};
+
+const renderCustomizedLabel = (props: any) => {
+  const { x, y, width, value } = props;
+  if (value > 0) {
+    return (
+      <text
+        x={x + width / 2}
+        y={y}
+        dy={-4}
+        fontSize={12}
+        textAnchor="middle"
+        fill="hsl(var(--muted-foreground))"
+      >
+        {value}
+      </text>
     );
   }
   return null;
@@ -144,7 +164,9 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
             name="Incorrect"
             fill="hsl(var(--destructive))"
             radius={[2, 2, 0, 0]}
-          />
+          >
+            <LabelList dataKey="total" content={renderCustomizedLabel} />
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

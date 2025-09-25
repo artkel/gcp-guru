@@ -89,6 +89,12 @@ export function useUpdateNote() {
   };
 }
 
+export function useSkipQuestion() {
+  return async (questionId: number) => {
+    return api.questions.skip(questionId);
+  };
+}
+
 export function useStartNewSession() {
   return async () => {
     return api.progress.startNewSession();

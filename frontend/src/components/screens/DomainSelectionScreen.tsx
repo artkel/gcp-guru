@@ -73,8 +73,14 @@ export function DomainSelectionScreen() {
   };
 
   const handleStartTraining = async () => {
+    // Double-check that we have valid selections before proceeding
+    if (!canStartTraining) {
+      console.error('Start Training called without valid selections');
+      return;
+    }
+
     const domains = allDomainsSelected ? undefined : localSelectedDomains;
-    
+
     // Check if all questions in the selected tags are mastered
     try {
       const status = await api.progress.getStatus(domains);

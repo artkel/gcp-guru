@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle, BrainCircuit } from 'lucide-react';
+import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle, Brain, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -18,6 +18,7 @@ import {
   useToggleStar,
   useUpdateNote,
   useStartNewSession,
+  useSkipQuestion,
 } from '@/hooks/useApi';
 import { api, APIError } from '@/lib/api';
 import { Question, QuestionResponse, CaseStudyResponse } from '@/types';
@@ -60,12 +61,13 @@ export function TrainingScreen() {
   const toggleStar = useToggleStar();
   const updateNote = useUpdateNote();
   const startNewSession = useStartNewSession();
+  const skipQuestion = useSkipQuestion();
 
   useEffect(() => {
     if (!currentQuestion) {
       loadNextQuestion();
     }
-  }, [currentQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount, not when currentQuestion changes
 
   const loadNextQuestion = async () => {
     setIsLoading(true);
@@ -212,6 +214,26 @@ export function TrainingScreen() {
     }
   };
 
+  const handleSkipQuestion = async () => {
+    if (!currentQuestion) return;
+
+    setIsLoading(true);
+    try {
+      await skipQuestion(currentQuestion.question_number);
+      // Try to load next question
+      await loadNextQuestion();
+    } catch (error) {
+      if (error instanceof APIError && error.status === 410) {
+        // Session complete - handle same as normal session completion
+        await handleSessionComplete(error.message);
+        return;
+      }
+      console.error('Failed to skip question:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleBackToStart = async () => {
     if (sessionStats.total > 0) {
       showConfirm({
@@ -273,8 +295,40 @@ export function TrainingScreen() {
 
   if (!currentQuestion) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <p>No question available</p>
+      <div className="flex-1 p-6">
+        <div className="mx-auto max-w-4xl space-y-6">
+          {/* Header with back button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="icon" onClick={handleBackToStart}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <Button variant="outline" onClick={handleEndSession}>
+                End Session
+              </Button>
+            </div>
+          </div>
+
+          {/* No question available message */}
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+              <div className="text-center space-y-2">
+                <h3 className="text-xl font-semibold">No Questions Available</h3>
+                <p className="text-muted-foreground">
+                  No questions are available for the selected domains or all questions have been completed in this session.
+                </p>
+              </div>
+              <div className="flex space-x-4">
+                <Button variant="outline" onClick={handleBackToStart}>
+                  Select Different Domains
+                </Button>
+                <Button onClick={() => setCurrentScreen('start')}>
+                  Return to Start
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -309,7 +363,7 @@ export function TrainingScreen() {
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-semibold">Question #{currentQuestion.question_number}</h3>
                     {currentQuestion.score >= 4 && (
-                      <BrainCircuit className="h-5 w-5 text-purple-500" title="This question is considered mastered" />
+                      <Brain className="h-5 w-5 text-purple-500" title="This question is considered mastered" />
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -444,13 +498,23 @@ export function TrainingScreen() {
               {/* Controls */}
               <div className="flex justify-center space-x-4">
                 {!questionAnswered && (
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={selectedAnswers.size === 0}
-                    size="lg"
-                  >
-                    Submit Answer
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={handleSkipQuestion}
+                      className="text-muted-foreground"
+                    >
+                      <SkipForward className="h-4 w-4 mr-2" />
+                      Skip
+                    </Button>
+                    <Button
+                      onClick={handleSubmitAnswer}
+                      disabled={selectedAnswers.size === 0}
+                      size="lg"
+                    >
+                      Submit Answer
+                    </Button>
+                  </>
                 )}
 
                 {questionAnswered && (

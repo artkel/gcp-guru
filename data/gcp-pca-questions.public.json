@@ -1,0 +1,344 @@
+[
+  {
+    "question_number": 1,
+    "question_text": "The development team has submitted a ticket for a web application that is crashing due to high CPU utilization. The network admin has suggested creating a Managed Instance Group to handle the load. Which suggested configuration below could solve the problem?",
+    "answers": {
+      "a": {
+        "answer_text": "Create a Managed Instance Group with an autoscaling policy based on load balancing serving capacity.",
+        "status": "incorrect"
+      },
+      "b": {
+        "answer_text": "Create a Managed Instance Group with a cluster autoscaler with a fixed minimum and a maximum number of instances.",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Create a Managed Instance Group with an autohealing policy that attempts to recreate the crashed instance.",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "Create a Managed Instance Group with an autoscaling policy based on CPU utilization.",
+        "status": "correct"
+      }
+    },
+    "tag": [
+      "compute"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 2,
+    "question_text": "An application development team believes their current logging tool will not meet their needs for their new cloud-based product. They want a better tool to capture errors and help them analyze their historical log data. You want to help them find a solution that meets their needs. What should you do?",
+    "answers": {
+      "a": {
+        "answer_text": "Direct them to download and install the Google StackDriver logging agent",
+        "status": "incorrect"
+      },
+      "b": {
+        "answer_text": "Send them a list of online resources about logging best practices",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Help them define their requirements and assess viable logging tools",
+        "status": "correct"
+      },
+      "d": {
+        "answer_text": "Help them upgrade their current tool to take advantage of any new features",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "monitoring"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 3,
+    "question_text": "There is one application that has been utilizing a lot of bandwidth - sending out large packets. This particular app attempts to control the TCP window size so that it can maximize its own performance, to the detriment of other services running on the same VM. Which Linux tunable below would you adjust to set the maximum OS send buffer size for all connections?",
+    "answers": {
+      "a": {
+        "answer_text": "Net.core.rmem_max",
+        "status": "incorrect"
+      },
+      "b": {
+        "answer_text": "Net.core.wmem_max",
+        "status": "correct"
+      },
+      "c": {
+        "answer_text": "net.ipv4.tcp_rmem",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "net.ipv4.tcp_wmem",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "networking"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 4,
+    "question_text": "A news feed web service has the following code running on Google App Engine. During peak load, users report that they can see news articles they already viewed. What is the most likely cause of this problem?",
+    "answers": {
+      "a": {
+        "answer_text": "The session variable is local to just a single instance",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "The session variable is being overwritten in Cloud Datastore",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "The URL of the API needs to be modified to prevent caching",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "The HTTP Expires header needs to be set to -1 stop caching",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "compute"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 5,
+    "question_text": "Your company has recently acquired another company operating in Spain to expand your market in Europe. You have to integrate their legacy systems into your company's systems. Your company uses GCP as the primary cloud to manage your applications. Assuming your team is taking this opportunity to modernize parts of the legacy system, what is the best way to integrate this system into your company's systems?",
+    "answers": {
+      "a": {
+        "answer_text": "Containerize the legacy applications using GKE and run them on the on-prem instances. Use Anthos for managing the applications",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "Create snapshot of the legacy systems and run them on compute instances on GCP",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Containerize the legacy applications using GKE and run the GKE instances on GCP",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "Use transfer appliance to securely ship the data from on-prem systems to GCP",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "migration",
+      "compute"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 6,
+    "question_text": "The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud. Which three practices should you recommend? (Choose three.)",
+    "answers": {
+      "a": {
+        "answer_text": "Port the application code to run on Google App Engine",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "Integrate Cloud Dataflow into the application to capture real-time metrics",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Instrument the application with a monitoring tool like Stackdriver Debugger",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "Select an automation framework to reliably provision the cloud infrastructure",
+        "status": "correct"
+      },
+      "e": {
+        "answer_text": "Deploy a continuous integration tool with automated testing in a staging environment",
+        "status": "correct"
+      },
+      "f": {
+        "answer_text": "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "migration",
+      "devops"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 7,
+    "question_text": "A start-up in the decentralized finance space provides portfolio management services for customers holding digital assets. In order to manage the digital assets they take custody of their customer's private keys which are very sensitive and prone to hacking. They plan to use the private keys of high value assets only when required and store them offline in their on-premise systems. They use GCP as their primary infrastructure and would like to know how to access and update the private keys securely only when required. What is the best way to achieve this? (Choose three)",
+    "answers": {
+      "a": {
+        "answer_text": "Create a VM in a separate VPC and use it to temporarily store the private keys. Create a peering connection with the main VPC to update the or access the private keys.",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "Store the private keys on premise and copy them to the VM through cloud VPN.",
+        "status": "correct"
+      },
+      "c": {
+        "answer_text": "Copy the updated private keys back to on-prem system and delete the VM instance",
+        "status": "correct"
+      },
+      "d": {
+        "answer_text": "Connect the on-prem system to the main VPC through cloud VPN.",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "security",
+      "networking"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 8,
+    "question_text": "Your company plans to migrate a multi-petabyte data set to the cloud. The data set must be available 24hrs a day. Your business analysts have experience only with using a SQL interface. How should you store the data to optimize it for ease of analysis?",
+    "answers": {
+      "a": {
+        "answer_text": "Load data into Google BigQuery",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "Insert data into Google Cloud SQL",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Put flat files into Google Cloud Storage",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "Stream data into Google Cloud Datastore",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "data-analytics",
+      "storage"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 9,
+    "question_text": "A development team has launched a vital application on a regional managed instance group that must have nearly zero downtime. To ensure high availability, you now have to configure a global load balancer to direct HTTP traffic across multiple zones. After configuring the backend then the frontend of the load balancer, you click Review and Finalize. Assuming you have configured the load balancer correctly, what backend settings do you see upon review?",
+    "answers": {
+      "a": {
+        "answer_text": "The Backend service is web-app-backend. The Endpoint protocol is HTTP. The Health check is web-app-load-balancer-check. The Instance group is load-balancing-web-app-group.",
+        "status": "correct"
+      },
+      "b": {
+        "answer_text": "The Backend service is web-app-backend. The Endpoint protocol is TCP. The Health check is load-balancing-web-app-group. The Instance group is web-app-load-balancer-check.",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "The Backend service is web-app-backend. The Endpoint protocol is HTTP. The Health check is load-balancing-web-app-group. The Instance group is web-app-load-balancer-check.",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "The Backend service is web-app-backend. The Endpoint protocol is TCP. The Health check is web-app-load-balancer-check. The Instance group is load-balancing-web-app-group.",
+        "status": "incorrect"
+      }
+    },
+    "tag": [
+      "networking"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_3": ""
+  },
+  {
+    "question_number": 10,
+    "question_text": "Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the API available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIs. What should they do?",
+    "answers": {
+      "a": {
+        "answer_text": "Configure a new load balancer for the new version of the API",
+        "status": "incorrect"
+      },
+      "b": {
+        "answer_text": "Reconfigure old clients to use a new endpoint for the new API",
+        "status": "incorrect"
+      },
+      "c": {
+        "answer_text": "Have the old API forward traffic to the new API based on the path",
+        "status": "incorrect"
+      },
+      "d": {
+        "answer_text": "Use separate backend pools for each API path behind the load balancer",
+        "status": "correct"
+      }
+    },
+    "tag": [
+      "networking"
+    ],
+    "explanation": "",
+    "hint": "",
+    "score": 0,
+    "starred": false,
+    "note": "",
+    "active": true,
+    "case_study": "",
+    "placeholder_.": ""
+  }
+]

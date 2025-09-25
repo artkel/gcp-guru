@@ -23,14 +23,14 @@
     "tag": [
       "compute"
     ],
-    "explanation": "Using and autoscaler based on CPU utilization would be the most effective approach. This problem is not directly related to traffic, so configuring based on the load balancer would not be effective. The cluster autoscaler is specifically for GKE groups. The autohealer is the incorrect tool - it will not resolve the issue.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 2,
@@ -57,13 +57,13 @@
       "monitoring"
     ],
     "explanation": "",
-    "hint": "Consider how you can collect, store, and gain insights from your application's runtime events in a scalable way. Think about what GCP services are designed for detailed observation and analysis of application behavior.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 3,
@@ -89,14 +89,14 @@
     "tag": [
       "networking"
     ],
-    "explanation": "Net.core.wmem_max allows an admin with root access to set the send buffer size for all types of connections.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 4,
@@ -127,9 +127,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 5,
@@ -156,14 +156,14 @@
       "migration",
       "compute"
     ],
-    "explanation": "The legacy systems are on-prem and it would be difficult to migrate them on cloud. You should containerize the applications and run them on GKE. Google Anthos can be used to consistently run and manage Kubernetes workloads across on-prem systems and GCP. All other options are not optimal and take time to integrate with their existing GCP systems.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 6,
@@ -203,9 +203,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 7,
@@ -232,14 +232,14 @@
       "security",
       "networking"
     ],
-    "explanation": "Cloud VPN is the best way to connect the on prem system to the GCP as the data needs to be accessed only a few times. Creating a temporary VM in a separate VPC will make it more secure and avoid exposing the on-prem systems directly to the main VPC. The best way to achieve the required solution is to use the temporary VM to update the private keys whenever required and deleting it after usage, so that they are not stored on the cloud.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 8,
@@ -266,14 +266,14 @@
       "data-analytics",
       "storage"
     ],
-    "explanation": "BigQuery is Google's serverless, highly scalable, low cost enterprise data warehouse designed to make all your data analysts productive. Because there is no infrastructure to manage, you can focus on analyzing data to find meaningful insights using familiar SQL and you don't need a database administrator. BigQuery enables you to analyze all your data by creating a logical data warehouse over managed, columnar storage as well as data from object storage, and spreadsheets.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 9,
@@ -304,9 +304,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 10,
@@ -337,9 +337,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 11,
@@ -365,14 +365,14 @@
     "tag": [
       "devops"
     ],
-    "explanation": "Cloud Code integrates a number of Google APIs into our IDE, and uses Minikube and Skaffold under the hood to streamline container-based development on our local machine. Minikube uses our local Docker installation to manage a single Kubernetes cluster on our development machine.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 12,
@@ -407,9 +407,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 13,
@@ -441,9 +441,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 14,
@@ -483,9 +483,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 15,
@@ -511,14 +511,14 @@
     "tag": [
       "networking"
     ],
-    "explanation": "Direct Peering is the best choice. It is essentially free. Custom routing is not an option, and the connection is supported over the public internet rather than a private connection. Google Workspace applications are available to users.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 16,
@@ -544,14 +544,14 @@
     "tag": [
       "data-analytics"
     ],
-    "explanation": "Relational databases were not designed to cope with the scale and agility challenges that face modern applications, nor were they built to take advantage of the commodity storage and processing power available today. NoSQL fits well for developers working with applications that create massive volumes of new, rapidly changing data types \u2013 structured, semi-structured, unstructured and polymorphic data.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 17,
@@ -583,9 +583,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 18,
@@ -612,14 +612,14 @@
       "compute",
       "networking"
     ],
-    "explanation": "The best practice when configuration a health check is to check health and serve traffic on the same port. However, it is possible to perform health checks on one port, but serve traffic on another. If you do use two different ports, ensure that firewall rules and services running on instances are configured appropriately. If you run health checks and serve traffic on the same port, but decide to switch ports at some point, be sure to update both the backend service and the health check. Backend services that do not have a valid global forwarding rule referencing it will not be health checked and will have no health status.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 19,
@@ -651,9 +651,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 20,
@@ -682,12 +682,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": -1,
+    "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 21,
@@ -718,9 +718,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 22,
@@ -746,14 +746,14 @@
     "tag": [
       "security"
     ],
-    "explanation": "Organization policy constraints can be used to restrict the users to use a particular region at organization level. The remaining choices are incorrect for the following reasons: There is no such custom policy you can create where you can restrict users from using a particular region. Only Organization policy constraints can be used to restrict the users at the organization level.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 23,
@@ -779,14 +779,14 @@
     "tag": [
       "data-analytics"
     ],
-    "explanation": "Cloud Dataflow is a fully-managed service for transforming and enriching data in stream (real time) and batch (historical) modes with equal reliability and expressiveness -- no more complex workarounds or compromises needed.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 24,
@@ -813,14 +813,14 @@
       "security",
       "compute"
     ],
-    "explanation": "If you expect your Shielded VMs to fail reboot security checks, for example, if you applied a system update on that VM instance, you should update the integrity policy baseline. Updating the integrity policy baseline sets the baseline to the measurements captured from the most recent boot sequence. If it is not expected, you should stop that VM instance and investigate the reason for the failure.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 25,
@@ -847,14 +847,14 @@
       "monitoring",
       "devops"
     ],
-    "explanation": "Stackdriver Logging allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services (AWS). Our API also allows ingestion of any custom log data from any source. Stackdriver Logging is a fully managed service that performs at scale and can ingest application and system log data from thousands of VMs. Even better, you can analyze all that log data in real time.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 26,
@@ -880,14 +880,14 @@
     "tag": [
       "security"
     ],
-    "explanation": "Google Cloud Armor is an enterprise-grade DDoS defense service and web application firewall.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 27,
@@ -914,14 +914,14 @@
       "storage",
       "compute"
     ],
-    "explanation": "On Linux instances, connect to your instance and manually resize your partitions and file systems to use the additional disk space that you added. Extend the file system on the disk or the partition to use the added space. If you grew a partition on your disk, specify the partition. If your disk does not have a partition table, specify only the disk ID. sudo resize2fs /dev/[DISK_ID][PARTITION_NUMBER] where [DISK_ID] is the device name and [PARTITION_NUMBER] is the partition number for the device where you are resizing the file system.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 28,
@@ -953,9 +953,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 29,
@@ -981,14 +981,14 @@
     "tag": [
       "compute"
     ],
-    "explanation": "While we can quickly end up with dozens or more network end points in between all of our microservices, with Anthos Service Mesh, we can again use a simple YAML configuration file to define how all our containers interact with each other, and with external network connections.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 30,
@@ -1017,12 +1017,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": -1,
+    "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 31,
@@ -1054,9 +1054,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 32,
@@ -1088,9 +1088,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 33,
@@ -1117,14 +1117,14 @@
       "data-analytics",
       "compute"
     ],
-    "explanation": "Google Cloud Dataproc is a fast, easy-to-use, low-cost and fully managed service that lets you run the Apache Spark and Apache Hadoop ecosystem on Google Cloud Platform. Cloud Dataproc provisions big or small clusters rapidly, supports many popular job types, and is integrated with other Google Cloud Platform services, such as Google Cloud Storage and Stackdriver Logging, thus helping you reduce TCO.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 34,
@@ -1151,14 +1151,14 @@
       "compute",
       "migration"
     ],
-    "explanation": "When converting physical server CPUs to Google Compute Engine vCPUs, it is important to remember that vCPU on a Compute Engine instance is implemented as a single hyper-thread on an Intel Xeon Processor. Since each Xeon Processor has two hyper-threads, that means you need to multiply the number of cores by two to get the number of threads, and thus the number of vCPUs. Here are the steps to calculate this: 1.Take the number of servers (4) 2.Multiply that number by the number of cores per server (4) 3.Multiply that number by the number of hyper-threads (2) 4 servers x 4 cores per server x 2 hyper-threads = 32 vCPUs",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 35,
@@ -1190,9 +1190,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 36,
@@ -1219,14 +1219,14 @@
       "security",
       "compute"
     ],
-    "explanation": "Anthos has a Policy Controller that checks configuration files and enforces their rules against every Kubernetes API request. With this, we can create guardrails for our applications by defining security rules that are enforced on all of our containers across all of our Anthos deployments.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 37,
@@ -1253,14 +1253,14 @@
       "data-analytics",
       "storage"
     ],
-    "explanation": "Google Cloud Bigtable is a scalable, fully-managed NoSQL wide-column database that is suitable for both real-time access and analytics workloads. Good for: Low-latency read/write access, High-throughput analytics, Native time series support. Common workloads: IoT, finance, adtech, Personalization, recommendations, Monitoring, Geospatial datasets, Graphs",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 38,
@@ -1291,9 +1291,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 39,
@@ -1325,9 +1325,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 40,
@@ -1353,14 +1353,14 @@
     "tag": [
       "compute"
     ],
-    "explanation": "Cloud Run is a managed microservices platform that allows us to just build our application into a container, then let Google worry about handling all the infrastructure management from there.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 41,
@@ -1391,14 +1391,14 @@
       "devops",
       "compute"
     ],
-    "explanation": "The speed of deployment can be changed by limiting the size of the uploaded app, limiting the complexity of the build necessary in the Dockerfile, if present, and by ensuring a fast and reliable internet connection. Note: Alpine Linux is built around musl libc and busybox. This makes it smaller and more resource efficient than traditional GNU/Linux distributions. A container requires no more than 8 MB and a minimal installation to disk requires around 130 MB of storage. Not only do you get a fully-fledged Linux environment but a large selection of packages from the repository.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 42,
@@ -1430,9 +1430,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 43,
@@ -1463,9 +1463,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 44,
@@ -1496,9 +1496,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 45,
@@ -1530,9 +1530,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 46,
@@ -1563,9 +1563,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 47,
@@ -1592,14 +1592,14 @@
       "networking",
       "migration"
     ],
-    "explanation": "Google Cloud Dedicated Interconnect provides direct physical connections and RFC 1918 communication between your on-premises network and Google's network. Dedicated Interconnect enables you to transfer large amounts of data between networks, which can be more cost effective than purchasing additional bandwidth over the public Internet or using VPN tunnels. Benefits: Traffic between your on-premises network and your VPC network doesn't traverse the public Internet. Traffic traverses a dedicated connection with fewer hops, meaning there are less points of failure where traffic might get dropped or disrupted. Your VPC network's internal (RFC 1918) IP addresses are directly accessible from your on-premises network. You don't need to use a NAT device or VPN tunnel to reach internal IP addresses. Currently, you can only reach internal IP addresses over a dedicated connection. To reach Google external IP addresses, you must use a separate connection. You can scale your connection to Google based on your needs. Connection capacity is delivered over one or more 10 Gbps Ethernet connections, with a maximum of eight connections (80 Gbps total per interconnect). The cost of egress traffic from your VPC network to your on-premises network is reduced. A dedicated connection is generally the least expensive method if you have a high-volume of traffic to and from Google's network.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 48,
@@ -1626,14 +1626,14 @@
       "cost-optimization",
       "networking"
     ],
-    "explanation": "Multi region cloud storage is not an option for this use-case as it might impact the user experience. Caching should be enabled for common content and not for personalized content - there is no advantage in caching the personalized content as it is likely to be shown to a single user. Optimizing image size and format will reduce their size and allow for optimal data consumption.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 49,
@@ -1665,9 +1665,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 50,
@@ -1699,9 +1699,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 51,
@@ -1732,9 +1732,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 52,
@@ -1760,14 +1760,14 @@
     "tag": [
       "compute"
     ],
-    "explanation": "A startup script, or a shutdown script, is specified through the metadata server, using startup script metadata keys.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 53,
@@ -1793,14 +1793,14 @@
     "tag": [
       "compute"
     ],
-    "explanation": "VMware has their own new product called Tanzu that shares a lot of similar features to Anthos. Tanzu is also built around Kubernetes. It can build and orchestrate containers and can manage containers hosted across multiple cloud providers with a single control plane, with support for all major public cloud providers.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 54,
@@ -1827,14 +1827,14 @@
       "networking",
       "security"
     ],
-    "explanation": "Google Cloud Platform(GCP) enforces firewall rules through rules and tags. GCP rules and tags can be defined once and used across all regions.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 55,
@@ -1860,14 +1860,14 @@
     "tag": [
       "security"
     ],
-    "explanation": "If the organization uses a third-party identity provider, the organizations' user directory should be synchronized with Cloud Identity to let users access Google Cloud with their corporate credentials. Delegating responsibility with service accounts and groups is associated with assigning IAM roles, not with enabling a user's access to Google Cloud with their corporate credentials. The principle of least privilege is not related to enabling users access to Google Cloud with their corporate credentials but with access to resources within Google Cloud. Migration of unmanaged accounts is required to be implemented when members of the organizational domain have used their corporate email ID to create a personal Google Account.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 56,
@@ -1907,9 +1907,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 57,
@@ -1941,9 +1941,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 58,
@@ -1979,9 +1979,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 59,
@@ -2008,14 +2008,14 @@
       "monitoring",
       "devops"
     ],
-    "explanation": "Both Cloud Logging and Cloud Debugger can assist troubleshooting in production, but Cloud Debugger can troubleshoot the code with the logging data in live production, that's something that the log data alone cannot match. The canary mode allows testing the Cloud Debugger in a small number of nodes before rolling it out to all the nodes to reduce the potential business impact in case things don't go as planned.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 60,
@@ -2046,9 +2046,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 61,
@@ -2075,14 +2075,14 @@
       "storage",
       "migration"
     ],
-    "explanation": "Snapshots are global resources which means they are available to all the regions globally. This avoids the need to manually export and import snapshots between regions. A snapshot that was taken from a persistent disk attached to an instance in us-central will be instantly available in europe-west.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 62,
@@ -2108,14 +2108,14 @@
     "tag": [
       "security"
     ],
-    "explanation": "Folders are nodes in the Cloud Platform Resource Hierarchy. A folder can contain projects, other folders, or a combination of both. You can use folders to group projects under an organization in a hierarchy. For example, your organization might contain multiple departments, each with its own set of GCP resources. Folders allow you to group these resources on a per-department basis. Folders are used to group resources that share common IAM policies. While a folder can contain multiple folders or resources, a given folder or resource can have exactly one parent.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 63,
@@ -2142,9 +2142,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 64,
@@ -2171,14 +2171,14 @@
       "storage",
       "networking"
     ],
-    "explanation": "Signed urls are temporary urls that will prevent users from sharing the static url to access the content. CDNs help in distributing the content globally without replicating them in multiple cloud storage locations. Multi-region storage will not necessarily help improve performance, so these choices are incorrect.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 65,
@@ -2209,9 +2209,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 66,
@@ -2243,9 +2243,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 67,
@@ -2271,14 +2271,14 @@
     "tag": [
       "devops"
     ],
-    "explanation": "Infrastructure as a Code helps you deploy the same architecture with the same configuration within a few minutes. You won't even have to review using Cloud Deployment Manager's IAC feature. You have to create an infrastructure template for the first time, and later on, you can use it directly. The other choices are incorrect for the following reasons: Individually creating resources and using asset history both assist in viewing existing infrastructure configurations, but they do not help duplicate existing infrastructure. Creating resources one by one will be a time taking process, and there are chances of mistakes in the manual process.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 68,
@@ -2307,12 +2307,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": -1,
+    "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 69,
@@ -2343,9 +2343,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 70,
@@ -2377,9 +2377,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 71,
@@ -2410,9 +2410,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 72,
@@ -2443,9 +2443,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 73,
@@ -2476,9 +2476,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 74,
@@ -2509,9 +2509,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 75,
@@ -2543,9 +2543,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 76,
@@ -2577,9 +2577,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 77,
@@ -2611,9 +2611,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 78,
@@ -2640,14 +2640,14 @@
       "security",
       "compute"
     ],
-    "explanation": "Vulnerability Scans along with Binary Authorization will prevent deployment of any package with security issues. The remaining choices are incorrect for the following reasons: Deployment strategies are for application deployment where you should follow recreate, rolling update, or blue/green strategy to deploy the application. It helps in upgrading the application without making it offline. Binary authorization is a security measure that comes into play while deploying the package; it will not let you deploy the package with known security issues. Vulnerability scanning will only scan for the issues, but anyone can still deploy it.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 79,
@@ -2678,9 +2678,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 80,
@@ -2711,9 +2711,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 81,
@@ -2745,9 +2745,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 82,
@@ -2779,9 +2779,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 83,
@@ -2813,9 +2813,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 84,
@@ -2847,9 +2847,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 85,
@@ -2881,9 +2881,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 86,
@@ -2915,9 +2915,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 87,
@@ -2949,9 +2949,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 88,
@@ -2983,9 +2983,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 89,
@@ -3017,9 +3017,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 90,
@@ -3050,9 +3050,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 91,
@@ -3084,9 +3084,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 92,
@@ -3117,9 +3117,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 93,
@@ -3150,9 +3150,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 94,
@@ -3183,9 +3183,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 95,
@@ -3217,9 +3217,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 96,
@@ -3251,9 +3251,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 97,
@@ -3284,9 +3284,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 98,
@@ -3318,9 +3318,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 99,
@@ -3351,9 +3351,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 100,
@@ -3384,9 +3384,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 101,
@@ -3418,9 +3418,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 102,
@@ -3452,9 +3452,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 103,
@@ -3485,9 +3485,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 104,
@@ -3519,9 +3519,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 105,
@@ -3552,9 +3552,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 106,
@@ -3585,9 +3585,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 107,
@@ -3619,9 +3619,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 108,
@@ -3649,12 +3649,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": 0,
+    "score": -1,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 109,
@@ -3686,9 +3686,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 110,
@@ -3720,9 +3720,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 111,
@@ -3754,9 +3754,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 112,
@@ -3788,9 +3788,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 113,
@@ -3821,9 +3821,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 114,
@@ -3854,9 +3854,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 115,
@@ -3887,9 +3887,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 116,
@@ -3921,9 +3921,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 123,
@@ -3955,9 +3955,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 124,
@@ -3989,9 +3989,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 125,
@@ -4023,9 +4023,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 126,
@@ -4057,9 +4057,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 127,
@@ -4091,9 +4091,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 128,
@@ -4124,9 +4124,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 129,
@@ -4161,9 +4161,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 130,
@@ -4195,9 +4195,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 131,
@@ -4229,9 +4229,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 132,
@@ -4263,9 +4263,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 133,
@@ -4297,9 +4297,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 134,
@@ -4331,9 +4331,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 135,
@@ -4365,9 +4365,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 136,
@@ -4399,9 +4399,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 137,
@@ -4432,9 +4432,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 138,
@@ -4466,9 +4466,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 139,
@@ -4500,9 +4500,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 140,
@@ -4531,12 +4531,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": 1,
+    "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 141,
@@ -4567,9 +4567,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 142,
@@ -4600,9 +4600,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 143,
@@ -4629,14 +4629,14 @@
       "storage",
       "compute"
     ],
-    "explanation": "https://cloud.google.com/storage/docs/gcs-fuse#notes",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 144,
@@ -4668,9 +4668,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 145,
@@ -4702,9 +4702,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 146,
@@ -4735,9 +4735,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 147,
@@ -4769,9 +4769,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 148,
@@ -4803,9 +4803,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 149,
@@ -4837,9 +4837,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 150,
@@ -4870,9 +4870,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 151,
@@ -4904,9 +4904,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 152,
@@ -4937,9 +4937,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 153,
@@ -4966,14 +4966,14 @@
       "case-study",
       "devops"
     ],
-    "explanation": "From Scenario: A few of their games were more popular than expected, and they had problems scaling their application servers, MySQL databases, and analytics tools. Requirements for Game Analytics Platform include: Dynamically scale up or down based on game activity",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 154,
@@ -5000,14 +5000,14 @@
       "case-study",
       "devops"
     ],
-    "explanation": "From scenario: Requirements for Game Backend Platform Dynamically scale up or down based on game activity Connect to a managed NoSQL database service Run customize Linux distro",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 155,
@@ -5039,9 +5039,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 156,
@@ -5068,14 +5068,14 @@
       "case-study",
       "monitoring"
     ],
-    "explanation": "503 is service unavailable error. If the database was online everyone would get the 503 error. https://cloud.google.com/docs/quota#capping_usage",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 157,
@@ -5107,9 +5107,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 158,
@@ -5145,9 +5145,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 160,
@@ -5183,9 +5183,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 161,
@@ -5217,9 +5217,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 162,
@@ -5251,9 +5251,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 163,
@@ -5280,14 +5280,14 @@
       "case-study",
       "data-analytics"
     ],
-    "explanation": "The Avro binary format is the preferred format for loading compressed data. Avro data is faster to load because the data can be read in parallel, even when the data blocks are compressed. Cloud Storage supports streaming transfers with the gsutil tool or boto library, based on HTTP chunked transfer encoding. Streaming data lets you stream data to and from your Cloud Storage account as soon as it becomes available without requiring that the data be first saved to a separate file. Streaming transfers are useful if you have a process that generates data and you do not want to buffer it locally before uploading it, or if you want to send the result from a computational pipeline directly into Cloud Storage.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 164,
@@ -5314,14 +5314,14 @@
       "case-study",
       "cost-optimization"
     ],
-    "explanation": "Capacity planning, TCO calculations, opex/capex allocation From the case study, it can conclude that Management (CXO) all concern rapid provision of resources (infrastructure) for growing as well as cost management, such as Cost optimization in Infrastructure, trade up front capital expenditures (Capex) for ongoing operating expenditures (Opex), and Total cost of ownership (TCO)",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 165,
@@ -5353,9 +5353,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 166,
@@ -5382,14 +5382,14 @@
       "case-study",
       "data-analytics"
     ],
-    "explanation": "Storage guarantees 2 replicates which are geo diverse (100 miles apart) which can get better remote latency and availability. More importantly, is that multiregional heavily leverages Edge caching and CDNs to provide the content to the end users. All this redundancy and caching means that Multiregional comes with overhead to sync and ensure consistency between geo-diverse areas. As such, it's much better for write-once-read-many scenarios. This means frequently accessed (e.g. \"hot\" objects) around the world, such as website content, streaming videos, gaming or mobile applications.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 167,
@@ -5416,14 +5416,14 @@
       "case-study",
       "storage"
     ],
-    "explanation": "Coldline Storage is the best choice for data that you plan to access at most once a year, due to its slightly lower availability, 90-day minimum storage duration, costs for data access, and higher per- operation costs. For example: Cold Data Storage - Infrequently accessed data, such as data stored for legal or regulatory reasons, can be stored at low cost as Coldline Storage, and be available when you need it. Disaster recovery - In the event of a disaster recovery event, recovery time is key. Cloud Storage provides low latency access to data stored as Coldline Storage.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 168,
@@ -5455,9 +5455,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 169,
@@ -5496,9 +5496,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 170,
@@ -5530,9 +5530,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 171,
@@ -5572,9 +5572,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 172,
@@ -5614,9 +5614,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 173,
@@ -5648,9 +5648,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 174,
@@ -5682,9 +5682,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 175,
@@ -5720,9 +5720,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "JencoMart"
+    "case_study": "JencoMart",
+    "placeholder_3": ""
   },
   {
     "question_number": 176,
@@ -5754,9 +5754,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 177,
@@ -5788,9 +5788,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 178,
@@ -5822,9 +5822,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 179,
@@ -5856,9 +5856,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 180,
@@ -5890,9 +5890,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 181,
@@ -5924,9 +5924,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 182,
@@ -5958,9 +5958,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 183,
@@ -5992,9 +5992,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 184,
@@ -6026,9 +6026,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 185,
@@ -6060,9 +6060,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 187,
@@ -6094,9 +6094,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 188,
@@ -6128,9 +6128,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 189,
@@ -6162,9 +6162,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 190,
@@ -6196,9 +6196,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 191,
@@ -6230,9 +6230,9 @@
     "score": 0,
     "starred": false,
     "note": "The provided answer 'A' is questionable. Cloud Logging (part of option D) is the service for audit logs ('Admin Activity logs'). Cloud Trace is for performance and latency analysis. However, per instructions, the provided answer is marked as correct.",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 192,
@@ -6264,9 +6264,9 @@
     "score": 0,
     "starred": false,
     "note": "Best practice is to use predefined roles for simplicity unless custom roles are necessary. Utilizing default encryption is standard, but setting a default KMS key is a specific configuration for Customer-Managed Encryption Keys (CMEK) at the bucket level.",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 193,
@@ -6298,9 +6298,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": false,
-    "case_study": "Dress4Win"
+    "case_study": "Dress4Win",
+    "placeholder_3": ""
   },
   {
     "question_number": 194,
@@ -6332,9 +6332,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 195,
@@ -6366,9 +6366,9 @@
     "score": 0,
     "starred": false,
     "note": "The prompt asks for two actions, but provides single-letter answers. The best interpretation is that answer A contains the correct combination of two lifecycle rules.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 196,
@@ -6400,9 +6400,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 197,
@@ -6434,9 +6434,9 @@
     "score": 0,
     "starred": false,
     "note": "While Dataprep (D) is a strong candidate for data cleaning, using a Dataflow job (A) to clean data as part of the ingestion pipeline before it lands in BigQuery is a common and efficient pattern.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 198,
@@ -6468,9 +6468,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 199,
@@ -6502,9 +6502,9 @@
     "score": 0,
     "starred": false,
     "note": "The provided answer 'A' is highly questionable. The Google-recommended practice for large-scale device data ingestion is Cloud IoT Core (B), which is a managed service designed for this exact use case. Using GKE (A) would require building and managing the ingestion logic from scratch.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 200,
@@ -6536,9 +6536,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 201,
@@ -6570,9 +6570,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 202,
@@ -6604,9 +6604,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 203,
@@ -6638,9 +6638,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 204,
@@ -6672,9 +6672,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 205,
@@ -6703,12 +6703,12 @@
     ],
     "explanation": "",
     "hint": "",
-    "score": -1,
+    "score": 0,
     "starred": false,
     "note": "Question text was slightly modified for clarity as the original was missing parts. The core problem is handling NULL values in a CSV for an INT column in BigQuery. The `--null_marker` flag is the correct tool. Appending is the default behavior, but `--replace=false` is a common (though invalid) way to express 'do not replace'. `--noreplace` is the valid flag for this, but omitting the flag also works.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 206,
@@ -6735,14 +6735,14 @@
       "security",
       "networking"
     ],
-    "explanation": "To create a highly available and fault tolerant architecture, the servers must be deployed in 2 zones. Two server instances should be created in each zone / subnet and should be configured to allow traffic between them. Two subnets should be created - one in each zone. For this reason, choices having less than two subnets or not spanning two zones are incorrect. Load balancer and auto scaling group are not the right choice to deploy a highly available Active Directory. For this reason, the AD option using load balancers is incorrect.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 207,
@@ -6769,14 +6769,14 @@
       "security",
       "compute"
     ],
-    "explanation": "You have chosen the required privileges for the Service account, and if your application is running in the compute engine, you are not required to specify credentials explicitly.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "When a GCE VM is configured with a service account, it can get credentials automatically from the metadata server, eliminating the need to manage service account key files. Also, IAM roles are the preferred method for granting permissions over legacy access scopes.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 208,
@@ -6803,14 +6803,14 @@
       "storage",
       "security"
     ],
-    "explanation": "Retention policies can provide immutable storage on Cloud Storage. In conjunction with Detailed audit logging mode, which logs Cloud Storage request and response details, Bucket Lock can help with regulatory and compliance requirements, such as those associated with FINRA, SEC, and CFTC. The hedge firm can add a retention policy that prohibits anyone from deleting an object for 3 years and comply with the regulation.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 209,
@@ -6842,9 +6842,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 210,
@@ -6880,9 +6880,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 211,
@@ -6914,9 +6914,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 212,
@@ -6948,9 +6948,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 213,
@@ -6982,13 +6982,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "",
+    "hint": "Consider how game activity logs are described in the technical requirements and what Google Cloud services are best suited for processing and analyzing large volumes of structured, time-series data for future analysis.",
     "score": 0,
-    "starred": false,
+    "starred": true,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 214,
@@ -7020,9 +7020,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 215,
@@ -7058,9 +7058,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 216,
@@ -7092,9 +7092,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 217,
@@ -7126,9 +7126,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 218,
@@ -7160,9 +7160,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 219,
@@ -7194,9 +7194,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 220,
@@ -7228,9 +7228,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 221,
@@ -7262,9 +7262,9 @@
     "score": 0,
     "starred": false,
     "note": "Note: The provided correct answer (B) suggests granting 'Organization Admin' role which is highly permissive and contradicts 'access should be as restricted as possible'. This may indicate a flawed question or answer in the source material.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 222,
@@ -7296,9 +7296,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 223,
@@ -7330,9 +7330,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 224,
@@ -7364,9 +7364,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 225,
@@ -7398,9 +7398,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Mountkirk Games"
+    "case_study": "Mountkirk Games",
+    "placeholder_3": ""
   },
   {
     "question_number": 226,
@@ -7432,9 +7432,9 @@
     "score": 0,
     "starred": false,
     "note": "Note: Firebase Test Lab (A) is the generally recommended and purpose-built solution for mobile app testing across various devices and configurations. Option C is technically unusual for mobile app testing on containers for UI/UX aspects.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 227,
@@ -7466,9 +7466,9 @@
     "score": 0,
     "starred": false,
     "note": "Question text and options A, C, D were malformed in the original input and have been reconstructed for clarity. Option B (Correct Answer) uses Cloud Armor security policies with preconfigured IP lists, which is the appropriate method for controlling traffic to an external HTTP(S) load balancer based on CDN IP ranges.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Helicopter Racing League"
+    "case_study": "Helicopter Racing League",
+    "placeholder_3": ""
   },
   {
     "question_number": 228,
@@ -7500,9 +7500,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Helicopter Racing League"
+    "case_study": "Helicopter Racing League",
+    "placeholder_3": ""
   },
   {
     "question_number": 229,
@@ -7534,9 +7534,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Helicopter Racing League"
+    "case_study": "Helicopter Racing League",
+    "placeholder_3": ""
   },
   {
     "question_number": 230,
@@ -7568,9 +7568,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Helicopter Racing League"
+    "case_study": "Helicopter Racing League",
+    "placeholder_3": ""
   },
   {
     "question_number": 231,
@@ -7602,9 +7602,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "Helicopter Racing League"
+    "case_study": "Helicopter Racing League",
+    "placeholder_3": ""
   },
   {
     "question_number": 232,
@@ -7640,9 +7640,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 233,
@@ -7669,14 +7669,14 @@
       "security",
       "devops"
     ],
-    "explanation": "Binary Authorization to ensure only verified containers are deployed. To ensure deployments are secure and consistent, automatically scan images for vulnerabilities with container analysis (https://cloud.google.com/docs/ci-cd/overview?hl=en&skip_cache=true)",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "Original input 'Answer(s): A' but the question clearly says 'Choose two' and the explanation supports option D (vulnerability scanning). Parsed with A and D as correct.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 234,
@@ -7708,9 +7708,9 @@
     "score": 0,
     "starred": false,
     "note": "This question is similar to question 239 but has a different correct answer in the provided source. Following the explicit answer given for this question.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 235,
@@ -7742,9 +7742,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 236,
@@ -7776,9 +7776,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 237,
@@ -7810,9 +7810,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 238,
@@ -7844,9 +7844,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 239,
@@ -7873,14 +7873,14 @@
       "networking",
       "case-study"
     ],
-    "explanation": "The case does not call out the throughput being an issue. However, to achieve 99.99%, you need to have 4 connections as per Google recommendations. However, in the options only A has the option to add an additional Interconnect connection. https://cloud.google.com/network-connectivity/docs/interconnect/concepts/dedicated-overview#availability",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "This question is similar to question 234 but provides an explanation and a different correct answer. Follows the explicit answer and explanation provided here.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "EHR Healthcare"
+    "case_study": "EHR Healthcare",
+    "placeholder_3": ""
   },
   {
     "question_number": 240,
@@ -7916,9 +7916,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 241,
@@ -7950,9 +7950,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 242,
@@ -7984,9 +7984,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 243,
@@ -8018,9 +8018,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 244,
@@ -8052,9 +8052,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 245,
@@ -8081,14 +8081,14 @@
       "monitoring",
       "storage"
     ],
-    "explanation": "Overview of storage classes, price, and use cases https://cloud.google.com/storage/docs/storage- classes Why export logs? https://cloud.google.com/logging/docs/export/ StackDriver Quotas and Limits for Monitoring https://cloud.google.com/monitoring/quotas The BigQuery pricing. https://cloud.google.com/bigquery/pricing",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "The explanation provided by the source material points to Cloud Storage as the correct choice for long-term archival of metrics/logs due to cost-effectiveness, implying direct export from Stackdriver (Cloud Logging) to GCS is the standard practice for long retention periods beyond default limits.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 246,
@@ -8120,9 +8120,9 @@
     "score": 0,
     "starred": false,
     "note": "Dedicated Interconnect provides high bandwidth and private connectivity, suitable for large database replication with frequent updates and private communication requirements. Cloud VPN is generally lower bandwidth and higher latency.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 247,
@@ -8149,14 +8149,14 @@
       "data-analytics",
       "migration"
     ],
-    "explanation": "Google Cloud Dataproc is a fast, easy-to-use, low-cost and fully managed service that lets you run the Apache Spark and Apache Hadoop ecosystem on Google Cloud Platform. Cloud Dataproc provisions big or small clusters rapidly, supports many popular job types, and is integrated with other Google Cloud Platform services, such as Google Cloud Storage and Stackdriver Logging, thus helping you reduce TCO.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 248,
@@ -8183,14 +8183,14 @@
       "compute",
       "devops"
     ],
-    "explanation": "https://cloud.google.com/compute/docs/instance-groups/ Google Compute Engine enables users to launch virtual machines (VMs) on demand. VMs can be launched from the standard images or custom images created by users. Managed instance groups offer autoscaling capabilities that allow you to automatically add or remove instances from a managed instance group based on increases or decreases in load. Autoscaling helps your applications gracefully handle increases in traffic and reduces cost when the need for resources is lower.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 249,
@@ -8217,14 +8217,14 @@
       "security",
       "monitoring"
     ],
-    "explanation": "Export the logs to Google Cloud Storage bucket - Archive Storage, as it will not be used for 1 year, price for which is $0.004 per GB per Month. The price for long term storage in BigQuery is $0.01 per GB per Month (250% more). Also for analysis purpose, whenever Auditors are there(once per year), you can use BigQuery and use GCS bucket as external data source. BigQuery supports querying Cloud Storage data from these storage classes: Standard Nearline Coldline Archive",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 250,
@@ -8256,9 +8256,9 @@
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 251,
@@ -8298,9 +8298,9 @@
     "score": 0,
     "starred": false,
     "note": "The phrasing 'Choose 3 answers' dictates multiple correct options.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 252,
@@ -8327,14 +8327,14 @@
       "compute",
       "devops"
     ],
-    "explanation": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler To enable autoscaling for an existing node pool, run the following command: gcloud container clusters update [CLUSTER_NAME] --enable-autoscaling \\ --min-nodes 1 --max-nodes 10 --zone [COMPUTE_ZONE] --node-pool default-pool",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "The command shown in the provided option C (and the explanation's example) uses `gcloud alpha container clusters update` which might be outdated. However, following the provided correct answer. The stable command now would generally be `gcloud container clusters update`.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 253,
@@ -8374,9 +8374,9 @@
     "score": 0,
     "starred": false,
     "note": "Challenges with new technology adoption (unfamiliarity) and vendor lock-in (Google Cloud only) are common business risks.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 254,
@@ -8407,14 +8407,14 @@
       "compute",
       "devops"
     ],
-    "explanation": "B: With Container Engine, Google will automatically deploy your cluster for you, update, patch, secure the nodes. Kubernetes Engine's cluster autoscaler automatically resizes clusters based on the demands of the workloads you want to run. C: Solutions like Datastore, BigQuery, AppEngine, etc are truly NoOps. App Engine by default scales the number of instances running up and down to match the load, thus providing consistent performance for your app at all times while minimizing idle instances and thus reducing cost. Note: At a high level, NoOps means that there is no infrastructure to build out and manage during usage of the platform. Typically, the compromise you make with NoOps is that you lose control of the underlying infrastructure.",
+    "explanation": "",
     "hint": "",
-    "score": -1,
+    "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 255,
@@ -8446,9 +8446,9 @@
     "score": 0,
     "starred": false,
     "note": "Open-source (Kubernetes/GKE, Jenkins, Helm), dynamic scaling (GKE), continuous delivery (Jenkins), segregated copies (Kubernetes deployments/namespaces), dynamic templates (Helm charts), URL routing (GKE Ingress/LoadBalancer.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 256,
@@ -8480,9 +8480,9 @@
     "score": 0,
     "starred": false,
     "note": "App Engine (standard environment) is serverless and auto-scales, fitting 'minimize direct operation management' and wide demand range, with Datastore being a flexible NoSQL database. Managed Instance Groups with autoscaling also fit the compute scaling requirement, and Bigtable is suitable for large-scale key-value data with high throughput.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 257,
@@ -8514,9 +8514,9 @@
     "score": 0,
     "starred": false,
     "note": "Digital signing ensures non-repudiation and integrity verification, crucial for trusting log authenticity.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 258,
@@ -8548,9 +8548,9 @@
     "score": 0,
     "starred": false,
     "note": "Compute Engine provides a `shutdown-script` metadata key specifically for handling graceful shutdowns on VM termination, which is especially useful for preemptible VMs.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 259,
@@ -8586,9 +8586,9 @@
     "score": 0,
     "starred": false,
     "note": "Persistent disks can often be resized while the VM is running, and then the filesystem needs to be extended inside the guest OS (e.g., with `resize2fs` for ext4) to utilize the new space, minimizing downtime.",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 260,
@@ -8615,14 +8615,14 @@
       "networking",
       "security"
     ],
-    "explanation": "Google Cloud Platform(GCP) enforces firewall rules through rules and tags. GCP rules and tags can be defined once and used across all regions.",
+    "explanation": "",
     "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 261,
@@ -8658,13 +8658,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "For cost visibility, consider billing exports and resource tagging. For persistent state on VMs, ensure disks are not automatically deleted.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 262,
@@ -8692,13 +8692,13 @@
       "monitoring"
     ],
     "explanation": "",
-    "hint": "To test system resilience under load and failure, consider combining realistic load testing with failure injection (chaos engineering).",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 263,
@@ -8726,13 +8726,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "For strict password security and minimal disruption during migration, consider federating identity to an existing on-premises system.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 264,
@@ -8760,13 +8760,13 @@
       "monitoring"
     ],
     "explanation": "",
-    "hint": "For visibility without modification rights, consider viewer roles at both the organization and project levels.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 265,
@@ -8798,13 +8798,13 @@
       "devops"
     ],
     "explanation": "",
-    "hint": "To reduce security errors with speed and agility, focus on automating security checks within your development and deployment workflows.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 266,
@@ -8840,13 +8840,13 @@
       "devops"
     ],
     "explanation": "",
-    "hint": "When load testing complex cloud systems, consider isolating the test environment, including all critical components in the test scope, and meticulously collecting performance data.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 267,
@@ -8874,13 +8874,13 @@
       "storage"
     ],
     "explanation": "",
-    "hint": "For easily managing and deploying copies of VMs across regions/projects, consider using VM disk snapshots to create a custom image stored in Cloud Storage.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 268,
@@ -8908,13 +8908,13 @@
       "cost-optimization"
     ],
     "explanation": "",
-    "hint": "To minimize backup impact on active disk performance, consider using a very high-speed temporary storage during the backup process.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 269,
@@ -8938,13 +8938,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "If a Java application deployment fails on App Engine, especially with security-related errors in the stack trace, consider issues with JAR signing.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 270,
@@ -8971,14 +8971,14 @@
       "storage",
       "data-analytics"
     ],
-    "explanation": "In order to maintain a high request rate, avoid using sequential names. Using completely random object names will give you the best load distribution. Randomness after a common prefix is effective under the prefix",
-    "hint": "For high-volume writes to Cloud Storage, naming objects with random prefixes helps distribute the load and prevents hot spots.",
+    "explanation": "",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 271,
@@ -9005,14 +9005,14 @@
       "networking",
       "compute"
     ],
-    "explanation": "Google Cloud Platform (GCP) HTTP(S) load balancing provides global load balancing for HTTP(S) requests destined for your instances. The HTTP(S) load balancer has native support for the WebSocket protocol. Incorrect Answers: A: HTTP server push, also known as HTTP streaming, is a client-server communication pattern that sends information from an HTTP server to a client asynchronously, without a client request. A server push architecture is especially effective for highly interactive web or mobile applications, where one or more clients need to receive continuous information from the server.",
-    "hint": "For applications with sticky sessions or WebSockets, proper load balancer configuration is crucial for ensuring traffic is routed to the correct backend instance.",
+    "explanation": "",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 272,
@@ -9036,17 +9036,16 @@
       }
     },
     "tag": [
-      "compute",
-      "autoscaling"
+      "compute"
     ],
-    "explanation": "The correct answer is B because it uses the `gcloud compute instances add-tags` command to *enable autoscaling* on the cluster nodes, which is the mechanism for dynamic scaling in Google Kubernetes Engine (GKE). Options A, C, and D are incorrect because they either manually resize nodes or attempt to configure autoscaling with incorrect commands or alpha features that are not the standard way to achieve this.",
-    "hint": "Consider how your cluster can dynamically adjust its size to meet fluctuating application needs. Think about the built-in mechanisms for managing resource allocation within GKE.",
-    "score": 0,
+    "explanation": "",
+    "hint": "",
+    "score": 2,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 274,
@@ -9074,13 +9073,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "In an automated deployment pipeline, the most consistent and reliable way to roll back a bad change is to revert it in source control and rerun the pipeline.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 275,
@@ -9108,13 +9107,13 @@
       "monitoring"
     ],
     "explanation": "",
-    "hint": "To trace the origin of resource creation and configuration changes in GCP, use Cloud Audit Logs in Cloud Logging.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 276,
@@ -9146,13 +9145,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "For critical, high-volume, low-latency, and reliable connectivity between on-premises and GCP, especially for database replication, a direct network interconnect often outperforms VPN over the public internet.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 277,
@@ -9180,13 +9179,13 @@
       "storage"
     ],
     "explanation": "",
-    "hint": "For rotating encryption keys for sensitive data in Cloud Storage while maintaining integration with other GCP services, use Customer-Managed Encryption Keys (CMEK) with Cloud KMS.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 278,
@@ -9214,13 +9213,13 @@
       "security"
     ],
     "explanation": "",
-    "hint": "To enable direct browser uploads to Cloud Storage without passing through your backend, use Signed URLs and configure CORS.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 279,
@@ -9248,13 +9247,13 @@
       "storage"
     ],
     "explanation": "",
-    "hint": "For streaming popular static content like music, especially from Cloud Storage, a Content Delivery Network (CDN) can significantly improve performance and reduce load.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 280,
@@ -9282,13 +9281,13 @@
       "data-analytics"
     ],
     "explanation": "",
-    "hint": "When external key generation is required for BigQuery encryption, utilize Cloud KMS to import the key and then apply it as a Customer-Managed Encryption Key (CMEK) to your BigQuery dataset.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 281,
@@ -9316,13 +9315,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "For application logs from Kubernetes pods, especially for rapidly restarting containers, centralized logging services like Cloud Logging are the most effective tool.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 282,
@@ -9350,13 +9349,13 @@
       "networking"
     ],
     "explanation": "",
-    "hint": "To prevent data exfiltration from sensitive services like BigQuery, especially in hybrid environments, consider using VPC Service Controls to establish security perimeters.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 283,
@@ -9381,16 +9380,16 @@
     },
     "tag": [
       "monitoring",
-      "troubleshooting"
+      "compute"
     ],
     "explanation": "",
-    "hint": "The primary first step in troubleshooting any application performance issue is always to collect and analyze diagnostic data, including logs and metrics.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 284,
@@ -9418,13 +9417,13 @@
       "devops"
     ],
     "explanation": "",
-    "hint": "For SRE-driven alerting on service latency in Anthos GKE, consider leveraging service mesh metrics and defining Service Level Objectives (SLOs) in Cloud Monitoring.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 286,
@@ -9452,13 +9451,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "Liveness and readiness probes are crucial for Kubernetes deployments to ensure that new pods are healthy and ready to serve traffic before being integrated into the service, preventing outages during rolling updates.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 287,
@@ -9486,13 +9485,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "To reduce latency for a global user base accessing APIs served from multiple GKE clusters in different regions, consider a global (Multi-Cluster) HTTP(S) Load Balancer.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 288,
@@ -9520,13 +9519,13 @@
       "devops"
     ],
     "explanation": "",
-    "hint": "To enforce that only tested and approved Docker images are deployed to GKE clusters, especially across different environments, use Binary Authorization with attestations in your CI/CD pipeline.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 289,
@@ -9554,13 +9553,13 @@
       "security"
     ],
     "explanation": "",
-    "hint": "For automatic collection of logs from all existing and future projects within a specific environment (e.g., production), configure an aggregated log export at the Folder level.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 290,
@@ -9588,13 +9587,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "When integrating two independent GCP organizations or Shared VPCs, especially with potential IP overlap issues, Cloud VPN can bridge the networks with minimal re-engineering.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 291,
@@ -9622,13 +9621,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "Microservice architecture benefits include improved agility, scalability, feature development, and operational efficiencies.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 292,
@@ -9656,13 +9655,13 @@
       "migration"
     ],
     "explanation": "",
-    "hint": "For large-scale, automated transfers between object storage providers or into Cloud Storage, look for a managed transfer service.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 293,
@@ -9690,13 +9689,13 @@
       "security"
     ],
     "explanation": "",
-    "hint": "To verify file integrity after upload to Cloud Storage efficiently, leverage checksums that the service can provide without downloading the full data.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 294,
@@ -9724,13 +9723,13 @@
       "data-analytics"
     ],
     "explanation": "",
-    "hint": "To control access at the column/row level for PII and other data in BigQuery efficiently, consider using authorized views with separate datasets for different teams.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 295,
@@ -9758,13 +9757,13 @@
       "storage"
     ],
     "explanation": "",
-    "hint": "For very large datasets (PBs) with a tight timeline for transfer to Cloud, a physical data transfer service like Transfer Appliance is often faster than network-based options, especially with limited bandwidth.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": "TerramEarth"
+    "case_study": "TerramEarth",
+    "placeholder_3": ""
   },
   {
     "question_number": 296,
@@ -9792,13 +9791,13 @@
       "cost-optimization"
     ],
     "explanation": "",
-    "hint": "For high availability and cost optimization for specific throughput requirements, HA Cloud VPN offers redundant tunnels from a single gateway, which can be more cost-effective than multiple full VPN gateways.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 297,
@@ -9826,13 +9825,13 @@
       "storage"
     ],
     "explanation": "",
-    "hint": "For long-term log retention beyond Cloud Logging's default retention, export relevant logs to Cloud Storage.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 298,
@@ -9860,13 +9859,13 @@
       "compute"
     ],
     "explanation": "",
-    "hint": "To avoid local CLI management and have a consistent environment for interacting with GCP services from any location, use a web-based shell environment pre-configured with gcloud tools.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 299,
@@ -9894,13 +9893,13 @@
       "devops"
     ],
     "explanation": "",
-    "hint": "While Pub/Sub offers at-least-once delivery, to achieve strict FIFO and guaranteed-once semantics, especially with complex processing requirements, consider a robust stream processing engine.",
+    "hint": "",
     "score": 0,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   },
   {
     "question_number": 300,
@@ -9925,15 +9924,15 @@
     },
     "tag": [
       "compute",
-      "autoscaling"
+      "devops"
     ],
-    "explanation": "",
-    "hint": "For scaling message-processing applications in Kubernetes, use the Horizontal Pod Autoscaler (HPA) and base its scaling decisions on a metric directly reflecting the message backlog.",
-    "score": 4,
+    "explanation": "**D** is correct because the `subscription/num_undelivered_messages` metric from *Cloud Pub/Sub* directly indicates a backlog of messages, which is the problem described, allowing for scaling the processing.\n\nOption A is incorrect as it scales based on CPU, not the message backlog. Option B is incorrect because *push latency* is about delivery speed, not queue depth. Option C is incorrect; `--enable-autoscaling` enables *cluster autoscaling*, which scales nodes, not application pods. The goal is to scale the *application deployment* itself to handle the I/O-intensive processing of undelivered messages.",
+    "hint": "",
+    "score": 2,
     "starred": false,
     "note": "",
-    "placeholder_3": "",
     "active": true,
-    "case_study": ""
+    "case_study": "",
+    "placeholder_3": ""
   }
 ]

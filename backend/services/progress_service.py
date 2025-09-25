@@ -179,6 +179,11 @@ class ProgressService:
 
         # Don't update daily history on every answer - only when session ends
 
+    def record_skip(self, question_id: int):
+        """Record that a question was skipped - mark as seen but don't affect stats"""
+        self.add_question_to_session(question_id)
+        # Don't increment any stats - skipped questions don't count toward totals
+
     def add_question_to_session(self, question_id: int):
         """Track that a question has been shown in current session"""
         self.current_session_questions.add(question_id)
@@ -192,34 +197,22 @@ class ProgressService:
         return question_id in self.current_session_questions
 
     def get_available_questions_for_tags(self, tags: List[str] = None) -> List:
-        """Get questions available for selection, prioritizing non-mastered ones."""
+        """Get all unseen and active questions for the current session, filtered by tags."""
         from services.question_service import question_service
-
         all_questions = question_service.get_all_questions()
 
-        # Filter by tags if provided
         if tags:
             filtered_questions = [q for q in all_questions if any(tag in q.tag for tag in tags)]
         else:
             filtered_questions = all_questions
 
-        # First, try to get questions that are not mastered (score < 4) and not seen in this session
-        ideal_available = [
-            q for q in filtered_questions
-            if q.score < 4 and not self.is_question_shown_in_session(q.question_number) and q.active
-        ]
-
-        if ideal_available:
-            return ideal_available
-
-        # If no ideal questions are left, check if there are ANY unseen questions, regardless of score
-        # This prevents sessions on small tags from ending prematurely if the only remaining questions are mastered
-        any_unseen_available = [
+        # The weighting logic in get_random_question will naturally prioritize lower-scored questions.
+        # This just needs to return all possible candidates for the session.
+        available_questions = [
             q for q in filtered_questions
             if not self.is_question_shown_in_session(q.question_number) and q.active
         ]
-
-        return any_unseen_available
+        return available_questions
 
     def are_all_questions_mastered_for_tags(self, tags: List[str] = None) -> bool:
         """Check if all active questions for given tags are mastered (score >= 4)"""

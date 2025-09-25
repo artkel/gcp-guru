@@ -102,6 +102,12 @@ async def get_hint(question_id: int):
         raise HTTPException(status_code=404, detail="Question not found")
 
     hint = get_ai_service().generate_hint(question)
+
+    # Save the generated hint to the question
+    if hint != question.hint:
+        question.hint = hint
+        question_service.save_questions()
+
     return {"hint": hint}
 
 @router.get("/questions/{question_id}/explanation")
@@ -115,6 +121,12 @@ async def get_explanation(question_id: int, regenerate: bool = Query(False)):
     correct_answers = [key for key, answer in question.answers.items() if answer.status == "correct"]
 
     explanation = get_ai_service().generate_explanation(question, [], correct_answers, force_regenerate=regenerate)
+
+    # Save the generated explanation to the question
+    if explanation != question.explanation:
+        question.explanation = explanation
+        question_service.save_questions()
+
     return {"explanation": explanation}
 
 @router.post("/questions/{question_id}/star")
@@ -152,6 +164,18 @@ async def get_case_study(case_study_name: str):
         "content": content,
         "filename": ai_service.CASE_STUDY_MAPPING[case_study_name]
     }
+
+@router.post("/questions/{question_id}/skip")
+async def skip_question(question_id: int):
+    """Skip a question - mark it as seen without affecting stats"""
+    question = question_service.get_question_by_id(question_id)
+    if not question:
+        raise HTTPException(status_code=404, detail="Question not found")
+
+    # Mark question as shown in session (same as when answering)
+    progress_service.record_skip(question_id)
+
+    return {"success": True, "skipped": True}
 
 @router.get("/tags")
 async def get_available_tags():

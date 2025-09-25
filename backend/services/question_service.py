@@ -93,17 +93,25 @@ class QuestionService:
             self.questions = []
 
     def save_questions(self):
-        """Save questions back to GCS bucket"""
+        """Save questions back to GCS bucket with local fallback"""
         blob_name = 'gcp-pca-questions.json'
         try:
             data = [q.dict() for q in self.questions]
-            success = upload_json_to_gcs(data, blob_name)
-            if success:
+
+            # Try to upload to GCS first
+            gcs_success = upload_json_to_gcs(data, blob_name)
+
+            if gcs_success:
                 print(f"Successfully saved {len(self.questions)} questions to GCS: {blob_name}")
             else:
-                print(f"Failed to save questions to GCS: {blob_name}")
+                # Fallback to saving locally
+                print("GCS upload failed, falling back to local save.")
+                local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', blob_name)
+                with open(local_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2)
+                print(f"Successfully saved questions to local file: {local_path}")
         except Exception as e:
-            print(f"Error saving questions to GCS: {e}")
+            print(f"Error saving questions: {e}")
 
     def get_all_questions(self) -> List[Question]:
         """Get all questions"""
@@ -122,37 +130,24 @@ class QuestionService:
         """Get a random question using sophisticated probability-based selection"""
         from services.progress_service import progress_service
 
-        # Debug logging
-        print(f"DEBUG: get_random_question called with tags: {tags}")
-
-        # Get available questions (not shown in session, score < 4)
         available_questions = progress_service.get_available_questions_for_tags(tags)
-        print(f"DEBUG: Available questions count: {len(available_questions)}")
-        if len(available_questions) == 0:
-            print(f"DEBUG: No available questions for tags {tags}")
-            all_tag_questions = [q for q in self.questions if not tags or any(tag in q.tag for tag in tags)]
-            print(f"DEBUG: Total questions with tags: {len(all_tag_questions)}")
-            for q in all_tag_questions:
-                shown = progress_service.is_question_shown_in_session(q.question_number)
-                print(f"DEBUG: Question {q.question_number} - score: {q.score}, shown: {shown}")
 
+        print(f"DEBUG: get_random_question called with tags: {tags}")
+        print(f"DEBUG: Available questions count: {len(available_questions)}")
+        print(f"DEBUG: Available question IDs: {[q.question_number for q in available_questions]}")
 
         if not available_questions:
-            # No more questions available for this session
+            print(f"DEBUG: No available questions for tags {tags}")
             return None
 
-        # Calculate probability weights based on scores
-        weights = []
-        for q in available_questions:
-            weight = self._calculate_question_weight(q.score)
-            weights.append(weight)
+        weights = [self._calculate_question_weight(q.score) for q in available_questions]
 
-        # Select question using weighted random choice
-        selected_question = random.choices(available_questions, weights=weights, k=1)[0]
+        if all(w == 0.0 for w in weights):
+            selected_question = random.choice(available_questions)
+        else:
+            selected_question = random.choices(available_questions, weights=weights, k=1)[0]
 
-        # Track that this question has been shown in the current session
-        progress_service.add_question_to_session(selected_question.question_number)
-
+        print(f"DEBUG: Selected question: {selected_question.question_number} (score: {selected_question.score})")
         return selected_question
 
     def _calculate_question_weight(self, score: int) -> float:
@@ -164,7 +159,7 @@ class QuestionService:
         1  -> 0.65 (reduced probability)
         2  -> 0.4 (low probability)
         3  -> 0.2 (very low probability)
-        4+ -> 0 (excluded - not available)
+        4+ -> 0.05 (very low probability for mastered questions)
 
         This creates the desired probability distribution where
         negative scores get higher probability, positive scores get lower probability
@@ -176,13 +171,18 @@ class QuestionService:
             2: 0.4,
             3: 0.2
         }
-        return weight_map.get(score, 0.0)
+        return weight_map.get(score, 0.05)  # Give mastered questions (score >= 4) a very small weight
 
     def check_answer(self, question_id: int, selected_answers: List[str]) -> Dict:
         """Check if the submitted answers are correct"""
+        from services.progress_service import progress_service
+
         question = self.get_question_by_id(question_id)
         if not question:
             return {"error": "Question not found"}
+
+        # Mark question as shown in session when user submits an answer (not during selection)
+        progress_service.add_question_to_session(question_id)
 
         correct_answers = [key for key, answer in question.answers.items() if answer.status == "correct"]
         selected_set = set(selected_answers)

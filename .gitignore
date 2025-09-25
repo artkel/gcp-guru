@@ -73,6 +73,9 @@ logs/
 # Data files (optional - you might want to include some sample data)
 #data/*.json
 #!data/sample_*.json
+data/session_history.json
+data/gcp-pca-questions.json
+
 
 # Temporary files
 *.tmp
@@ -108,3 +111,6 @@ frontend/.vercel
 # Production builds
 /build
 /dist
+
+# Claude local settings
+.claude/

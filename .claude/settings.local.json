@@ -28,7 +28,9 @@
       "Bash(find:*)",
       "Bash(git push:*)",
       "Bash(pip install:*)",
-      "Bash(export GCS_BUCKET_NAME=\"dev-bucket\")"
+      "Bash(export GCS_BUCKET_NAME=\"dev-bucket\")",
+      "Bash(jq:*)",
+      "Bash(xargs kill:*)"
     ],
     "deny": [],
     "ask": []
