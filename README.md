@@ -130,6 +130,8 @@ gcp-guru/
 └── README.md                  # This file
 ```
 
+**Note on `data/gcp-pca-questions.json`**: The version of this file in the public repository is a sample containing only 10 questions for testing and demonstration purposes. The full question set is not included.
+
 ## Cloud Deployment
 
 The application is designed for easy deployment on Google Cloud Platform.
