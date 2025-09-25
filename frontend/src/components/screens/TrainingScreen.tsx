@@ -503,7 +503,7 @@ export function TrainingScreen() {
 
       {/* Session Complete Modal */}
       <Modal open={showSessionComplete} onOpenChange={() => {}}>
-        <ModalContent>
+        <ModalContent showCloseButton={false}>
           <ModalHeader>
             <ModalTitle>🎉 Session Complete!</ModalTitle>
           </ModalHeader>
