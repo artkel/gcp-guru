@@ -120,7 +120,7 @@ gcp-guru/
 │   ├── next.config.js         # Next.js proxy configuration for local dev
 │   └── ...
 ├── data/
-│   ├── gcp-pca-questions.json # Question database
+│   ├── gcp-pca-questions.json # Sample question database (public version contains 10 demo questions)
 │   └── ...
 ├── documentation/
 │   ├── DEPLOYMENT_GUIDE.md
@@ -130,7 +130,7 @@ gcp-guru/
 └── README.md                  # This file
 ```
 
-**Note on `data/gcp-pca-questions.json`**: The version of this file in the public repository is a sample containing only 10 questions for testing and demonstration purposes. The full question set is not included.
+**Note on `data/gcp-pca-questions.public.json`**: The version of this file in the public repository is a sample containing only 10 questions for testing and demonstration purposes. The full question set is not included.
 
 ## Cloud Deployment
 
