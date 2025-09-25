@@ -14,6 +14,7 @@ const badgeVariants = cva(
         success: 'border-transparent bg-success text-success-foreground hover:bg-success/80',
         warning: 'border-transparent bg-warning text-warning-foreground hover:bg-warning/80',
         'case-study': 'border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 hover:shadow-md cursor-pointer dark:bg-blue-900/30 dark:text-blue-200 dark:hover:bg-blue-900/50',
+        beta: 'border-transparent bg-purple-100 text-purple-800 text-[10px] uppercase tracking-wider px-2 py-0 dark:bg-purple-900/30 dark:text-purple-200',
       },
     },
     defaultVariants: {

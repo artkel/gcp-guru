@@ -192,10 +192,9 @@ class ProgressService:
         return question_id in self.current_session_questions
 
     def get_available_questions_for_tags(self, tags: List[str] = None) -> List:
-        """Get questions available for selection (not shown in session, score < 4, and active)"""
+        """Get questions available for selection, prioritizing non-mastered ones."""
         from services.question_service import question_service
 
-        # Get all questions matching tags
         all_questions = question_service.get_all_questions()
 
         # Filter by tags if provided
@@ -204,13 +203,23 @@ class ProgressService:
         else:
             filtered_questions = all_questions
 
-        # Filter out questions with score >= 4 (mastered), already shown in session, and inactive questions
-        available_questions = [
+        # First, try to get questions that are not mastered (score < 4) and not seen in this session
+        ideal_available = [
             q for q in filtered_questions
             if q.score < 4 and not self.is_question_shown_in_session(q.question_number) and q.active
         ]
 
-        return available_questions
+        if ideal_available:
+            return ideal_available
+
+        # If no ideal questions are left, check if there are ANY unseen questions, regardless of score
+        # This prevents sessions on small tags from ending prematurely if the only remaining questions are mastered
+        any_unseen_available = [
+            q for q in filtered_questions
+            if not self.is_question_shown_in_session(q.question_number) and q.active
+        ]
+
+        return any_unseen_available
 
     def are_all_questions_mastered_for_tags(self, tags: List[str] = None) -> bool:
         """Check if all active questions for given tags are mastered (score >= 4)"""

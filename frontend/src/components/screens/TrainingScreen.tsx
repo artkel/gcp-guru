@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -261,7 +261,8 @@ export function TrainingScreen() {
       setShowCaseStudyModal(true);
     } catch (error) {
       console.error('Failed to load case study:', error);
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   };
@@ -305,7 +306,12 @@ export function TrainingScreen() {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold">Question #{currentQuestion.question_number}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold">Question #{currentQuestion.question_number}</h3>
+                    {currentQuestion.score >= 4 && (
+                      <BrainCircuit className="h-5 w-5 text-purple-500" title="This question is considered mastered" />
+                    )}
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {currentQuestion.case_study && (
                       <Badge

@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from models.progress import UserProgress
 from services.progress_service import progress_service
 from services.question_service import question_service
@@ -23,6 +23,12 @@ async def get_progress():
 async def get_session_summary():
     """Get current session summary"""
     return progress_service.get_session_summary()
+
+@router.get("/progress/status")
+async def get_progress_status(tags: Optional[List[str]] = Query(None)):
+    """Check if all questions for the given tags are already mastered."""
+    all_mastered = progress_service.are_all_questions_mastered_for_tags(tags)
+    return {"all_mastered": all_mastered}
 
 @router.post("/progress/session/start")
 async def start_new_session():

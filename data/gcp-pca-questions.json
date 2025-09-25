@@ -9929,7 +9929,7 @@
     ],
     "explanation": "",
     "hint": "For scaling message-processing applications in Kubernetes, use the Horizontal Pod Autoscaler (HPA) and base its scaling decisions on a metric directly reflecting the message backlog.",
-    "score": -1,
+    "score": 4,
     "starred": false,
     "note": "",
     "placeholder_3": "",

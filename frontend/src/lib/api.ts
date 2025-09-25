@@ -157,6 +157,14 @@ export const api = {
       return request<UserProgress>('/progress');
     },
 
+    getStatus: async (tags?: string[]): Promise<{ all_mastered: boolean }> => {
+      const params = new URLSearchParams();
+      if (tags) {
+        tags.forEach(tag => params.append('tags', tag));
+      }
+      return request<{ all_mastered: boolean }>(`/progress/status?${params.toString()}`);
+    },
+
     getSessionSummary: async (): Promise<any> => {
       return request<any>('/progress/session');
     },
