@@ -4,10 +4,21 @@ import os
 from typing import Any, Dict
 
 BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME")
-storage_client = storage.Client()
+
+# Initialize storage client with error handling for local development
+storage_client = None
+try:
+    storage_client = storage.Client()
+    print(f"GCS client initialized successfully for bucket: {BUCKET_NAME}")
+except Exception as e:
+    print(f"Warning: GCS client initialization failed: {e}")
+    print("This is expected for local development without GCS credentials")
 
 def download_json_from_gcs(source_blob_name: str) -> Dict[str, Any]:
     """Downloads a blob from the bucket and loads it as JSON."""
+    if storage_client is None:
+        raise Exception("GCS client not available - credentials not configured")
+
     try:
         bucket = storage_client.bucket(BUCKET_NAME)
         blob = bucket.blob(source_blob_name)
@@ -19,6 +30,10 @@ def download_json_from_gcs(source_blob_name: str) -> Dict[str, Any]:
 
 def upload_json_to_gcs(data: Any, destination_blob_name: str) -> bool:
     """Uploads data as a JSON string to the bucket."""
+    if storage_client is None:
+        print(f"Warning: Cannot upload {destination_blob_name} - GCS client not available")
+        return False
+
     try:
         bucket = storage_client.bucket(BUCKET_NAME)
         blob = bucket.blob(destination_blob_name)
@@ -33,6 +48,9 @@ def upload_json_to_gcs(data: Any, destination_blob_name: str) -> bool:
 
 def blob_exists(blob_name: str) -> bool:
     """Check if a blob exists in the bucket."""
+    if storage_client is None:
+        return False
+
     try:
         bucket = storage_client.bucket(BUCKET_NAME)
         blob = bucket.blob(blob_name)

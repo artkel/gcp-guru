@@ -1,4 +1,4 @@
-import { Question, QuestionResponse, AnswerSubmission, UserProgress } from '@/types';
+import { Question, QuestionResponse, AnswerSubmission, UserProgress, CaseStudyResponse } from '@/types';
 
 // For production, use the backend URL directly; for development, use relative path
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -141,6 +141,13 @@ export const api = {
   tags: {
     getAvailable: async (): Promise<{ tags: string[] }> => {
       return request<{ tags: string[] }>('/tags');
+    },
+  },
+
+  // Case study endpoint
+  caseStudy: {
+    get: async (caseStudyName: string): Promise<CaseStudyResponse> => {
+      return request<CaseStudyResponse>(`/case-study/${encodeURIComponent(caseStudyName)}`);
     },
   },
 

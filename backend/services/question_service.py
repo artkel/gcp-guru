@@ -17,22 +17,79 @@ class QuestionService:
             self._questions_loaded = True
 
     def load_questions(self):
-        """Load questions from GCS bucket"""
+        """Load questions from GCS bucket with local fallback"""
         blob_name = 'gcp-pca-questions.json'
+
+        # Try loading from GCS first
         try:
             if blob_exists(blob_name):
                 data = download_json_from_gcs(blob_name)
                 if data:
-                    self.questions = [Question(**q) for q in data]
-                    print(f"Loaded {len(self.questions)} questions from GCS: {blob_name}")
+                    self._parse_questions_data(data, "GCS")
+                    return
                 else:
                     print(f"No data found in GCS blob: {blob_name}")
-                    self.questions = []
             else:
                 print(f"Questions file not found in GCS: {blob_name}")
-                self.questions = []
         except Exception as e:
             print(f"Error loading questions from GCS: {e}")
+
+        # Fallback to local file
+        self._load_questions_from_local_file()
+
+    def _load_questions_from_local_file(self):
+        """Load questions from local JSON file as fallback"""
+        local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'gcp-pca-questions.json')
+        try:
+            if os.path.exists(local_path):
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                self._parse_questions_data(data, "local file")
+            else:
+                print(f"Local questions file not found: {local_path}")
+                self.questions = []
+        except Exception as e:
+            print(f"Error loading questions from local file: {e}")
+            self.questions = []
+
+    def _parse_questions_data(self, data, source):
+        """Parse question data from JSON and create Question objects"""
+        try:
+            parsed_questions = []
+            for item in data:
+                # Convert answers to the expected format
+                answers = {}
+                for key, answer_data in item.get("answers", {}).items():
+                    if isinstance(answer_data, dict):
+                        answers[key] = Answer(
+                            answer_text=answer_data.get("answer_text", ""),
+                            status=answer_data.get("status", "incorrect")
+                        )
+                    else:
+                        # Handle legacy format
+                        answers[key] = Answer(answer_text=str(answer_data), status="incorrect")
+
+                # Create Question object
+                question = Question(
+                    question_number=item.get("question_number", 0),
+                    question_text=item.get("question_text", ""),
+                    answers=answers,
+                    tag=item.get("tag", []),
+                    explanation=item.get("explanation", ""),
+                    hint=item.get("hint", ""),
+                    score=item.get("score", 0),
+                    starred=item.get("starred", False),
+                    note=item.get("note", ""),
+                    active=item.get("active", True),
+                    case_study=item.get("case_study", ""),
+                    placeholder_3=item.get("placeholder_3", "")
+                )
+                parsed_questions.append(question)
+
+            self.questions = parsed_questions
+            print(f"Loaded {len(self.questions)} questions from {source}")
+        except Exception as e:
+            print(f"Error parsing questions data from {source}: {e}")
             self.questions = []
 
     def save_questions(self):

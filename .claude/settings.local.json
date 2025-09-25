@@ -26,7 +26,9 @@
       "Bash(pkill:*)",
       "Bash(git reset:*)",
       "Bash(find:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(pip install:*)",
+      "Bash(export GCS_BUCKET_NAME=\"dev-bucket\")"
     ],
     "deny": [],
     "ask": []

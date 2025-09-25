@@ -133,6 +133,26 @@ async def update_note(question_id: int, note: str = Query(...)):
         raise HTTPException(status_code=404, detail="Question not found")
     return {"success": True, "note": note}
 
+@router.get("/case-study/{case_study_name}")
+async def get_case_study(case_study_name: str):
+    """Get case study content by name"""
+    ai_service = get_ai_service()
+
+    # Check if case study exists in mapping
+    if case_study_name not in ai_service.CASE_STUDY_MAPPING:
+        raise HTTPException(status_code=404, detail="Case study not found")
+
+    # Load case study content
+    content = ai_service._load_case_study_content(case_study_name)
+    if not content:
+        raise HTTPException(status_code=404, detail="Case study content not available")
+
+    return {
+        "name": case_study_name,
+        "content": content,
+        "filename": ai_service.CASE_STUDY_MAPPING[case_study_name]
+    }
+
 @router.get("/tags")
 async def get_available_tags():
     """Get all available question tags (only from active questions)"""

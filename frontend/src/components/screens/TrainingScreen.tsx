@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { LoadingSpinner, LoadingOverlay } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from '@/components/ui/Modal';
+import { CaseStudyModal } from '@/components/ui/CaseStudyModal';
 import { useConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useAppStore } from '@/lib/store';
 import {
@@ -18,7 +20,7 @@ import {
   useStartNewSession,
 } from '@/hooks/useApi';
 import { api, APIError } from '@/lib/api';
-import { Question, QuestionResponse } from '@/types';
+import { Question, QuestionResponse, CaseStudyResponse } from '@/types';
 import { cn, formatSessionTimer } from '@/lib/utils';
 
 export function TrainingScreen() {
@@ -42,10 +44,12 @@ export function TrainingScreen() {
   const [showHintModal, setShowHintModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showSessionComplete, setShowSessionComplete] = useState(false);
+  const [showCaseStudyModal, setShowCaseStudyModal] = useState(false);
   const [hint, setHint] = useState<string>('');
   const [note, setNote] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
   const [showExplanation, setShowExplanation] = useState(false);
+  const [caseStudyData, setCaseStudyData] = useState<CaseStudyResponse | null>(null);
 
   // Confirmation dialog hook
   const { showConfirm, ConfirmDialog } = useConfirmDialog();
@@ -247,6 +251,21 @@ export function TrainingScreen() {
     setCurrentScreen('start');
   };
 
+  const handleCaseStudyClick = async (caseStudyName: string) => {
+    if (!caseStudyName) return;
+
+    setIsLoading(true);
+    try {
+      const caseStudy = await api.caseStudy.get(caseStudyName);
+      setCaseStudyData(caseStudy);
+      setShowCaseStudyModal(true);
+    } catch (error) {
+      console.error('Failed to load case study:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!currentQuestion && isLoading) {
     return <LoadingOverlay>Loading your next question...</LoadingOverlay>;
   }
@@ -288,6 +307,15 @@ export function TrainingScreen() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold">Question #{currentQuestion.question_number}</h3>
                   <div className="flex flex-wrap gap-2">
+                    {currentQuestion.case_study && (
+                      <Badge
+                        key={currentQuestion.case_study}
+                        variant="case-study"
+                        onClick={() => handleCaseStudyClick(currentQuestion.case_study!)}
+                      >
+                        {currentQuestion.case_study}
+                      </Badge>
+                    )}
                     {currentQuestion.tag.map((tag) => (
                       <Badge key={tag} variant="secondary">
                         {tag}
@@ -379,7 +407,29 @@ export function TrainingScreen() {
                   {showExplanation && explanation && (
                     <div className="mt-4 p-4 bg-background/50 rounded border">
                       <h4 className="font-medium mb-2">Explanation:</h4>
-                      <p className="text-sm leading-relaxed">{explanation}</p>
+                      <div className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert">
+                        <ReactMarkdown
+                          components={{
+                            strong: ({ children }) => (
+                              <strong className="font-semibold text-gray-900 dark:text-gray-100">
+                                {children}
+                              </strong>
+                            ),
+                            em: ({ children }) => (
+                              <em className="italic text-gray-800 dark:text-gray-200">
+                                {children}
+                              </em>
+                            ),
+                            p: ({ children }) => (
+                              <p className="mb-2">
+                                {children}
+                              </p>
+                            ),
+                          }}
+                        >
+                          {explanation}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -484,6 +534,13 @@ export function TrainingScreen() {
           </div>
         </ModalContent>
       </Modal>
+
+      {/* Case Study Modal */}
+      <CaseStudyModal
+        open={showCaseStudyModal}
+        onOpenChange={setShowCaseStudyModal}
+        caseStudy={caseStudyData}
+      />
 
       {/* Confirmation Dialog */}
       <ConfirmDialog />

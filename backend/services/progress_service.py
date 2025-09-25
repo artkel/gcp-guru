@@ -19,30 +19,55 @@ class ProgressService:
         self.load_session_history()
 
     def load_session_history(self):
-        """Load session history from GCS bucket"""
+        """Load session history from GCS bucket with local fallback"""
+        # Try loading from GCS first
         try:
             if blob_exists(self.history_blob_name):
                 data = download_json_from_gcs(self.history_blob_name)
                 if data:
-                    # Convert date strings back to date objects and add missing fields for backward compatibility
-                    for item in data:
-                        if isinstance(item['date'], str):
-                            item['date'] = date.fromisoformat(item['date'])
-                        # Add missing fields with defaults for backward compatibility
-                        if 'duration_minutes' not in item:
-                            item['duration_minutes'] = 0.0
-                        if 'tags' not in item:
-                            item['tags'] = []
-                    self.daily_history = [DailySessionHistory(**item) for item in data]
-                    print(f"Loaded {len(self.daily_history)} session history entries from GCS")
+                    self._parse_session_history_data(data, "GCS")
+                    return
                 else:
                     print("No session history data found in GCS")
-                    self.daily_history = []
             else:
                 print(f"Session history file not found in GCS: {self.history_blob_name}")
-                self.daily_history = []
         except Exception as e:
             print(f"Error loading session history from GCS: {e}")
+
+        # Fallback to local file
+        self._load_session_history_from_local_file()
+
+    def _load_session_history_from_local_file(self):
+        """Load session history from local JSON file as fallback"""
+        local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'session_history.json')
+        try:
+            if os.path.exists(local_path):
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                self._parse_session_history_data(data, "local file")
+            else:
+                print(f"Local session history file not found: {local_path}")
+                self.daily_history = []
+        except Exception as e:
+            print(f"Error loading session history from local file: {e}")
+            self.daily_history = []
+
+    def _parse_session_history_data(self, data, source):
+        """Parse session history data from JSON"""
+        try:
+            # Convert date strings back to date objects and add missing fields for backward compatibility
+            for item in data:
+                if isinstance(item['date'], str):
+                    item['date'] = date.fromisoformat(item['date'])
+                # Add missing fields with defaults for backward compatibility
+                if 'duration_minutes' not in item:
+                    item['duration_minutes'] = 0.0
+                if 'tags' not in item:
+                    item['tags'] = []
+            self.daily_history = [DailySessionHistory(**item) for item in data]
+            print(f"Loaded {len(self.daily_history)} session history entries from {source}")
+        except Exception as e:
+            print(f"Error parsing session history data from {source}: {e}")
             self.daily_history = []
 
     def save_session_history(self):

@@ -11,6 +11,7 @@ export interface Question {
   score: number;
   starred: boolean;
   note: string;
+  case_study?: string;
 }
 
 export interface QuestionResponse {
@@ -71,6 +72,12 @@ export interface SessionHistory {
   accuracy: number;
   duration_minutes: number;
   tags: string[];
+}
+
+export interface CaseStudyResponse {
+  name: string;
+  content: string;
+  filename: string;
 }
 
 export interface UserProgress {
