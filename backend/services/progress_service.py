@@ -71,19 +71,27 @@ class ProgressService:
             self.daily_history = []
 
     def save_session_history(self):
-        """Save session history to GCS bucket"""
+        """Save session history to GCS bucket with local fallback."""
         try:
             data = [item.dict() for item in self.daily_history]
-            # Convert date objects to strings for JSON serialization
             for item in data:
                 item['date'] = item['date'].isoformat()
-            success = upload_json_to_gcs(data, self.history_blob_name)
-            if success:
+
+            # Try to upload to GCS
+            gcs_success = upload_json_to_gcs(data, self.history_blob_name)
+
+            if gcs_success:
                 print(f"Successfully saved {len(self.daily_history)} session history entries to GCS")
             else:
-                print(f"Failed to save session history to GCS: {self.history_blob_name}")
+                # Fallback to saving locally
+                print("GCS upload failed, falling back to local save.")
+                local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', self.history_blob_name)
+                with open(local_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2)
+                print(f"Successfully saved session history to local file: {local_path}")
+
         except Exception as e:
-            print(f"Error saving session history to GCS: {e}")
+            print(f"Error saving session history: {e}")
 
     def start_new_session(self):
         """Start a new learning session"""
