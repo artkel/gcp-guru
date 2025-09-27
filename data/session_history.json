@@ -16,5 +16,21 @@
       "compute",
       "storage"
     ]
+  },
+  {
+    "date": "2025-09-27",
+    "total_questions": 5,
+    "correct_answers": 1,
+    "incorrect_answers": 4,
+    "accuracy": 20.0,
+    "duration_minutes": 894.22578985,
+    "tags": [
+      "security",
+      "storage",
+      "monitoring",
+      "data-analytics",
+      "migration",
+      "case-study"
+    ]
   }
 ]

@@ -141,10 +141,11 @@ class QuestionService:
 The AI model receives only answer content (no letters A, B, C, D) and generates explanations using a structured three-paragraph format that describes approaches directly without any letter references.
 
 ```python
-# Answer options provided to model (no letters)
+# Answer options provided to model (status included, no letters)
 answers_text = ""
 for key, answer in question.answers.items():
-    answers_text += f"- {answer.answer_text}\n"
+    status = "✓ CORRECT" if key in correct_answers else "✗ INCORRECT"
+    answers_text += f"- {answer.answer_text} [{status}]\n"
 
 # New three-paragraph structured prompts
 # Standard prompt:

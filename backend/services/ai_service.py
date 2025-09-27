@@ -59,10 +59,11 @@ class AIService:
         if question.explanation and not force_regenerate:
             return question.explanation
 
-        # Build answer options without letters - only content
+        # Build answer options with status but without letters
         answers_text = ""
         for key, answer in question.answers.items():
-            answers_text += f"- {answer.answer_text}\n"
+            status = "✓ CORRECT" if key in correct_answers else "✗ INCORRECT"
+            answers_text += f"- {answer.answer_text} [{status}]\n"
 
         # Get actual text content of selected and correct answers
         selected_text = ""
