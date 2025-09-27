@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from pydantic import BaseModel
-from models.question import Question, AnswerSubmission, QuestionResponse
+from models.question import Question, AnswerSubmission, QuestionResponse, ShuffledQuestion, AnswerSubmissionWithMapping, ShuffledQuestionResponse
 from services.question_service import question_service
+from services.answer_shuffler import AnswerShuffler
 from services.ai_service import get_ai_service
 from services.progress_service import progress_service
 
@@ -54,6 +55,26 @@ async def get_random_question(tags: Optional[List[str]] = Query(None)):
             raise HTTPException(status_code=404, detail="No questions found")
     return question
 
+@router.get("/questions/random-shuffled", response_model=ShuffledQuestion)
+async def get_random_shuffled_question(tags: Optional[List[str]] = Query(None)):
+    """Get a random question with shuffled answers"""
+    shuffled_question = question_service.get_random_shuffled_question(tags)
+    if not shuffled_question:
+        # Check why no question was returned (reuse existing logic)
+        from services.progress_service import progress_service
+        available = progress_service.get_available_questions_for_tags(tags)
+
+        if len(available) == 0:
+            # Check if all questions for these tags are mastered
+            if progress_service.are_all_questions_mastered_for_tags(tags):
+                raise HTTPException(status_code=410, detail="All questions with related tag(s) are mastered")
+            else:
+                raise HTTPException(status_code=410, detail="No more questions available in this session")
+        else:
+            raise HTTPException(status_code=500, detail="Failed to get random question")
+
+    return shuffled_question
+
 @router.get("/questions/{question_id}", response_model=Question)
 async def get_question(question_id: int):
     """Get a specific question by ID"""
@@ -91,6 +112,71 @@ async def submit_answer(question_id: int, submission: AnswerSubmission):
         question=updated_question,
         is_correct=result["is_correct"],
         correct_answers=result["correct_answers"],
+        explanation=explanation
+    )
+
+@router.post("/questions/{question_id}/answer-shuffled", response_model=ShuffledQuestionResponse)
+async def submit_shuffled_answer(question_id: int, submission: AnswerSubmissionWithMapping):
+    """Submit answer with reverse mapping support for shuffled questions"""
+    question = question_service.get_question_by_id(question_id)
+    if not question:
+        raise HTTPException(status_code=404, detail="Question not found")
+
+    # Use existing logic with reverse mapped answers
+    result = question_service.check_answer_with_mapping(
+        question_id, submission.selected_answers, submission.original_mapping
+    )
+
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+
+    # Record the answer in progress tracking
+    progress_service.record_answer(result["is_correct"])
+
+    # Get explanation if requested (use original question for AI)
+    explanation = None
+    if submission.request_explanation:
+        # Convert original correct answers back to shuffled format for display
+        original_correct = result["correct_answers"]
+        shuffled_correct = AnswerShuffler.map_answers_to_shuffled(
+            original_correct, submission.original_mapping
+        )
+
+        explanation = get_ai_service().generate_explanation(
+            question,
+            AnswerShuffler.reverse_map_answers(submission.selected_answers, submission.original_mapping),
+            original_correct
+        )
+
+    # Get updated question and re-shuffle with same mapping
+    updated_question = question_service.get_question_by_id(question_id)
+
+    # Create shuffled response
+    shuffled_response_question = ShuffledQuestion(
+        question_number=updated_question.question_number,
+        question_text=updated_question.question_text,
+        answers={k: updated_question.answers[v] for k, v in submission.original_mapping.items()},
+        original_mapping=submission.original_mapping,
+        tag=updated_question.tag,
+        explanation=updated_question.explanation,
+        hint=updated_question.hint,
+        score=updated_question.score,
+        starred=updated_question.starred,
+        note=updated_question.note,
+        active=updated_question.active,
+        case_study=updated_question.case_study,
+        placeholder_3=updated_question.placeholder_3
+    )
+
+    # Convert correct answers to shuffled format for response
+    shuffled_correct_answers = AnswerShuffler.map_answers_to_shuffled(
+        result["correct_answers"], submission.original_mapping
+    )
+
+    return ShuffledQuestionResponse(
+        question=shuffled_response_question,
+        is_correct=result["is_correct"],
+        correct_answers=shuffled_correct_answers,
         explanation=explanation
     )
 
@@ -176,6 +262,7 @@ async def skip_question(question_id: int):
     progress_service.record_skip(question_id)
 
     return {"success": True, "skipped": True}
+
 
 @router.get("/tags")
 async def get_available_tags():

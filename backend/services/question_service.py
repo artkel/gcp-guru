@@ -1,7 +1,8 @@
 import json
 import random
 from typing import List, Optional, Dict
-from models.question import Question, Answer
+from models.question import Question, Answer, ShuffledQuestion
+from services.answer_shuffler import AnswerShuffler
 import os
 from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blob_exists
 
@@ -149,6 +150,28 @@ class QuestionService:
 
         print(f"DEBUG: Selected question: {selected_question.question_number} (score: {selected_question.score})")
         return selected_question
+
+    def get_random_shuffled_question(self, tags: Optional[List[str]] = None) -> Optional[ShuffledQuestion]:
+        """Get a random question with shuffled answers"""
+        # Get base question using existing logic
+        base_question = self.get_random_question(tags)
+        if not base_question:
+            return None
+
+        # Shuffle answers
+        shuffled_question = AnswerShuffler.shuffle_answers(base_question)
+        return shuffled_question
+
+    def check_answer_with_mapping(self, question_id: int, selected_answers: List[str],
+                                original_mapping: Dict[str, str]) -> Dict:
+        """Check answers with reverse mapping to original keys"""
+        # Convert shuffled selections back to original keys
+        original_selections = AnswerShuffler.reverse_map_answers(
+            selected_answers, original_mapping
+        )
+
+        # Use existing logic with original keys
+        return self.check_answer(question_id, original_selections)
 
     def _calculate_question_weight(self, score: int) -> float:
         """Calculate probability weight based on question score

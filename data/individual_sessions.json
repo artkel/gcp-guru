@@ -1,0 +1,57 @@
+[
+  {
+    "session_start": "2025-09-27T20:04:27.961104",
+    "session_end": "2025-09-27T20:05:51.863015",
+    "total_questions": 6,
+    "correct_answers": 2,
+    "incorrect_answers": 4,
+    "accuracy": 33.33333333333333,
+    "duration_minutes": 1.3983651833333333,
+    "tags": [
+      "storage",
+      "compute",
+      "data-analytics",
+      "devops",
+      "monitoring",
+      "security",
+      "case-study"
+    ]
+  },
+  {
+    "session_start": "2025-09-27T20:15:07.531563",
+    "session_end": "2025-09-27T20:22:27.914589",
+    "total_questions": 24,
+    "correct_answers": 6,
+    "incorrect_answers": 18,
+    "accuracy": 25.0,
+    "duration_minutes": 7.3397171,
+    "tags": [
+      "security",
+      "migration",
+      "case-study",
+      "data-analytics",
+      "monitoring",
+      "networking",
+      "devops",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-27T20:31:51.852458",
+    "session_end": "2025-09-27T20:34:18.349282",
+    "total_questions": 13,
+    "correct_answers": 3,
+    "incorrect_answers": 10,
+    "accuracy": 23.076923076923077,
+    "duration_minutes": 2.4416137333333334,
+    "tags": [
+      "storage",
+      "monitoring",
+      "case-study",
+      "cost-optimization",
+      "compute",
+      "networking",
+      "data-analytics"
+    ]
+  }
+]

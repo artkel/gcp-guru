@@ -26,6 +26,23 @@ export interface AnswerSubmission {
   request_explanation?: boolean;
 }
 
+export interface ShuffledQuestion extends Question {
+  original_mapping: Record<string, string>;
+}
+
+export interface AnswerSubmissionWithMapping {
+  selected_answers: string[];
+  original_mapping: Record<string, string>;
+  request_explanation?: boolean;
+}
+
+export interface ShuffledQuestionResponse {
+  question: ShuffledQuestion;
+  is_correct: boolean;
+  correct_answers: string[];
+  explanation?: string;
+}
+
 export interface SessionStats {
   total: number;
   correct: number;
@@ -34,9 +51,11 @@ export interface SessionStats {
 }
 
 export interface LastSession {
-  date: string;
+  session_start: string;
+  session_end: string;
   total_questions: number;
   correct_answers: number;
+  incorrect_answers: number;
   accuracy: number;
   duration_minutes: number;
   tags: string[];
@@ -105,6 +124,7 @@ export interface AppState {
   // Training state
   selectedDomains: string[] | null;
   availableTags: string[];
+  useShuffledQuestions: boolean;
 
   // User data
   userProgress: UserProgress | null;
@@ -119,6 +139,7 @@ export interface AppState {
   setIsLoading: (loading: boolean) => void;
   setSelectedDomains: (domains: string[] | null) => void;
   setAvailableTags: (tags: string[]) => void;
+  setUseShuffledQuestions: (useShuffled: boolean) => void;
   setUserProgress: (progress: UserProgress | null) => void;
   setQuestionsList: (questions: Question[]) => void;
   startSessionTimer: () => void;

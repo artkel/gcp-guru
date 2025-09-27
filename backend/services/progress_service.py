@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 from typing import List, Dict
 import json
 import os
-from models.progress import SessionStats, TagProgress, OverallProgress, UserProgress, DailySessionHistory
+from models.progress import SessionStats, TagProgress, OverallProgress, UserProgress, DailySessionHistory, IndividualSession
 from services.question_service import question_service
 from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blob_exists
 
@@ -11,12 +11,15 @@ class ProgressService:
         self.current_session = SessionStats(session_start=datetime.now())
         self.session_history: List[SessionStats] = []
         self.daily_history: List[DailySessionHistory] = []
+        self.individual_sessions: List[IndividualSession] = []
         self.history_blob_name = 'session_history.json'
+        self.individual_sessions_blob_name = 'individual_sessions.json'
         # Track questions shown in current session to prevent repetition
         self.current_session_questions: set[int] = set()
         # Track current session tags for last session display
         self.current_session_tags: set[str] = set()
         self.load_session_history()
+        self.load_individual_sessions()
 
     def load_session_history(self):
         """Load session history from GCS bucket with local fallback"""
@@ -93,15 +96,114 @@ class ProgressService:
         except Exception as e:
             print(f"Error saving session history: {e}")
 
+    def load_individual_sessions(self):
+        """Load individual session history from GCS bucket with local fallback"""
+        # Try loading from GCS first
+        try:
+            if blob_exists(self.individual_sessions_blob_name):
+                data = download_json_from_gcs(self.individual_sessions_blob_name)
+                if data:
+                    self._parse_individual_sessions_data(data, "GCS")
+                    return
+                else:
+                    print("No individual sessions data found in GCS")
+            else:
+                print(f"Individual sessions file not found in GCS: {self.individual_sessions_blob_name}")
+        except Exception as e:
+            print(f"Error loading individual sessions from GCS: {e}")
+
+        # Fallback to local file
+        self._load_individual_sessions_from_local_file()
+
+    def _load_individual_sessions_from_local_file(self):
+        """Load individual sessions from local JSON file as fallback"""
+        local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'individual_sessions.json')
+        try:
+            if os.path.exists(local_path):
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                self._parse_individual_sessions_data(data, "local file")
+            else:
+                print(f"Local individual sessions file not found: {local_path}")
+                self.individual_sessions = []
+        except Exception as e:
+            print(f"Error loading individual sessions from local file: {e}")
+            self.individual_sessions = []
+
+    def _parse_individual_sessions_data(self, data, source):
+        """Parse individual sessions data from JSON"""
+        try:
+            # Convert datetime strings back to datetime objects
+            for item in data:
+                if isinstance(item['session_start'], str):
+                    item['session_start'] = datetime.fromisoformat(item['session_start'])
+                if isinstance(item['session_end'], str):
+                    item['session_end'] = datetime.fromisoformat(item['session_end'])
+                # Add missing fields with defaults for backward compatibility
+                if 'tags' not in item:
+                    item['tags'] = []
+            self.individual_sessions = [IndividualSession(**item) for item in data]
+            print(f"Loaded {len(self.individual_sessions)} individual sessions from {source}")
+        except Exception as e:
+            print(f"Error parsing individual sessions data from {source}: {e}")
+            self.individual_sessions = []
+
+    def save_individual_sessions(self):
+        """Save individual sessions to GCS bucket with local fallback."""
+        try:
+            data = [item.dict() for item in self.individual_sessions]
+            for item in data:
+                item['session_start'] = item['session_start'].isoformat()
+                item['session_end'] = item['session_end'].isoformat()
+
+            # Try to upload to GCS
+            gcs_success = upload_json_to_gcs(data, self.individual_sessions_blob_name)
+
+            if gcs_success:
+                print(f"Successfully saved {len(self.individual_sessions)} individual sessions to GCS")
+            else:
+                # Fallback to saving locally
+                print("GCS upload failed, falling back to local save.")
+                local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', self.individual_sessions_blob_name)
+                with open(local_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2)
+                print(f"Successfully saved individual sessions to local file: {local_path}")
+
+        except Exception as e:
+            print(f"Error saving individual sessions: {e}")
+
     def start_new_session(self):
         """Start a new learning session"""
         print(f"DEBUG: Starting new session. Current session questions before reset: {self.current_session_questions}")
         if self.current_session.total_questions > 0:
-            # Save current session to daily history
+            # Save current session to daily history (for charts)
             self.save_current_session_to_daily()
 
-            # Save current session to history
-            self.current_session.session_end = datetime.now()
+            # Save current session to individual sessions (for last session display)
+            session_end = datetime.now()
+            session_duration = (session_end - self.current_session.session_start).total_seconds() / 60
+
+            individual_session = IndividualSession(
+                session_start=self.current_session.session_start,
+                session_end=session_end,
+                total_questions=self.current_session.total_questions,
+                correct_answers=self.current_session.correct_answers,
+                incorrect_answers=self.current_session.incorrect_answers,
+                accuracy=self.current_session.accuracy,
+                duration_minutes=session_duration,
+                tags=list(self.current_session_tags)
+            )
+            self.individual_sessions.append(individual_session)
+
+            # Keep only last 50 individual sessions to prevent unbounded growth
+            if len(self.individual_sessions) > 50:
+                self.individual_sessions = self.individual_sessions[-50:]
+
+            # Save individual sessions
+            self.save_individual_sessions()
+
+            # Save current session to history (legacy)
+            self.current_session.session_end = session_end
             self.session_history.append(self.current_session)
 
         # Start new session
@@ -332,8 +434,8 @@ class ProgressService:
         # Calculate streak (simplified - could be enhanced with actual date tracking)
         streak_days = 1 if self.current_session.total_questions > 0 else 0
 
-        # Get last session data
-        last_session = self.daily_history[-1] if self.daily_history else None
+        # Get last individual session data (the actual last session, not daily aggregated)
+        last_session = self.individual_sessions[-1] if self.individual_sessions else None
 
         return UserProgress(
             current_session=self.current_session,
@@ -361,7 +463,9 @@ class ProgressService:
         self.current_session = SessionStats(session_start=datetime.now())
         self.session_history = []
         self.daily_history = []
+        self.individual_sessions = []
         self.save_session_history()
+        self.save_individual_sessions()
 
     def reset_selective_progress(self, options: dict):
         """Reset selected progress data based on options (only active questions)"""
@@ -392,7 +496,9 @@ class ProgressService:
         # Reset session history if requested
         if options.get('sessionHistory', False):
             self.daily_history = []
+            self.individual_sessions = []
             self.save_session_history()
+            self.save_individual_sessions()
 
         # Reset training time (part of session history) if requested
         if options.get('trainingTime', False):

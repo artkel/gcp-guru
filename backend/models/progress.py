@@ -10,6 +10,16 @@ class SessionStats(BaseModel):
     session_start: datetime
     session_end: Optional[datetime] = None
 
+class IndividualSession(BaseModel):
+    session_start: datetime
+    session_end: datetime
+    total_questions: int
+    correct_answers: int
+    incorrect_answers: int
+    accuracy: float
+    duration_minutes: float
+    tags: List[str] = []
+
 class TagProgress(BaseModel):
     tag: str
     total_questions: int
@@ -41,7 +51,7 @@ class OverallProgress(BaseModel):
 
 class UserProgress(BaseModel):
     current_session: SessionStats
-    last_session: Optional[DailySessionHistory] = None
+    last_session: Optional[IndividualSession] = None
     overall: OverallProgress
     streak_days: int = 0
     session_history: List[DailySessionHistory] = []

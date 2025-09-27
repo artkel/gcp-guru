@@ -30,7 +30,8 @@
       "Bash(pip install:*)",
       "Bash(export GCS_BUCKET_NAME=\"dev-bucket\")",
       "Bash(jq:*)",
-      "Bash(xargs kill:*)"
+      "Bash(xargs kill:*)",
+      "Bash(for i in {1..3})"
     ],
     "deny": [],
     "ask": []

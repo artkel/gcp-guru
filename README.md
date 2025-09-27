@@ -2,18 +2,20 @@
 
 A sophisticated flashcard learning application for Google Cloud Platform Professional Cloud Architect certification preparation, featuring AI-powered explanations, interactive session history charts, and comprehensive progress tracking.
 
-## ✨ Latest Updates (v2.1)
+## ✨ Latest Updates (v2.2)
 
-- **🧠 Case Study Integration**: Questions related to official GCP case studies now include the full text of the case study, which can be viewed in a modal or a new window directly from the question screen. The AI assistant is provided with this context for more accurate explanations.
-- **🎯 Next.js Migration**: Complete frontend rewrite with modern React components.
-- **📊 Interactive Session History**: Visual charts showing daily progress.
-- **🎨 Modern UI Components**: Clean, accessible design with Radix UI and Tailwind CSS.
-- **🔄 Session Persistence**: Seamless page refresh experience.
-- **⚙️ Selective Progress Reset**: Granular control over resetting progress data.
+- **🔀 Answer Shuffling**: Revolutionary answer randomization system to prevent answer memorization and promote true understanding.
+- **📊 Mastery Progress Bar**: New visual stacked progress bar showing overall mastery distribution with color-coded categories.
+- **📈 Enhanced Session Tracking**: Individual session history with accurate last session display (no more daily aggregation confusion).
+- **🏷️ Auto-tagging System**: Automatic "case-study" tag detection and addition for questions with case study content.
+- **🎯 Modern UI Components**: Enhanced switches, improved progress indicators, and optimized chart performance.
+- **☁️ Cloud-Ready Infrastructure**: Full GCS integration for all data persistence modules including individual sessions.
 
 ## Features
 
 ### 🎯 **Smart Learning System**
+- **Answer Shuffling**: Optional answer randomization to prevent memorization and promote true understanding.
+- **Letter-Free AI**: Advanced AI explanations that work regardless of answer order, eliminating letter-based references.
 - Adaptive question selection based on performance.
 - Spaced repetition algorithm preventing question repetition in the same session.
 - Domain-specific training sessions with customizable tag filtering.
@@ -27,13 +29,15 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 - **Intelligent Caching**: Explanations and hints are cached for performance.
 
 ### 📊 **Advanced Progress Dashboard**
+- **Mastery Progress Bar**: Visual stacked progress bar showing overall mastery distribution.
 - **Enhanced Progress Categories**:
   - 🔴 **Mistakes** (-1): Questions answered incorrectly.
   - 🟡 **Learning** (0-1): Questions being learned.
   - 🟢 **Mastered** (2-3): Well-understood questions.
   - 🟣 **Perfected** (4+): Fully mastered questions (excluded from training).
+- **Individual Session Tracking**: Accurate last session display with individual session history.
 - **Topic-Based Analytics**: Performance tracking by GCP domain.
-- **Interactive Session History Chart**: 30-day visual timeline.
+- **Interactive Session History Chart**: 30-day visual timeline with optimized performance.
 - **Mastery Metrics**: Color-coded progress indicators.
 - **Training Time Tracking**: Total study time with detailed session breakdowns.
 

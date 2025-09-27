@@ -9,6 +9,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from '@/components/ui/Modal';
 import { useConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { SessionHistoryChart, DailySessionHistory } from '@/components/charts/SessionHistoryChart';
+import { StackedProgressBar } from '@/components/charts/StackedProgressBar';
 import { useAppStore } from '@/lib/store';
 import { useProgress, useResetProgress, useClearExplanations, useClearHints } from '@/hooks/useApi';
 import { formatDuration, formatTrainingTime, getMasteryClass } from '@/lib/utils';
@@ -146,7 +147,7 @@ export function ProgressScreen() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Date:</span>
-                      <span>{new Date(progress.last_session.date).toLocaleDateString()}</span>
+                      <span>{new Date(progress.last_session.session_start).toLocaleDateString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Questions:</span>
@@ -220,7 +221,7 @@ export function ProgressScreen() {
                   </div>
                   <div className="text-center p-3 bg-secondary rounded-lg">
                     <div className="text-2xl font-bold">{formatTrainingTime(progress.overall.total_training_time_minutes)}</div>
-                    <div className="text-xs text-muted-foreground">Training Time</div>
+                    <div className="text-xs text-muted-foreground">Total Training Time</div>
                   </div>
                 </div>
 
@@ -243,6 +244,19 @@ export function ProgressScreen() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Overall Progress Bar */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <BarChart3 className="h-5 w-5" />
+                <span>Mastery Progress</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <StackedProgressBar progress={progress.overall} />
+            </CardContent>
+          </Card>
 
           {/* Progress by Topic */}
           <Card>

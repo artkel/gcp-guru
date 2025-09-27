@@ -21,7 +21,7 @@ import {
   useSkipQuestion,
 } from '@/hooks/useApi';
 import { api, APIError } from '@/lib/api';
-import { Question, QuestionResponse, CaseStudyResponse } from '@/types';
+import { Question, QuestionResponse, CaseStudyResponse, ShuffledQuestion, ShuffledQuestionResponse } from '@/types';
 import { cn, formatSessionTimer } from '@/lib/utils';
 
 export function TrainingScreen() {
@@ -38,10 +38,11 @@ export function TrainingScreen() {
     setIsLoading,
     stopSessionTimer,
     resetSessionStats,
+    useShuffledQuestions,
   } = useAppStore();
 
   const [questionAnswered, setQuestionAnswered] = useState(false);
-  const [answerResult, setAnswerResult] = useState<QuestionResponse | null>(null);
+  const [answerResult, setAnswerResult] = useState<QuestionResponse | ShuffledQuestionResponse | null>(null);
   const [showHintModal, setShowHintModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showSessionComplete, setShowSessionComplete] = useState(false);
@@ -51,6 +52,7 @@ export function TrainingScreen() {
   const [explanation, setExplanation] = useState<string>('');
   const [showExplanation, setShowExplanation] = useState(false);
   const [caseStudyData, setCaseStudyData] = useState<CaseStudyResponse | null>(null);
+  const [originalMapping, setOriginalMapping] = useState<Record<string, string>>({});
 
   // Confirmation dialog hook
   const { showConfirm, ConfirmDialog } = useConfirmDialog();
@@ -72,8 +74,19 @@ export function TrainingScreen() {
   const loadNextQuestion = async () => {
     setIsLoading(true);
     try {
-      const question = await api.questions.getRandom(selectedDomains || undefined);
+      const question = useShuffledQuestions
+        ? await api.questions.getRandomShuffled(selectedDomains || undefined)
+        : await api.questions.getRandom(selectedDomains || undefined);
+
       setCurrentQuestion(question);
+
+      // Store original mapping if using shuffled questions
+      if (useShuffledQuestions && 'original_mapping' in question) {
+        setOriginalMapping(question.original_mapping);
+      } else {
+        setOriginalMapping({});
+      }
+
       setSelectedAnswers(new Set());
       setQuestionAnswered(false);
       setAnswerResult(null);
@@ -133,10 +146,16 @@ export function TrainingScreen() {
 
     setIsLoading(true);
     try {
-      const result = await submitAnswer(
-        currentQuestion.question_number,
-        Array.from(selectedAnswers)
-      );
+      const result = useShuffledQuestions && Object.keys(originalMapping).length > 0
+        ? await api.questions.submitShuffledAnswer(
+            currentQuestion.question_number,
+            Array.from(selectedAnswers),
+            originalMapping
+          )
+        : await submitAnswer(
+            currentQuestion.question_number,
+            Array.from(selectedAnswers)
+          );
 
       setAnswerResult(result);
       setQuestionAnswered(true);

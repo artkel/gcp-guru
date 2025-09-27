@@ -26,6 +26,7 @@ export const useAppStore = create<AppState>()(
       // Training state
       selectedDomains: null,
       availableTags: [],
+      useShuffledQuestions: true,
 
       // User data
       userProgress: null,
@@ -58,6 +59,8 @@ export const useAppStore = create<AppState>()(
       setSelectedDomains: (domains) => set({ selectedDomains: domains }),
 
       setAvailableTags: (tags) => set({ availableTags: tags }),
+
+      setUseShuffledQuestions: (useShuffled) => set({ useShuffledQuestions: useShuffled }),
 
       setUserProgress: (progress) => set({ userProgress: progress }),
 
@@ -138,6 +141,7 @@ export const useAppStore = create<AppState>()(
         currentScreen: state.currentScreen,
         sessionStats: state.sessionStats,
         selectedDomains: state.selectedDomains,
+        useShuffledQuestions: state.useShuffledQuestions,
         currentQuestion: state.currentQuestion,
         selectedAnswers: state.selectedAnswers, // Will be converted by replacer
       }),

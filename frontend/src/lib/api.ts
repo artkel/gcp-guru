@@ -1,4 +1,4 @@
-import { Question, QuestionResponse, AnswerSubmission, UserProgress, CaseStudyResponse } from '@/types';
+import { Question, QuestionResponse, AnswerSubmission, UserProgress, CaseStudyResponse, ShuffledQuestion, AnswerSubmissionWithMapping, ShuffledQuestionResponse } from '@/types';
 
 // For production, use the backend URL directly; for development, use relative path
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -61,6 +61,17 @@ export const api = {
       return request<Question>(`/questions/random${params}${cacheBuster}`);
     },
 
+    getRandomShuffled: async (tags?: string[]): Promise<ShuffledQuestion> => {
+      let params = '';
+      if (tags && tags.length > 0) {
+        const urlParams = new URLSearchParams();
+        tags.forEach(tag => urlParams.append('tags', tag));
+        params = `?${urlParams.toString()}`;
+      }
+      const cacheBuster = params ? `&_t=${Date.now()}` : `?_t=${Date.now()}`;
+      return request<ShuffledQuestion>(`/questions/random-shuffled${params}${cacheBuster}`);
+    },
+
     getList: async (filters: {
       tags?: string[];
       search?: string;
@@ -96,6 +107,22 @@ export const api = {
           selected_answers: selectedAnswers,
           request_explanation: requestExplanation,
         } as AnswerSubmission),
+      });
+    },
+
+    submitShuffledAnswer: async (
+      questionId: number,
+      selectedAnswers: string[],
+      originalMapping: Record<string, string>,
+      requestExplanation = false
+    ): Promise<ShuffledQuestionResponse> => {
+      return request<ShuffledQuestionResponse>(`/questions/${questionId}/answer-shuffled`, {
+        method: 'POST',
+        body: JSON.stringify({
+          selected_answers: selectedAnswers,
+          original_mapping: originalMapping,
+          request_explanation: requestExplanation,
+        } as AnswerSubmissionWithMapping),
       });
     },
 

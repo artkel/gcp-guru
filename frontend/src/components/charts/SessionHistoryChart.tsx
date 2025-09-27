@@ -65,16 +65,16 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const renderCustomizedLabel = React.memo((props: any) => {
-  const { x, y, width, value, height } = props;
+const renderCustomizedLabel = (props: any) => {
+  const { x, y, width, value } = props;
   if (value > 0) {
     return (
       <text
         x={x + width / 2}
-        y={y - 10}
+        y={y}
+        dy={-4}
         fontSize={12}
         textAnchor="middle"
-        dominantBaseline="text-after-edge" // Added this
         fill="hsl(var(--muted-foreground))"
       >
         {value}
@@ -82,11 +82,11 @@ const renderCustomizedLabel = React.memo((props: any) => {
     );
   }
   return null;
-});
+};
 
 export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps) {
   // Generate last 30 days data
-  const chartData = React.useMemo((): ChartData[] => {
+  const generateChartData = (): ChartData[] => {
     const today = new Date();
     const chartData: ChartData[] = [];
 
@@ -113,7 +113,9 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
     }
 
     return chartData;
-  }, [sessionHistory]);
+  };
+
+  const chartData = generateChartData();
   const hasData = chartData.some(d => d.total > 0);
 
   if (!hasData) {

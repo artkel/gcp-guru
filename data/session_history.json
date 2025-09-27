@@ -1,36 +1,22 @@
 [
   {
-    "date": "2025-09-25",
-    "total_questions": 50,
-    "correct_answers": 24,
-    "incorrect_answers": 26,
-    "accuracy": 48.0,
-    "duration_minutes": 6.895352099999999,
-    "tags": [
-      "monitoring",
-      "data-analytics",
-      "cost-optimization",
-      "case-study",
-      "autoscaling",
-      "networking",
-      "compute",
-      "storage"
-    ]
-  },
-  {
     "date": "2025-09-27",
-    "total_questions": 5,
-    "correct_answers": 1,
-    "incorrect_answers": 4,
-    "accuracy": 20.0,
-    "duration_minutes": 894.22578985,
+    "total_questions": 43,
+    "correct_answers": 11,
+    "incorrect_answers": 32,
+    "accuracy": 25.581395348837212,
+    "duration_minutes": 11.179632933333334,
     "tags": [
-      "security",
       "storage",
+      "case-study",
       "monitoring",
+      "cost-optimization",
+      "compute",
       "data-analytics",
-      "migration",
-      "case-study"
+      "networking",
+      "security",
+      "devops",
+      "migration"
     ]
   }
 ]

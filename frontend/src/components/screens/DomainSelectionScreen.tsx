@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Switch } from '@/components/ui/Switch';
 import { useAppStore } from '@/lib/store';
 import { useAvailableTags, useStartNewSession } from '@/hooks/useApi';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,8 @@ export function DomainSelectionScreen() {
     isLoading,
     resetSessionStats,
     startSessionTimer,
+    useShuffledQuestions,
+    setUseShuffledQuestions,
   } = useAppStore();
 
   const { data: tagsData, isLoading: tagsLoading } = useAvailableTags();
@@ -189,6 +192,31 @@ export function DomainSelectionScreen() {
                     <span className="text-sm font-medium capitalize">{tag}</span>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Answer Shuffling Options */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shuffle className="h-5 w-5" />
+                Answer Shuffling
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="font-medium">Shuffle answer positions</p>
+                  <p className="text-sm text-muted-foreground">
+                    Randomize A, B, C, D positions to prevent memorization by position
+                  </p>
+                </div>
+                <Switch
+                  checked={useShuffledQuestions}
+                  onCheckedChange={setUseShuffledQuestions}
+                  size="md"
+                />
               </div>
             </CardContent>
           </Card>

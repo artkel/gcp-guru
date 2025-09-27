@@ -32,7 +32,7 @@ class AIService:
             raise ValueError("GOOGLE_API_KEY environment variable not set")
 
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash-lite') # do not change this model!
+        self.model = genai.GenerativeModel('gemini-2.5-flash') # do not change this model - gemini-2.5-flash!
 
     def _load_case_study_content(self, case_study_name: str) -> str:
         """Load case study content from a markdown file."""
