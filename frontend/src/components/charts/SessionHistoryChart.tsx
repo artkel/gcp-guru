@@ -65,28 +65,28 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const renderCustomizedLabel = (props: any) => {
-  const { x, y, width, value } = props;
+const renderCustomizedLabel = React.memo((props: any) => {
+  const { x, y, width, value, height } = props;
   if (value > 0) {
     return (
       <text
         x={x + width / 2}
-        y={y}
-        dy={-4}
+        y={y - 10} // Increased offset to place label above the bar
         fontSize={12}
         textAnchor="middle"
         fill="hsl(var(--muted-foreground))"
+        className="pointer-events-none"
       >
         {value}
       </text>
     );
   }
   return null;
-};
+});
 
 export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps) {
   // Generate last 30 days data
-  const generateChartData = (): ChartData[] => {
+  const chartData = React.useMemo((): ChartData[] => {
     const today = new Date();
     const chartData: ChartData[] = [];
 
@@ -113,9 +113,7 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
     }
 
     return chartData;
-  };
-
-  const chartData = generateChartData();
+  }, [sessionHistory]);
   const hasData = chartData.some(d => d.total > 0);
 
   if (!hasData) {
