@@ -71,11 +71,11 @@ const renderCustomizedLabel = React.memo((props: any) => {
     return (
       <text
         x={x + width / 2}
-        y={y - 10} // Increased offset to place label above the bar
+        y={y - 10}
         fontSize={12}
         textAnchor="middle"
+        dominantBaseline="text-after-edge" // Added this
         fill="hsl(var(--muted-foreground))"
-        className="pointer-events-none"
       >
         {value}
       </text>
