@@ -199,17 +199,21 @@ export function ProgressScreen() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-secondary rounded-lg">
+                  <div className="text-center p-3 bg-background border border-border rounded-lg">
                     <div className="text-2xl font-bold">{progress.overall.total_questions}</div>
                     <div className="text-xs text-muted-foreground">Total Questions</div>
                   </div>
-                  <div className="text-center p-3 bg-destructive/10 rounded-lg">
-                    <div className="text-2xl font-bold text-destructive">{progress.overall.mistakes_count}</div>
-                    <div className="text-xs text-muted-foreground">Mistakes</div>
+                  <div className="text-center p-3 bg-background border border-border rounded-lg">
+                    <div className="text-2xl font-bold">{formatTrainingTime(progress.overall.total_training_time_minutes)}</div>
+                    <div className="text-xs text-muted-foreground">Total Training Time</div>
                   </div>
                   <div className="text-center p-3 bg-secondary rounded-lg">
                     <div className="text-2xl font-bold">{progress.overall.learning_count}</div>
                     <div className="text-xs text-muted-foreground">Learning</div>
+                  </div>
+                  <div className="text-center p-3 bg-destructive/10 rounded-lg">
+                    <div className="text-2xl font-bold text-destructive">{progress.overall.mistakes_count}</div>
+                    <div className="text-xs text-muted-foreground">Mistakes</div>
                   </div>
                   <div className="text-center p-3 bg-success/10 rounded-lg">
                     <div className="text-2xl font-bold text-success">{progress.overall.mastered_count}</div>
@@ -218,10 +222,6 @@ export function ProgressScreen() {
                   <div className="text-center p-3 bg-purple-500/10 rounded-lg">
                     <div className="text-2xl font-bold text-purple-600">{progress.overall.perfected_count}</div>
                     <div className="text-xs text-muted-foreground">Perfected</div>
-                  </div>
-                  <div className="text-center p-3 bg-secondary rounded-lg">
-                    <div className="text-2xl font-bold">{formatTrainingTime(progress.overall.total_training_time_minutes)}</div>
-                    <div className="text-xs text-muted-foreground">Total Training Time</div>
                   </div>
                 </div>
 

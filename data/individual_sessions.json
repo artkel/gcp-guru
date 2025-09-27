@@ -53,5 +53,21 @@
       "networking",
       "data-analytics"
     ]
+  },
+  {
+    "session_start": "2025-09-27T23:38:26.003916",
+    "session_end": "2025-09-27T23:40:27.645542",
+    "total_questions": 3,
+    "correct_answers": 0,
+    "incorrect_answers": 3,
+    "accuracy": 0.0,
+    "duration_minutes": 2.0273604333333335,
+    "tags": [
+      "networking",
+      "case-study",
+      "data-analytics",
+      "cost-optimization",
+      "devops"
+    ]
   }
 ]
