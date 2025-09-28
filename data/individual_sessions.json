@@ -69,5 +69,115 @@
       "cost-optimization",
       "devops"
     ]
+  },
+  {
+    "session_start": "2025-09-28T13:43:44.253635",
+    "session_end": "2025-09-28T13:44:48.545364",
+    "total_questions": 10,
+    "correct_answers": 3,
+    "incorrect_answers": 7,
+    "accuracy": 30.0,
+    "duration_minutes": 1.0715288166666668,
+    "tags": [
+      "migration",
+      "monitoring",
+      "case-study",
+      "security",
+      "devops",
+      "storage",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T13:45:49.059130",
+    "session_end": "2025-09-28T13:46:22.423023",
+    "total_questions": 8,
+    "correct_answers": 2,
+    "incorrect_answers": 6,
+    "accuracy": 25.0,
+    "duration_minutes": 0.5560648833333333,
+    "tags": [
+      "networking",
+      "case-study",
+      "cost-optimization",
+      "security",
+      "storage",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T13:47:33.610482",
+    "session_end": "2025-09-28T13:48:32.919493",
+    "total_questions": 6,
+    "correct_answers": 1,
+    "incorrect_answers": 5,
+    "accuracy": 16.666666666666664,
+    "duration_minutes": 0.9884835166666667,
+    "tags": [
+      "case-study",
+      "data-analytics",
+      "security",
+      "storage",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T14:06:17.505070",
+    "session_end": "2025-09-28T14:06:29.094009",
+    "total_questions": 3,
+    "correct_answers": 1,
+    "incorrect_answers": 2,
+    "accuracy": 33.33333333333333,
+    "duration_minutes": 0.19314898333333333,
+    "tags": [
+      "compute",
+      "security",
+      "storage"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T14:06:50.897546",
+    "session_end": "2025-09-28T14:07:04.477938",
+    "total_questions": 3,
+    "correct_answers": 0,
+    "incorrect_answers": 3,
+    "accuracy": 0.0,
+    "duration_minutes": 0.22633986666666667,
+    "tags": [
+      "migration",
+      "devops",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T14:12:27.945985",
+    "session_end": "2025-09-28T14:12:39.032163",
+    "total_questions": 4,
+    "correct_answers": 1,
+    "incorrect_answers": 3,
+    "accuracy": 25.0,
+    "duration_minutes": 0.18476963333333335,
+    "tags": [
+      "security",
+      "migration",
+      "case-study",
+      "storage",
+      "networking",
+      "compute"
+    ]
+  },
+  {
+    "session_start": "2025-09-28T14:33:01.140653",
+    "session_end": "2025-09-28T15:50:55.432433",
+    "total_questions": 1,
+    "correct_answers": 0,
+    "incorrect_answers": 1,
+    "accuracy": 0.0,
+    "duration_minutes": 77.90486299999999,
+    "tags": [
+      "security",
+      "case-study",
+      "compute"
+    ]
   }
 ]

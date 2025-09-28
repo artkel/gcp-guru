@@ -18,5 +18,25 @@
       "storage",
       "compute"
     ]
+  },
+  {
+    "date": "2025-09-28",
+    "total_questions": 35,
+    "correct_answers": 8,
+    "incorrect_answers": 27,
+    "accuracy": 22.857142857142858,
+    "duration_minutes": 81.12500646666666,
+    "tags": [
+      "security",
+      "migration",
+      "case-study",
+      "storage",
+      "monitoring",
+      "devops",
+      "networking",
+      "cost-optimization",
+      "data-analytics",
+      "compute"
+    ]
   }
 ]
