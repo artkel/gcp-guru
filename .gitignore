@@ -74,6 +74,7 @@ logs/
 #data/*.json
 #!data/sample_*.json
 data/session_history.json
+data/individual_sessions.json
 data/gcp-pca-questions.json
 
 
