@@ -75,6 +75,7 @@ logs/
 #!data/sample_*.json
 data/session_history.json
 data/gcp-pca-questions.json
+data/individual_sessions.json
 
 
 # Temporary files
