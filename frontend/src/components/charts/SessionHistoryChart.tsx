@@ -157,6 +157,7 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
             name="Correct"
             fill="hsl(var(--success))"
             radius={[0, 0, 0, 0]}
+            isAnimationActive={false}
           />
           <Bar
             dataKey="incorrect"
@@ -164,8 +165,9 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
             name="Incorrect"
             fill="hsl(var(--destructive))"
             radius={[2, 2, 0, 0]}
+            isAnimationActive={false}
           >
-            <LabelList dataKey="total" content={renderCustomizedLabel} />
+            <LabelList dataKey="total" content={renderCustomizedLabel} isAnimationActive={false} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
