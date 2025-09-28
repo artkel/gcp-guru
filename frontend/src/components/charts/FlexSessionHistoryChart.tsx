@@ -116,13 +116,6 @@ export function FlexSessionHistoryChart({ sessionHistory }: FlexSessionHistoryCh
                 >
                   {day.total > 0 && (
                     <>
-                      {/* Total label above bar */}
-                      <div
-                        className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground font-medium"
-                      >
-                        {day.total}
-                      </div>
-
                       {/* Stacked bars */}
                       <div
                         className="w-full bg-destructive rounded-t-sm"
@@ -132,6 +125,13 @@ export function FlexSessionHistoryChart({ sessionHistory }: FlexSessionHistoryCh
                         className="w-full bg-success"
                         style={{ height: `${correctHeight}%` }}
                       />
+
+                      {/* Total label above bar */}
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 text-xs text-muted-foreground font-medium"
+                      >
+                        {day.total}
+                      </div>
                     </>
                   )}
                 </div>
