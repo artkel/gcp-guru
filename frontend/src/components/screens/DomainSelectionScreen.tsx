@@ -72,7 +72,7 @@ export function DomainSelectionScreen() {
     return () => {
       isCancelled = true;
     };
-  }, []); // Only run once on mount
+  }, [setSelectedDomains]); // Only run once on mount
 
   const handleDomainToggle = (domain: string) => {
     if (allDomainsSelected) {

@@ -69,7 +69,7 @@ export function TrainingScreen() {
     if (!currentQuestion) {
       loadNextQuestion();
     }
-  }, []); // Only run on mount, not when currentQuestion changes
+  }, [currentQuestion, loadNextQuestion]);
 
   const loadNextQuestion = async () => {
     setIsLoading(true);
