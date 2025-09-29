@@ -75,7 +75,9 @@ logs/
 #!data/sample_*.json
 data/session_history.json
 data/individual_sessions.json
-data/gcp-pca-questions.json
+
+# Deployment script with API key
+build_and_deploy.sh
 
 
 # Temporary files

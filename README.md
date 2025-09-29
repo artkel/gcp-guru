@@ -2,14 +2,14 @@
 
 A sophisticated flashcard learning application for Google Cloud Platform Professional Cloud Architect certification preparation, featuring AI-powered explanations, interactive session history charts, and comprehensive progress tracking.
 
-## ✨ Latest Updates (v2.2)
+## ✨ Latest Updates (v2.3)
 
+- **🚀 Production-Ready Architecture**: Major infrastructure upgrade for robustness and security.
+- **⚡️ Firestore Database**: Migrated all transactional data (questions, user progress) to Firestore for improved performance and data integrity.
+- **🔒 Secret Manager**: Gemini API keys are now securely stored and managed via Google Secret Manager.
+- **🤖 Automated CI/CD**: New automated deployment pipeline using **Cloud Build**, triggered on every push to the main branch.
+- **🛡️ Secure Backend**: The backend service is now private and only accessible via the frontend, using service-to-service authentication.
 - **🔀 Answer Shuffling**: Revolutionary answer randomization system to prevent answer memorization and promote true understanding.
-- **📊 Mastery Progress Bar**: New visual stacked progress bar showing overall mastery distribution with color-coded categories.
-- **📈 Enhanced Session Tracking**: Individual session history with accurate last session display (no more daily aggregation confusion).
-- **🏷️ Auto-tagging System**: Automatic "case-study" tag detection and addition for questions with case study content.
-- **🎯 Modern UI Components**: Enhanced switches, improved progress indicators, and optimized chart performance.
-- **☁️ Cloud-Ready Infrastructure**: Full GCS integration for all data persistence modules including individual sessions.
 
 ## Features
 
@@ -26,7 +26,7 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 - **Case Study Context**: For relevant questions, the AI is provided with the full text of the corresponding GCP case study (e.g., Mountkirk Games, TerramEarth) for more precise and context-aware explanations.
 - **Smart Hints**: Contextual hints without revealing answers.
 - **Content Regeneration**: Get alternative explanations with different perspectives.
-- **Intelligent Caching**: Explanations and hints are cached for performance.
+- **Intelligent Caching**: Explanations and hints are cached in Firestore for performance.
 
 ### 📊 **Advanced Progress Dashboard**
 - **Mastery Progress Bar**: Visual stacked progress bar showing overall mastery distribution.
@@ -50,19 +50,24 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 ### 🚀 **Modern Tech Stack**
 - **Backend**: FastAPI with Python.
 - **Frontend**: Next.js 14 with TypeScript and React 18.
+- **Database**: **Google Firestore** for all transactional data.
+- **Static Storage**: **Google Cloud Storage** for case study assets.
+- **CI/CD**: **Google Cloud Build** for automated deployments.
+- **Secret Management**: **Google Secret Manager**.
+- **Compute**: **Google Cloud Run** with cost-optimized scaling.
 - **State Management**: Zustand with localStorage persistence.
 - **UI Components**: Radix UI primitives with Tailwind CSS.
-- **AI Integration**: Google Gemini API.
-- **Cloud Deployment**: Google Cloud Run with cost-optimized scaling.
 
 ## Quick Start
 
 ### Prerequisites
 - **Node.js** 18+ (for frontend)
 - **Python** 3.8+ (for backend)
-- **Google Gemini API key**
+- **Google Gemini API key** (for local development)
 
 ### Local Installation
+
+The local development setup remains the same and is perfect for feature development and testing.
 
 1.  **Clone the repository**:
     ```bash
@@ -73,11 +78,11 @@ A sophisticated flashcard learning application for Google Cloud Platform Profess
 2.  **Set up backend environment**:
     ```bash
     cd backend
-    python -m venv venv
+    python3 -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     pip install -r requirements.txt
     
-    # Create .env file in the /backend directory
+    # Create .env file in the /backend directory for local development
     echo "GOOGLE_API_KEY=your_gemini_api_key_here" > .env
     cd ..
     ```
@@ -106,62 +111,45 @@ The project is a monorepo with a separate `backend` and `frontend`.
 ```
 gcp-guru/
 ├── backend/
-│   ├── services/
-│   │   ├── ai_service.py      # Gemini AI integration & prompt generation
-│   │   └── ...
-│   ├── main.py                # FastAPI application entry point
-│   ├── .env                   # Backend environment configuration
+│   ├── services/            # Core application logic
+│   ├── main.py              # FastAPI application entry point
 │   └── ...
 ├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   │   ├── screens/       # Main application screens (TrainingScreen, etc.)
-│   │   │   └── ui/            # Reusable UI (Modal, CaseStudyModal, etc.)
-│   │   ├── lib/
-│   │   │   └── api.ts         # Frontend API client
-│   │   └── ...
-│   ├── next.config.js         # Next.js proxy configuration for local dev
+│   ├── src/                 # Next.js source code
 │   └── ...
-├── data/
-│   ├── gcp-pca-questions.json # Sample question database (public version contains 10 demo questions)
-│   └── ...
+├── data/                    # Local data for seeding Firestore
 ├── documentation/
 │   ├── DEPLOYMENT_GUIDE.md
-│   ├── mountkirk_games.md     # Case study documents for the AI
 │   └── ...
-├── deploy.sh                  # Automated deployment script
-└── README.md                  # This file
+├── cloudbuild.yaml          # CI/CD pipeline configuration
+└── README.md                # This file
 ```
-
-**Note on `data/gcp-pca-questions.public.json`**: The version of this file in the public repository is a sample containing only 10 questions for testing and demonstration purposes. The full question set is not included.
 
 ## Cloud Deployment
 
-The application is designed for easy deployment on Google Cloud Platform.
-- **Backend**: FastAPI on Cloud Run.
-- **Frontend**: Next.js on Cloud Run.
-- **Storage**: Google Cloud Storage for question data and session history.
+The application is deployed on a robust, production-ready GCP architecture.
 
-The deployed application uses the default URL provided by Cloud Run (e.g., `https://gcp-guru-frontend-....a.run.app`). Custom domain mapping is not used as it is not available in all Cloud Run regions.
+- **Automated Deployments**: The entire deployment process is automated via a **Cloud Build** CI/CD pipeline. To deploy any changes, simply push your commits to the `main` branch.
+- **Infrastructure**: 
+  - **Backend**: Private FastAPI service on **Cloud Run**.
+  - **Frontend**: Public Next.js service on **Cloud Run**.
+  - **Database**: **Firestore** stores all question and user progress data.
+  - **Static Files**: **Cloud Storage** hosts the case study markdown files.
+  - **Secrets**: The Gemini API key is securely stored in **Secret Manager**.
 
-For detailed deployment instructions, see:
-- [`documentation/DEPLOYMENT_GUIDE.md`](documentation/DEPLOYMENT_GUIDE.md) - Complete deployment walkthrough.
-- [`deploy.sh`](deploy.sh) - Automated deployment script.
+For a detailed guide on the one-time setup for the cloud environment, see [`documentation/DEPLOYMENT_GUIDE.md`](documentation/DEPLOYMENT_GUIDE.md).
 
 ## Troubleshooting
 
 ### Common Issues
 
-**AI features not working:**
+**AI features not working (local development):**
 1.  Ensure your `.env` file is in the `backend/` directory.
 2.  Verify your `GOOGLE_API_KEY` is correct.
 3.  Restart the backend server after changing the `.env` file.
 
 **Frontend not connecting to backend (local development):**
 1.  Ensure both services are running via `npm run dev` from the root directory.
-2.  The backend should be on port 8000 and the frontend on 3000.
-3.  The Next.js proxy in `next.config.js` handles the connection automatically. There is no need to configure CORS.
 
 **Cold start delays (Cloud deployment):**
 1.  The first request after a period of inactivity may take 2-3 seconds. This is normal for a cost-optimized configuration that scales to zero.

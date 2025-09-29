@@ -31,7 +31,11 @@
       "Bash(export GCS_BUCKET_NAME=\"dev-bucket\")",
       "Bash(jq:*)",
       "Bash(xargs kill:*)",
-      "Bash(for i in {1..3})"
+      "Bash(for i in {1..3})",
+      "Bash(gcloud auth:*)",
+      "Bash(printf \"4/0AVGzR1C9PIrCNl8FFKm5fwKj6llAgcvjxWTlQ-AMEvxi2Jb4xHEgmerxZz_-Iy90lFGVHA\\n\")",
+      "Bash(echo:*)",
+      "Bash(./build_and_deploy.sh)"
     ],
     "deny": [],
     "ask": []
