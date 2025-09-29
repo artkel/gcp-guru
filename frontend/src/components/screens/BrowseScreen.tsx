@@ -12,9 +12,12 @@ import { useAppStore } from '@/lib/store';
 import { useQuestions, useAvailableTags } from '@/hooks/useApi';
 import { Question } from '@/types';
 import { cn, debounce } from '@/lib/utils';
+import { useSWRConfig } from 'swr';
+import { api } from '@/lib/api';
 
 export function BrowseScreen() {
   const { setCurrentScreen } = useAppStore();
+  const { mutate } = useSWRConfig();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
@@ -24,11 +27,39 @@ export function BrowseScreen() {
   const [showQuestionModal, setShowQuestionModal] = useState(false);
 
   const { data: tagsData } = useAvailableTags();
-  const { data: questions, isLoading } = useQuestions({
+  const { data: questions, isLoading, mutate: mutateQuestions } = useQuestions({
     search: searchTerm,
     tags: selectedTag ? [selectedTag] : undefined,
     starred_only: starredOnly,
   });
+
+  const handleToggleStar = async (e: React.MouseEvent, questionNumber: number, currentStarredStatus: boolean) => {
+    e.stopPropagation(); // Prevent card click event
+
+    // Optimistic UI update for the list
+    const updatedQuestions = questions?.map(q =>
+      q.question_number === questionNumber ? { ...q, starred: !currentStarredStatus } : q
+    );
+    mutateQuestions(updatedQuestions, false);
+
+    // Optimistic UI update for the modal if it's open and matches the question
+    if (selectedQuestion && selectedQuestion.question_number === questionNumber) {
+      setSelectedQuestion({ ...selectedQuestion, starred: !currentStarredStatus });
+    }
+
+    try {
+      await api.questions.toggleStar(questionNumber, !currentStarredStatus);
+      // Revalidate to ensure data consistency
+      mutate(['questions', searchTerm, selectedTag, starredOnly]);
+    } catch (error) {
+      // Revert on error
+      mutateQuestions(questions, false);
+      if (selectedQuestion && selectedQuestion.question_number === questionNumber) {
+        setSelectedQuestion(selectedQuestion);
+      }
+      console.error("Failed to update star status:", error);
+    }
+  };
 
   // Debounced search handler
   const debouncedSearch = debounce((value: string) => {
@@ -76,12 +107,19 @@ export function BrowseScreen() {
                   ))}
                 </div>
                 <div className="flex items-center space-x-4">
-                  {selectedQuestion.starred && (
-                    <div className="flex items-center space-x-1 text-yellow-500">
-                      <Star className="h-4 w-4 fill-current" />
-                      <span className="text-sm">Starred</span>
-                    </div>
-                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-full"
+                    onClick={(e) => handleToggleStar(e, selectedQuestion.question_number, selectedQuestion.starred)}
+                  >
+                    <Star 
+                      className={cn(
+                        "h-5 w-5",
+                        selectedQuestion.starred ? "text-yellow-500 fill-current" : "text-muted-foreground"
+                      )}
+                    />
+                  </Button>
                   <div className="text-sm text-muted-foreground">
                     Score: <span className="font-medium">{selectedQuestion.score}</span>
                   </div>
@@ -242,9 +280,19 @@ export function BrowseScreen() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-4">
-                          {question.starred && (
-                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={(e) => handleToggleStar(e, question.question_number, question.starred)}
+                          >
+                            <Star 
+                              className={cn(
+                                "h-4 w-4",
+                                question.starred ? "text-yellow-500 fill-current" : "text-muted-foreground"
+                              )}
+                            />
+                          </Button>
                           {question.note && (
                             <FileText className="h-4 w-4 text-blue-500" />
                           )}

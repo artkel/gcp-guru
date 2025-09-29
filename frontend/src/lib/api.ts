@@ -141,31 +141,9 @@ export const api = {
     toggleStar: async (
       questionId: number,
       starred: boolean
-    ): Promise<{ success: boolean; starred: boolean }> => {
-      return request<{ success: boolean; starred: boolean }>(
+    ): Promise<{ success: boolean; starred: boolean; }> => {
+      return request<{ success: boolean; starred: boolean; }>(
         `/questions/${questionId}/star?starred=${starred}`,
-        {
-          method: 'POST',
-        }
-      );
-    },
-
-    updateNote: async (
-      questionId: number,
-      note: string
-    ): Promise<{ success: boolean; note: string }> => {
-      const encodedNote = encodeURIComponent(note);
-      return request<{ success: boolean; note: string }>(
-        `/questions/${questionId}/note?note=${encodedNote}`,
-        {
-          method: 'POST',
-        }
-      );
-    },
-
-    skip: async (questionId: number): Promise<{ success: boolean; skipped: boolean }> => {
-      return request<{ success: boolean; skipped: boolean }>(
-        `/questions/${questionId}/skip`,
         {
           method: 'POST',
         }
