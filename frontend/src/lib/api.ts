@@ -149,6 +149,18 @@ export const api = {
         }
       );
     },
+
+    updateNote: async (
+      questionId: number,
+      note: string
+    ): Promise<{ success: boolean; note: string; }> => {
+      return request<{ success: boolean; note: string; }>(
+        `/questions/${questionId}/note?note=${encodeURIComponent(note)}`,
+        {
+          method: 'POST',
+        }
+      );
+    },
   },
 
   // Tags endpoint
