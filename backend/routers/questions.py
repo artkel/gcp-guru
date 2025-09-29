@@ -192,7 +192,7 @@ async def get_hint(question_id: int):
     # Save the generated hint to the question
     if hint != question.hint:
         question.hint = hint
-        question_service.save_questions()
+        question_service.save_question(question)
 
     return {"hint": hint}
 
@@ -211,7 +211,7 @@ async def get_explanation(question_id: int, regenerate: bool = Query(False)):
     # Save the generated explanation to the question
     if explanation != question.explanation:
         question.explanation = explanation
-        question_service.save_questions()
+        question_service.save_question(question)
 
     return {"explanation": explanation}
 

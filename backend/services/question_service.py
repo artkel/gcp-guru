@@ -4,48 +4,55 @@ from typing import List, Optional, Dict
 from models.question import Question, Answer, ShuffledQuestion
 from services.answer_shuffler import AnswerShuffler
 import os
-from services.gcs_service import download_json_from_gcs, upload_json_to_gcs, blob_exists
+from services.firestore_service import get_all_documents, set_document
 
 class QuestionService:
     def __init__(self):
         self.questions: List[Question] = []
         self._questions_loaded = False
+        self.questions_collection = "questions"
 
     def _ensure_questions_loaded(self):
-        """Ensure questions are loaded from GCS (lazy loading)"""
+        """Ensure questions are loaded from Firestore (lazy loading)"""
         if not self._questions_loaded:
             self.load_questions()
             self._questions_loaded = True
 
     def load_questions(self):
-        """Load questions from GCS bucket with local fallback"""
-        blob_name = 'gcp-pca-questions.json'
-
-        # Try loading from GCS first
+        """Load questions from Firestore with a local fallback for development."""
         try:
-            if blob_exists(blob_name):
-                data = download_json_from_gcs(blob_name)
-                if data:
-                    self._parse_questions_data(data, "GCS")
-                    return
-                else:
-                    print(f"No data found in GCS blob: {blob_name}")
+            # Try loading from Firestore first
+            all_question_data = get_all_documents(self.questions_collection)
+            if all_question_data:
+                self._parse_questions_data(all_question_data, "Firestore")
+                # If loading from Firestore is successful, we might want to populate it
+                # from local if it's empty. This logic can be added in the migration script.
+                if not self.questions:
+                     print("Firestore is empty, falling back to local file to populate.")
+                     self._load_questions_from_local_file(and_save_to_firestore=True)
+                return
             else:
-                print(f"Questions file not found in GCS: {blob_name}")
+                print("No questions found in Firestore, trying to load from local file.")
+                self._load_questions_from_local_file(and_save_to_firestore=True)
+
         except Exception as e:
-            print(f"Error loading questions from GCS: {e}")
+            print(f"Error loading questions from Firestore: {e}. Falling back to local file.")
+            self._load_questions_from_local_file()
 
-        # Fallback to local file
-        self._load_questions_from_local_file()
-
-    def _load_questions_from_local_file(self):
-        """Load questions from local JSON file as fallback"""
+    def _load_questions_from_local_file(self, and_save_to_firestore: bool = False):
+        """Load questions from local JSON file as fallback and optionally save to Firestore."""
         local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'gcp-pca-questions.json')
         try:
             if os.path.exists(local_path):
                 with open(local_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                 self._parse_questions_data(data, "local file")
+
+                if and_save_to_firestore:
+                    print("Saving loaded local questions to Firestore...")
+                    for question in self.questions:
+                        self.save_question(question, skip_local_save=True)
+                    print("Finished saving local questions to Firestore.")
             else:
                 print(f"Local questions file not found: {local_path}")
                 self.questions = []
@@ -53,9 +60,12 @@ class QuestionService:
             print(f"Error loading questions from local file: {e}")
             self.questions = []
 
-    def _parse_questions_data(self, data, source):
-        """Parse question data from JSON and create Question objects"""
+    def _parse_questions_data(self, data: List[Dict], source: str):
+        """Parse question data from a list of dicts and create Question objects"""
         try:
+            # Sort data by question_number to ensure consistent order
+            data.sort(key=lambda x: x.get("question_number", 0))
+            
             parsed_questions = []
             for item in data:
                 # Convert answers to the expected format
@@ -88,31 +98,39 @@ class QuestionService:
                 parsed_questions.append(question)
 
             self.questions = parsed_questions
+            self._questions_loaded = True
             print(f"Loaded {len(self.questions)} questions from {source}")
         except Exception as e:
             print(f"Error parsing questions data from {source}: {e}")
             self.questions = []
 
-    def save_questions(self):
-        """Save questions back to GCS bucket with local fallback"""
-        blob_name = 'gcp-pca-questions.json'
+    def save_question(self, question: Question, skip_local_save: bool = False):
+        """Save a single question to Firestore and optionally to a local file."""
         try:
-            data = [q.dict() for q in self.questions]
+            # Firestore uses the question number as the document ID
+            document_id = str(question.question_number)
+            set_document(self.questions_collection, document_id, question.dict())
 
-            # Try to upload to GCS first
-            gcs_success = upload_json_to_gcs(data, blob_name)
+            # For local development, we can keep saving to the JSON file as well
+            if not skip_local_save:
+                self._save_all_questions_to_local_file()
 
-            if gcs_success:
-                print(f"Successfully saved {len(self.questions)} questions to GCS: {blob_name}")
-            else:
-                # Fallback to saving locally
-                print("GCS upload failed, falling back to local save.")
-                local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', blob_name)
-                with open(local_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                print(f"Successfully saved questions to local file: {local_path}")
         except Exception as e:
-            print(f"Error saving questions: {e}")
+            print(f"Error saving question {question.question_number}: {e}")
+
+    def _save_all_questions_to_local_file(self):
+        """Saves the entire current list of questions to the local JSON file."""
+        blob_name = 'gcp-pca-questions.json'
+        local_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', blob_name)
+        try:
+            # Ensure questions are loaded before saving
+            self._ensure_questions_loaded()
+            data = [q.dict() for q in self.questions]
+            with open(local_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving questions to local file {local_path}: {e}")
+
 
     def get_all_questions(self) -> List[Question]:
         """Get all questions"""
@@ -133,12 +151,7 @@ class QuestionService:
 
         available_questions = progress_service.get_available_questions_for_tags(tags)
 
-        print(f"DEBUG: get_random_question called with tags: {tags}")
-        print(f"DEBUG: Available questions count: {len(available_questions)}")
-        print(f"DEBUG: Available question IDs: {[q.question_number for q in available_questions]}")
-
         if not available_questions:
-            print(f"DEBUG: No available questions for tags {tags}")
             return None
 
         weights = [self._calculate_question_weight(q.score) for q in available_questions]
@@ -148,53 +161,29 @@ class QuestionService:
         else:
             selected_question = random.choices(available_questions, weights=weights, k=1)[0]
 
-        print(f"DEBUG: Selected question: {selected_question.question_number} (score: {selected_question.score})")
         return selected_question
 
     def get_random_shuffled_question(self, tags: Optional[List[str]] = None) -> Optional[ShuffledQuestion]:
         """Get a random question with shuffled answers"""
-        # Get base question using existing logic
         base_question = self.get_random_question(tags)
         if not base_question:
             return None
 
-        # Shuffle answers
         shuffled_question = AnswerShuffler.shuffle_answers(base_question)
         return shuffled_question
 
     def check_answer_with_mapping(self, question_id: int, selected_answers: List[str],
                                 original_mapping: Dict[str, str]) -> Dict:
         """Check answers with reverse mapping to original keys"""
-        # Convert shuffled selections back to original keys
         original_selections = AnswerShuffler.reverse_map_answers(
             selected_answers, original_mapping
         )
-
-        # Use existing logic with original keys
         return self.check_answer(question_id, original_selections)
 
     def _calculate_question_weight(self, score: int) -> float:
-        """Calculate probability weight based on question score
-
-        Score mapping to weights:
-        -1 -> 1.5 (high priority for difficult questions)
-        0  -> 1.0 (normal probability)
-        1  -> 0.65 (reduced probability)
-        2  -> 0.4 (low probability)
-        3  -> 0.2 (very low probability)
-        4+ -> 0.05 (very low probability for mastered questions)
-
-        This creates the desired probability distribution where
-        negative scores get higher probability, positive scores get lower probability
-        """
-        weight_map = {
-            -1: 1.5,
-            0: 1.0,
-            1: 0.65,
-            2: 0.4,
-            3: 0.2
-        }
-        return weight_map.get(score, 0.05)  # Give mastered questions (score >= 4) a very small weight
+        """Calculate probability weight based on question score"""
+        weight_map = { -1: 1.5, 0: 1.0, 1: 0.65, 2: 0.4, 3: 0.2 }
+        return weight_map.get(score, 0.05)
 
     def check_answer(self, question_id: int, selected_answers: List[str]) -> Dict:
         """Check if the submitted answers are correct"""
@@ -204,7 +193,6 @@ class QuestionService:
         if not question:
             return {"error": "Question not found"}
 
-        # Mark question as shown in session when user submits an answer (not during selection)
         progress_service.add_question_to_session(question_id)
 
         correct_answers = [key for key, answer in question.answers.items() if answer.status == "correct"]
@@ -213,13 +201,12 @@ class QuestionService:
 
         is_correct = selected_set == correct_set
 
-        # Update score based on adaptive learning algorithm
         if is_correct:
             question.score = min(4, question.score + 1)
         else:
             question.score = max(-1, question.score - 1)
 
-        self.save_questions()
+        self.save_question(question)
 
         return {
             "is_correct": is_correct,
@@ -233,7 +220,7 @@ class QuestionService:
         question = self.get_question_by_id(question_id)
         if question:
             question.starred = starred
-            self.save_questions()
+            self.save_question(question)
             return True
         return False
 
@@ -242,42 +229,41 @@ class QuestionService:
         question = self.get_question_by_id(question_id)
         if question:
             question.note = note
-            self.save_questions()
+            self.save_question(question)
             return True
         return False
 
     def get_questions_by_tags(self, tags: List[str]) -> List[Question]:
         """Get questions filtered by tags (only active questions)"""
+        self._ensure_questions_loaded()
         return [q for q in self.questions if q.active and any(tag in q.tag for tag in tags)]
 
     def search_questions(self, query: str) -> List[Question]:
         """Search questions by text content (only active questions)"""
+        self._ensure_questions_loaded()
         query_lower = query.lower()
         results = []
 
         for q in self.questions:
-            if not q.active:  # Skip inactive questions
+            if not q.active:
                 continue
-
             if query_lower in q.question_text.lower():
                 results.append(q)
                 continue
-
-            # Search in answer texts
             for answer in q.answers.values():
                 if query_lower in answer.answer_text.lower():
                     results.append(q)
                     break
-
         return results
 
     def clear_all_explanations(self) -> bool:
         """Clear all explanations from active questions only"""
+        self._ensure_questions_loaded()
         try:
             for question in self.questions:
-                if question.active:  # Only clear explanations from active questions
+                if question.active:
                     question.explanation = ""
-            self.save_questions()
+                    self.save_question(question)
             return True
         except Exception as e:
             print(f"Error clearing explanations: {e}")
@@ -285,11 +271,12 @@ class QuestionService:
 
     def clear_all_hints(self) -> bool:
         """Clear all hints from active questions only"""
+        self._ensure_questions_loaded()
         try:
             for question in self.questions:
-                if question.active:  # Only clear hints from active questions
+                if question.active:
                     question.hint = ""
-            self.save_questions()
+                    self.save_question(question)
             return True
         except Exception as e:
             print(f"Error clearing hints: {e}")

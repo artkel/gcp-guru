@@ -46,6 +46,21 @@ def upload_json_to_gcs(data: Any, destination_blob_name: str) -> bool:
         print(f"Error uploading {destination_blob_name} to GCS: {e}")
         return False
 
+def load_from_gcs(filename: str) -> str:
+    """Load text content (like markdown files) from GCS bucket."""
+    if storage_client is None:
+        print(f"Warning: Cannot load {filename} - GCS client not available")
+        return ""
+
+    try:
+        bucket = storage_client.bucket(BUCKET_NAME)
+        blob = bucket.blob(filename)
+        content = blob.download_as_string()
+        return content.decode('utf-8')
+    except Exception as e:
+        print(f"Error loading {filename} from GCS: {e}")
+        return ""
+
 def blob_exists(blob_name: str) -> bool:
     """Check if a blob exists in the bucket."""
     if storage_client is None:
