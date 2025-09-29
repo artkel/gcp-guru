@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Star, Lightbulb, StickyNote, CheckCircle, XCircle, Brain, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -65,13 +65,13 @@ export function TrainingScreen() {
   const startNewSession = useStartNewSession();
   const skipQuestion = useSkipQuestion();
 
-  useEffect(() => {
-    if (!currentQuestion) {
-      loadNextQuestion();
-    }
-  }, [currentQuestion, loadNextQuestion]);
+  const handleSessionComplete = useCallback(async (message: string = 'Session complete!') => {
+    stopSessionTimer();
+    setShowSessionComplete(true);
+    // The modal will show session stats and allow user to return to start
+  }, [stopSessionTimer]);
 
-  const loadNextQuestion = async () => {
+  const loadNextQuestion = useCallback(async () => {
     setIsLoading(true);
     try {
       const question = useShuffledQuestions
@@ -103,13 +103,26 @@ export function TrainingScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+    setIsLoading,
+    useShuffledQuestions,
+    selectedDomains,
+    setCurrentQuestion,
+    setOriginalMapping,
+    setSelectedAnswers,
+    setQuestionAnswered,
+    setAnswerResult,
+    setExplanation,
+    setShowExplanation,
+    setNote,
+    handleSessionComplete,
+  ]);
 
-  const handleSessionComplete = async (message: string = 'Session complete!') => {
-    stopSessionTimer();
-    setShowSessionComplete(true);
-    // The modal will show session stats and allow user to return to start
-  };
+  useEffect(() => {
+    if (!currentQuestion) {
+      loadNextQuestion();
+    }
+  }, [currentQuestion, loadNextQuestion]);
 
   const handleAnswerSelection = (answerId: string) => {
     if (questionAnswered) return;
