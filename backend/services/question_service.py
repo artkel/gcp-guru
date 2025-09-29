@@ -19,25 +19,21 @@ class QuestionService:
             self._questions_loaded = True
 
     def load_questions(self):
-        """Load questions from Firestore with a local fallback for development."""
+        """Load questions from Firestore. In a deployed environment, this is the only source."""
+        print("Attempting to load questions from Firestore...")
         try:
-            # Try loading from Firestore first
             all_question_data = get_all_documents(self.questions_collection)
-            if all_question_data:
-                self._parse_questions_data(all_question_data, "Firestore")
-                # If loading from Firestore is successful, we might want to populate it
-                # from local if it's empty. This logic can be added in the migration script.
-                if not self.questions:
-                     print("Firestore is empty, falling back to local file to populate.")
-                     self._load_questions_from_local_file(and_save_to_firestore=True)
-                return
-            else:
-                print("No questions found in Firestore, trying to load from local file.")
-                self._load_questions_from_local_file(and_save_to_firestore=True)
+            
+            if not all_question_data:
+                # This will cause the service to crash on startup if the DB is empty or unreachable
+                raise RuntimeError("Firestore 'questions' collection is empty or could not be read. Please verify database content and service account permissions.")
+
+            self._parse_questions_data(all_question_data, "Firestore")
 
         except Exception as e:
-            print(f"Error loading questions from Firestore: {e}. Falling back to local file.")
-            self._load_questions_from_local_file()
+            # Re-raise the exception to ensure the service fails to start
+            print(f"A critical error occurred while loading questions from Firestore: {e}")
+            raise e
 
     def _load_questions_from_local_file(self, and_save_to_firestore: bool = False):
         """Load questions from local JSON file as fallback and optionally save to Firestore."""
