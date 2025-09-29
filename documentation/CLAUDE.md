@@ -13,10 +13,10 @@ This document outlines the design and features of GCP Guru, a web-based flashcar
 
 ### Backend
 - **Framework**: FastAPI (Python)
-- **Data Storage**: JSON files served from Google Cloud Storage (for deployed version).
+- **Database**: **Google Firestore** for questions, progress, and all transactional data.
+- **Static Storage**: **Google Cloud Storage** for case study markdown files.
 - **LLM Integration**: Google **Gemini 2.5 Flash**.
-- **Environment**: `.env` file in `/backend` directory with `GOOGLE_API_KEY`.
-- **Case Study Context**: The AI service reads markdown files from the `/documentation` directory to provide context for case study questions.
+- **Secret Management**: **Google Secret Manager** for API keys in production. A local `.env` file is used for development.
 
 ### Frontend
 - **Framework**: Next.js (React)
@@ -24,13 +24,16 @@ This document outlines the design and features of GCP Guru, a web-based flashcar
 - **UI Components**: Radix UI (headless) and custom components.
 - **State Management**: Zustand with localStorage persistence for seamless sessions.
 
+### CI/CD
+- **Deployment Pipeline**: **Google Cloud Build** for fully automated builds, testing, and deployment to Cloud Run.
+
 ## Core Features
 
 ### 1. Question Practice System
 - Displays random questions with multiple choice answers.
 - Supports both single and multiple correct answer questions.
 - Provides immediate visual feedback (correct/incorrect) after answer submission.
-- Caches AI-generated explanations and hints after the first generation.
+- Caches AI-generated explanations and hints in Firestore after the first generation.
 
 ### 2. Case Study Integration
 - Questions related to official GCP case studies are tagged accordingly.
@@ -100,6 +103,6 @@ This document outlines the design and features of GCP Guru, a web-based flashcar
 
 ## Key Technical Considerations
 - **AI Integration**: The system prepends case study text to prompts for relevant questions to improve the quality of AI-generated explanations.
-- **Performance**: Explanations and hints are cached in the questions JSON file to reduce API calls and improve speed.
+- **Performance**: Explanations and hints are cached in Firestore documents to reduce API calls and improve speed.
 - **State Management**: Frontend state is persisted in `localStorage` to allow users to refresh the page without losing their session.
-- **Deployment**: The application is designed for a stateless, serverless environment like Google Cloud Run, with all persistent data stored in Google Cloud Storage.
+- **Deployment**: The application is automatically deployed to Google Cloud Run via a Cloud Build pipeline, triggered by a push to the main branch.

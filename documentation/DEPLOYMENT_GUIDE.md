@@ -1,36 +1,29 @@
-# GCP Deployment Guide for GCP Guru
+# GCP Deployment Guide for GCP Guru (v2)
 
-This guide provides step-by-step instructions for deploying the GCP Guru application to Google Cloud Platform. It includes solutions for common issues encountered during deployment.
+This guide provides instructions for the one-time setup of the GCP Guru application's cloud environment. After this initial setup, all deployments are fully automated via a Cloud Build CI/CD pipeline.
 
 ## Table of Contents
+- [New Architecture Overview](#new-architecture-overview)
+- [Part 1: One-Time Environment Setup](#part-1-one-time-environment-setup)
+- [Part 2: The Automated Deployment Process](#part-2-the-automated-deployment-process)
+- [Troubleshooting](#troubleshooting)
 
-- [Architecture Overview](#architecture-overview)
-- [Prerequisites](#prerequisites)
-- [Part 1: Setting Up The Cloud Environment](#part-1-setting-up-the-cloud-environment)
-- [Part 2: Backend Deployment (FastAPI)](#part-2-backend-deployment-fastapi)
-- [Part 3: Frontend Deployment (Next.js)](#part-3-frontend-deployment-nextjs)
-- [Part 4: Updating Your Deployed Application](#part-4-updating-your-deployed-application)
-- [Conclusion](#conclusion)
+## New Architecture Overview
 
-## Architecture Overview
+The application is deployed on a robust, production-ready GCP architecture:
 
-- **Backend (FastAPI)**: A Dockerized container running on **Google Cloud Run**.
-- **Frontend (Next.js)**: A Dockerized container on a separate **Google Cloud Run** service.
-- **Data Storage**: Application data (questions, progress, case studies) stored in a **Google Cloud Storage (GCS)** bucket.
-- **Container Registry**: Docker images will be stored in **Google Artifact Registry**.
-
-## Prerequisites
-
-1.  **Google Cloud Account**: With billing enabled.
-2.  **`gcloud` CLI**: Authenticated with your account (`gcloud auth login`).
-3.  **Git Repository**: Your project code hosted on a platform like GitHub.
-4.  **Performance Note**: For optimal performance from Europe, use `europe-west3` (Frankfurt) region.
+- **CI/CD**: **Google Cloud Build** automatically builds, tests, and deploys the application on every push to the `main` branch.
+- **Compute**: The frontend (Next.js) and backend (FastAPI) run as separate, secure services on **Google Cloud Run**.
+- **Database**: **Google Firestore** is used as the primary database for all transactional data, including questions and user progress.
+- **Static Storage**: **Google Cloud Storage (GCS)** is used to host static assets, specifically the case study markdown files.
+- **Secret Management**: The Gemini API key is securely stored and accessed via **Google Secret Manager**.
+- **Container Registry**: Docker images are stored in **Google Artifact Registry**.
 
 ---
 
-## Part 1: Setting Up The Cloud Environment
+## Part 1: One-Time Environment Setup
 
-These steps should be performed within the **Google Cloud Shell**.
+These steps only need to be performed once for the entire project. It is recommended to run them from the Google Cloud Shell.
 
 **1. Clone Your Project Repository**
 ```bash
@@ -41,46 +34,43 @@ cd gcp-guru
 
 **2. Set Core Environment Variables**
 ```bash
-# For European users (Germany, etc.), use europe-west3 for better performance
 export REGION="europe-west3"
 export PROJECT_ID=$(gcloud config get-value project)
 ```
 
 **3. Enable Required APIs**
 ```bash
-gcloud services enable run.googleapis.com artifactregistry.googleapis.com
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com secretmanager.googleapis.com cloudbuild.googleapis.com
 ```
 
----
-
-## Part 2: Backend Deployment (FastAPI)
-
-### A. Code Modification for GCS
-**Crucial:** Cloud Run is stateless. The application code is already configured to read/write all necessary data (questions, progress, case studies) from a GCS bucket instead of the local filesystem.
-
-### B. Step-by-Step Backend Deployment
-
-**1. Create a GCS Bucket**
+**4. Create GCS Bucket for Static Files**
 ```bash
 export BUCKET_NAME="gcp-guru-data-bucket-${PROJECT_ID}"
 gsutil mb -p ${PROJECT_ID} -l ${REGION} gs://${BUCKET_NAME}
-```
 
-**2. Upload Initial Data to GCS**
-This includes the questions file, an empty session history, and the case study documents.
-```bash
-# Run from your project's root directory in Cloud Shell
-gsutil cp data/gcp-pca-questions.json gs://${BUCKET_NAME}/gcp-pca-questions.json
-gsutil cp data/session_history.json gs://${BUCKET_NAME}/session_history.json
-
-# Upload case study files
+# Upload ONLY the case study markdown files
 gsutil cp documentation/mountkirk_games.md gs://${BUCKET_NAME}/mountkirk_games.md
 gsutil cp documentation/ehr_healthcare.md gs://${BUCKET_NAME}/ehr_healthcare.md
 gsutil cp documentation/terramearth.md gs://${BUCKET_NAME}/terramearth.md
 gsutil cp documentation/hrl.md gs://${BUCKET_NAME}/hrl.md
 ```
 
-**3. Create an Artifact Registry Repository**
+**5. Create Firestore Database**
+```bash
+gcloud firestore databases create --location=${REGION} --type=firestore-native
+```
+
+**6. Create and Configure API Key Secret**
+```bash
+# Create the secret container
+gcloud secrets create gemini-api-key --replication-policy="automatic"
+
+# Add your API key as the first version of the secret
+# Replace "your_gemini_api_key_here" with your actual key
+printf "your_gemini_api_key_here" | gcloud secrets versions add gemini-api-key --data-file=-
+```
+
+**7. Create Artifact Registry Repository**
 ```bash
 gcloud artifacts repositories create gcp-guru-repo \
     --repository-format=docker \
@@ -88,127 +78,52 @@ gcloud artifacts repositories create gcp-guru-repo \
     --description="GCP Guru Docker repository"
 ```
 
-**4. Authenticate Docker**
-This allows the Docker command to push images to your new repository.
+**8. Seed the Firestore Database**
+*This step uploads the local question data to your new database.*
 ```bash
-gcloud auth configure-docker ${REGION}-docker.pkg.dev
+# Authenticate your local user for this script
+gcloud auth application-default login
+
+# Run the migration script
+python3 backend/scripts/migrate_data.py
 ```
 
-**5. Build and Push the Backend Image**
-```bash
-export BACKEND_IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/gcp-guru-repo/gcp-guru-backend:latest"
-docker build --no-cache -t ${BACKEND_IMAGE_URI} -f backend/Dockerfile .
-docker push ${BACKEND_IMAGE_URI}
-```
+**9. Create the Cloud Build Trigger**
+*This is the final manual step, which connects your Git repository to the pipeline.*
 
-**6. Deploy Backend to Cloud Run**
-The `deploy.sh` script handles this automatically. When running manually, you will be prompted for your API key.
-```bash
-# You will be prompted to enter your Gemini API key
-gcloud run deploy gcp-guru-backend \
-    --image=${BACKEND_IMAGE_URI} \
-    --platform=managed \
-    --region=${REGION} \
-    --allow-unauthenticated \
-    --min-instances=0 \
-    --max-instances=10 \
-    --cpu=2 \
-    --memory=1Gi \
-    --concurrency=100 \
-    --timeout=300 \
-    --set-env-vars="GCS_BUCKET_NAME=${BUCKET_NAME}" \
-    --set-env-vars="GOOGLE_API_KEY=YOUR_API_KEY_HERE" # Replace or set in environment
+1.  Go to the [Cloud Build Triggers page](https://console.cloud.google.com/cloud-build/triggers) in the GCP Console.
+2.  Click **"Create trigger"**.
+3.  Fill in the following:
+    *   **Name**: `deploy-on-push-to-main`
+    *   **Region**: Select the same region as your services (e.g., `europe-west3`).
+    *   **Event**: Select **"Push to a branch"**.
+    *   **Source**: Select your Git repository and the `^main branch.
+    *   **Configuration**: Select **"Cloud Build configuration file (yaml or json)"**. The default path of `/cloudbuild.yaml` is correct.
+    *   **Service Account**: Select the appropriate Cloud Build service account (e.g., `cloud-build-deployer@...` or the default Cloud Build SA).
+4.  Click **"Create"**.
 
-# Get the backend URL (needed for frontend deployment)
-export BACKEND_URL=$(gcloud run services describe gcp-guru-backend --platform managed --region=${REGION} --format 'value(status.url)')
-echo "✅ Backend deployed at: ${BACKEND_URL}"
-```
-
-**7. Grant GCS Permissions**
-Allow the new Cloud Run service to access the GCS bucket.
-```bash
-export SERVICE_ACCOUNT=$(gcloud run services describe gcp-guru-backend --platform managed --region=${REGION} --format 'value(spec.template.spec.serviceAccountName)')
-gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}:objectAdmin gs://${BUCKET_NAME}
-echo "✅ Backend permissions configured"
-```
+**Your one-time setup is now complete!**
 
 ---
 
-## Part 3: Frontend Deployment (Next.js)
+## Part 2: The Automated Deployment Process
 
-Now, build the frontend with the backend URL and deploy it.
+With the CI/CD pipeline in place, the deployment process is now fully automated.
+
+**To deploy any changes to the application, simply push your commits to the `main` branch.**
 
 ```bash
-# Build frontend with backend URL
-export FRONTEND_IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/gcp-guru-repo/gcp-guru-frontend:latest"
-docker build --no-cache --build-arg NEXT_PUBLIC_API_URL=${BACKEND_URL} -t ${FRONTEND_IMAGE_URI} -f frontend/Dockerfile .
-
-# Push frontend image
-docker push ${FRONTEND_IMAGE_URI}
-
-# Deploy frontend
-gcloud run deploy gcp-guru-frontend \
-    --image=${FRONTEND_IMAGE_URI} \
-    --platform=managed \
-    --region=${REGION} \
-    --allow-unauthenticated \
-    --min-instances=0 \
-    --max-instances=10 \
-    --cpu=2 \
-    --memory=1Gi \
-    --concurrency=100 \
-    --timeout=300 \
-    --set-env-vars="NEXT_PUBLIC_API_URL=${BACKEND_URL}" \
-    --port=3000
-
-# Get the final frontend URL
-export FRONTEND_URL=$(gcloud run services describe gcp-guru-frontend --platform managed --region=${REGION} --format 'value(status.url)')
-echo "✅ Frontend deployed at: ${FRONTEND_URL}"
+git add .
+git commit -m "Your feature or fix"
+git push origin main
 ```
 
-Your application is now live! Access it via the URL provided.
+Cloud Build will automatically detect the push, build the new container images, and deploy the new versions to Cloud Run. You can monitor the progress of your builds in the [Cloud Build history page](https://console.cloud.google.com/cloud-build/builds).
 
 ---
 
-## Part 4: Updating Your Deployed Application
+## Troubleshooting
 
-When you make changes to your code, you must rebuild and redeploy the relevant service.
-
-**Using the `deploy.sh` Script (Recommended)**
-This script automates the entire deployment process for both services.
-```bash
-# From the project root, ensure you are authenticated with gcloud.
-# The script will prompt for your API key if it's not set as an environment variable.
-./deploy.sh
-```
-
-**For Code Changes - Manual Rebuild and Deploy**
-If you change the backend code, you must rebuild and push the backend image, then redeploy. If you change the frontend, do the same for the frontend image.
-
-Example for backend code change:
-```bash
-# 1. Rebuild and push backend image
-export BACKEND_IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/gcp-guru-repo/gcp-guru-backend:latest"
-docker build --no-cache -t ${BACKEND_IMAGE_URI} -f backend/Dockerfile .
-docker push ${BACKEND_IMAGE_URI}
-
-# 2. Redeploy backend service
-# The deploy.sh script is the easiest way to do this.
-./deploy.sh
-```
-
-> **Key Workflow Notes:**
-> - For **code changes**: A full rebuild → push → deploy workflow is required for the affected service.
-> - For **configuration changes** (like environment variables): You can often just re-run the deployment command or use `./deploy.sh`.
-
----
-
-## Conclusion
-
-Your GCP Guru application is now successfully deployed on Google Cloud Platform. The application is accessible via the default URL provided by Cloud Run for the frontend service.
-
-### Cost & Performance Notes
-
-- **Cost**: The primary ongoing cost will be from the **Google Gemini API**, which is billed based on the number of characters sent and received in prompts. The Cloud Run services are configured to scale to zero, so their cost will be minimal (often within the free tier) for typical, intermittent usage.
-- **Latency**: The first request to the application after a period of inactivity may take 2-3 seconds for the container to start (a "cold start"). Subsequent requests will be much faster.
-- **Region**: Deploying to a region physically closer to your users (like `europe-west3` for Europe) will minimize network latency.
+- **Cloud Build Failures**: Check the logs for the specific build run in the Cloud Build history. Common issues include syntax errors in `cloudbuild.yaml` or permission errors for the Cloud Build service account.
+- **GCS Permissions**: If case studies are not loading, ensure the backend's service account has the `Storage Object Viewer` role on your GCS bucket.
+- **Secret Manager Permissions**: If the application fails to start due to API key issues, ensure the backend's service account has the `Secret Manager Secret Accessor` role on the `gemini-api-key` secret.
