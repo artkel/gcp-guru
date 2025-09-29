@@ -1,0 +1,64 @@
+steps:
+# 1. Build and push the backend image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'build'
+    - '--no-cache'
+    - '-t'
+    - 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA'
+    - '-f'
+    - 'backend/Dockerfile'
+    - '.'
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA']
+
+# 2. Deploy the backend to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - 'gcp-guru-backend'
+    - '--image=europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA'
+    - '--region=europe-west3'
+    - '--platform=managed'
+    - '--no-allow-unauthenticated'
+    - '--set-env-vars=GCS_BUCKET_NAME=gcp-guru-data-bucket-$PROJECT_ID'
+
+# 3. Get the backend URL for the frontend build
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      gcloud run services describe gcp-guru-backend --platform managed --region=europe-west3 --format 'value(status.url)' > /workspace/backend_url.txt
+
+# 4. Build and push the frontend image
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      export BACKEND_URL=$(cat /workspace/backend_url.txt) && \
+      docker build --no-cache --build-arg NEXT_PUBLIC_API_URL=$BACKEND_URL -t europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-frontend:$SHORT_SHA -f frontend/Dockerfile .
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-frontend:$SHORT_SHA']
+
+# 5. Deploy the frontend to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      export BACKEND_URL=$(cat /workspace/backend_url.txt) && \
+      gcloud run deploy gcp-guru-frontend --image=europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-frontend:$SHORT_SHA --region=europe-west3 --platform=managed --allow-unauthenticated --port=3000 --set-env-vars=NEXT_PUBLIC_API_URL=$BACKEND_URL
+
+# Specify the images to be built
+images:
+- 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA'
+- 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-frontend:$SHORT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
