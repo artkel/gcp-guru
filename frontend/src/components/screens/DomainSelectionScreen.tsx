@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle2, Shuffle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Shuffle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -31,16 +31,51 @@ export function DomainSelectionScreen() {
 
   const [localSelectedDomains, setLocalSelectedDomains] = useState<string[]>([]);
   const [allDomainsSelected, setAllDomainsSelected] = useState(false);
+  const [starredQuestionsSelected, setStarredQuestionsSelected] = useState(false);
+  const [hasStarredQuestions, setHasStarredQuestions] = useState(false);
 
   useEffect(() => {
-    if (selectedDomains) {
-      setLocalSelectedDomains(selectedDomains);
-    }
-  }, [selectedDomains]);
+    let isCancelled = false;
+
+    // Reset all selections when the screen mounts to ensure a fresh start
+    setLocalSelectedDomains([]);
+    setAllDomainsSelected(false);
+    setStarredQuestionsSelected(false);
+    setSelectedDomains(null); // Explicitly clear global state too
+
+    const checkStarredQuestions = async () => {
+      console.log('Checking for starred questions...'); // Debug log
+
+      try {
+        const questions = await api.questions.getList();
+        console.log(`Total questions loaded: ${questions.length}`); // Debug log
+
+        const starredQuestions = questions.filter(q => q.starred);
+        console.log(`Starred questions found: ${starredQuestions.length}`); // Debug log
+        console.log('Starred question IDs:', starredQuestions.map(q => q.question_number)); // Debug log
+
+        if (!isCancelled) {
+          setHasStarredQuestions(starredQuestions.length > 0);
+          console.log(`Setting hasStarredQuestions to: ${starredQuestions.length > 0}`); // Debug log
+        }
+      } catch (error) {
+        console.error('Failed to check starred questions:', error);
+        if (!isCancelled) {
+          setHasStarredQuestions(false);
+        }
+      }
+    };
+
+    checkStarredQuestions();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []); // Only run once on mount
 
   const handleDomainToggle = (domain: string) => {
     if (allDomainsSelected) {
-      setAllDomainsSelected(false);
+      return; // Don't allow tag selection when All Questions is selected
     }
 
     setLocalSelectedDomains(prev => {
@@ -56,6 +91,32 @@ export function DomainSelectionScreen() {
     setAllDomainsSelected(!allDomainsSelected);
     if (!allDomainsSelected) {
       setLocalSelectedDomains([]);
+      setStarredQuestionsSelected(false);
+    }
+  };
+
+  const handleStarredQuestionsToggle = () => {
+    if (!hasStarredQuestions) return;
+
+    setStarredQuestionsSelected(!starredQuestionsSelected);
+    if (!starredQuestionsSelected) {
+      setAllDomainsSelected(false);
+    }
+  };
+
+  const refreshStarredQuestions = async () => {
+    setStarredQuestionsLoading(true);
+    console.log('Manually refreshing starred questions...');
+    try {
+      const questions = await api.questions.getList();
+      const starredCount = questions.filter(q => q.starred).length;
+      setHasStarredQuestions(starredCount > 0);
+      console.log(`Manual refresh: Found ${starredCount} starred questions`);
+    } catch (error) {
+      console.error('Failed to refresh starred questions:', error);
+      setHasStarredQuestions(false);
+    } finally {
+      setStarredQuestionsLoading(false);
     }
   };
 
@@ -63,7 +124,18 @@ export function DomainSelectionScreen() {
     setIsLoading(true);
     try {
       await startNewSession();
-      const domains = allDomainsSelected ? null : localSelectedDomains;
+      let domains = null;
+      if (allDomainsSelected) {
+        domains = null; // All questions
+      } else {
+        domains = [...localSelectedDomains];
+        if (starredQuestionsSelected) {
+          domains.push('starred');
+        }
+        if (domains.length === 0) {
+          domains = null; // If nothing selected, default to all
+        }
+      }
       setSelectedDomains(domains);
       resetSessionStats();
       startSessionTimer();
@@ -82,9 +154,25 @@ export function DomainSelectionScreen() {
       return;
     }
 
-    const domains = allDomainsSelected ? undefined : localSelectedDomains;
+    let domains = undefined;
+    if (allDomainsSelected) {
+      domains = undefined;
+    } else {
+      domains = [...localSelectedDomains];
+      if (starredQuestionsSelected) {
+        domains.push('starred');
+      }
+      if (domains.length === 0) {
+        domains = undefined;
+      }
+    }
 
-    // Check if all questions in the selected tags are mastered
+    // Check if all questions in the selected tags are mastered (skip for pure starred questions)
+    if (starredQuestionsSelected && localSelectedDomains.length === 0) {
+      proceedToTraining();
+      return;
+    }
+
     try {
       const status = await api.progress.getStatus(domains);
       if (status.all_mastered) {
@@ -104,7 +192,7 @@ export function DomainSelectionScreen() {
     }
   };
 
-  const canStartTraining = allDomainsSelected || localSelectedDomains.length > 0;
+  const canStartTraining = allDomainsSelected || starredQuestionsSelected || localSelectedDomains.length > 0;
 
   if (tagsLoading) {
     return (
@@ -139,29 +227,70 @@ export function DomainSelectionScreen() {
               <CardTitle>Training Topics</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* All Domains Option */}
-              <div
-                className={cn(
-                  'flex items-center space-x-3 rounded-lg border p-4 cursor-pointer transition-all hover:bg-accent',
-                  allDomainsSelected && 'bg-primary/10 border-primary'
-                )}
-                onClick={handleAllDomainsToggle}
-              >
+              {/* Top Row: All Questions and Starred Questions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
+                {/* All Domains Option */}
                 <div
                   className={cn(
-                    'flex h-5 w-5 items-center justify-center rounded border-2',
-                    allDomainsSelected
-                      ? 'bg-primary border-primary text-primary-foreground'
-                      : 'border-muted-foreground'
+                    'flex items-center space-x-3 rounded-lg border p-4 cursor-pointer transition-all hover:bg-accent min-h-[80px]',
+                    allDomainsSelected && 'bg-primary/10 border-primary'
                   )}
+                  onClick={handleAllDomainsToggle}
                 >
-                  {allDomainsSelected && <CheckCircle2 className="h-3 w-3" />}
+                  <div
+                    className={cn(
+                      'flex h-5 w-5 items-center justify-center rounded border-2',
+                      allDomainsSelected
+                        ? 'bg-primary border-primary text-primary-foreground'
+                        : 'border-muted-foreground'
+                    )}
+                  >
+                    {allDomainsSelected && <CheckCircle2 className="h-3 w-3" />}
+                  </div>
+                  <div>
+                    <p className="font-medium">All Questions</p>
+                    <p className="text-sm text-muted-foreground">
+                      Practice all available questions across all domains
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">All Questions</p>
-                  <p className="text-sm text-muted-foreground">
-                    Practice all available questions across all domains
-                  </p>
+
+                {/* Starred Questions Option */}
+                <div
+                  className={cn(
+                    'flex items-center space-x-3 rounded-lg border p-4 min-h-[80px]',
+                    hasStarredQuestions && !allDomainsSelected
+                      ? 'cursor-pointer hover:bg-accent'
+                      : 'opacity-50 cursor-not-allowed',
+                    starredQuestionsSelected && 'bg-primary/10 border-primary'
+                  )}
+                  onClick={() => {
+                    if (hasStarredQuestions && !allDomainsSelected) {
+                      handleStarredQuestionsToggle();
+                    }
+                  }}
+                >
+                  <div
+                    className={cn(
+                      'flex h-5 w-5 items-center justify-center rounded border-2',
+                      starredQuestionsSelected
+                        ? 'bg-primary border-primary text-primary-foreground'
+                        : 'border-muted-foreground'
+                    )}
+                  >
+                    {starredQuestionsSelected && <CheckCircle2 className="h-3 w-3" />}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-4 w-4 text-yellow-500" />
+                    <div>
+                      <p className="font-medium">
+                        Starred Questions
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {hasStarredQuestions ? 'Practice your bookmarked questions' : 'No starred questions available'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 

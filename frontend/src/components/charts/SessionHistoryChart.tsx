@@ -148,7 +148,11 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
             interval="preserveStartEnd"
             minTickGap={20}
           />
-          <YAxis tick={{ fontSize: 12 }} />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            allowDecimals={false}
+            domain={[0, 'dataMax']}
+          />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
           <Bar
@@ -167,7 +171,7 @@ export function SessionHistoryChart({ sessionHistory }: SessionHistoryChartProps
             radius={[2, 2, 0, 0]}
             isAnimationActive={false}
           >
-            <LabelList dataKey="total" content={renderCustomizedLabel} isAnimationActive={false} />
+            <LabelList dataKey="total" content={renderCustomizedLabel} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

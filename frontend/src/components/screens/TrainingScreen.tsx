@@ -82,7 +82,7 @@ export function TrainingScreen() {
 
       // Store original mapping if using shuffled questions
       if (useShuffledQuestions && 'original_mapping' in question) {
-        setOriginalMapping(question.original_mapping);
+        setOriginalMapping((question as any).original_mapping);
       } else {
         setOriginalMapping({});
       }
@@ -302,8 +302,7 @@ export function TrainingScreen() {
       setShowCaseStudyModal(true);
     } catch (error) {
       console.error('Failed to load case study:', error);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -382,7 +381,7 @@ export function TrainingScreen() {
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-semibold">Question #{currentQuestion.question_number}</h3>
                     {currentQuestion.score >= 4 && (
-                      <Brain className="h-5 w-5 text-purple-500" title="This question is considered mastered" />
+                      <Brain className="h-5 w-5 text-purple-500" />
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
