@@ -13,26 +13,28 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA']
 
-# 2. Deploy the backend to Cloud Run
+# 2. Deploy the backend to Cloud Run and capture the URL
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-    - 'run'
-    - 'deploy'
-    - 'gcp-guru-backend'
-    - '--image=europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA'
-    - '--region=europe-west3'
-    - '--platform=managed'
-    - '--no-allow-unauthenticated'
-    - '--set-env-vars=GCS_BUCKET_NAME=gcp-guru-data-bucket-$PROJECT_ID'
-
-# 3. Get the backend URL for the frontend build
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: 'Deploy Backend and Get URL'
   entrypoint: 'bash'
   args:
     - '-c'
     - |
-      gcloud run services describe gcp-guru-backend --platform managed --region=europe-west3 --format 'value(status.url)' > /workspace/backend_url.txt
+      URL=$(gcloud run deploy gcp-guru-backend \
+        --image=europe-west3-docker.pkg.dev/$PROJECT_ID/gcp-guru-repo/gcp-guru-backend:$SHORT_SHA \
+        --region=europe-west3 \
+        --platform=managed \
+        --no-allow-unauthenticated \
+        --set-env-vars=GCS_BUCKET_NAME=gcp-guru-data-bucket-$PROJECT_ID \
+        --format='value(status.url)') && \
+      echo "Backend deployed at: $URL" && \
+      echo $URL > /workspace/backend_url.txt
+
+# 3. DEBUG: Verify the backend URL
+- name: 'alpine'
+  id: 'Debug Print URL'
+  entrypoint: 'cat'
+  args: ['/workspace/backend_url.txt']
 
 # 4. Build and push the frontend image
 - name: 'gcr.io/cloud-builders/docker'
