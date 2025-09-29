@@ -110,8 +110,25 @@ export function ProgressScreen() {
 
   if (!progress) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <p>No progress data available</p>
+      <div className="flex-1 p-6">
+        <div className="mx-auto max-w-6xl space-y-6">
+          {/* Header */}
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentScreen('start')}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h2 className="text-2xl font-bold">Your Progress</h2>
+          </div>
+          <Card>
+            <CardContent className="flex items-center justify-center py-12">
+              <p className="text-muted-foreground">No progress data available or failed to load.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
