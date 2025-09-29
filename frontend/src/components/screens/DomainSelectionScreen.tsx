@@ -33,6 +33,7 @@ export function DomainSelectionScreen() {
   const [allDomainsSelected, setAllDomainsSelected] = useState(false);
   const [starredQuestionsSelected, setStarredQuestionsSelected] = useState(false);
   const [hasStarredQuestions, setHasStarredQuestions] = useState(false);
+  const [starredQuestionsLoading, setStarredQuestionsLoading] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
