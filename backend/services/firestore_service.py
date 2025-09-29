@@ -1,17 +1,22 @@
 import os
 from typing import Any, Dict, List, Optional
 
-# Get project ID from environment, with a fallback for local development
-PROJECT_ID = os.environ.get("GCP_PROJECT") or os.environ.get("PROJECT_ID") or "gcp-guru-473011"
+# Get project ID from a specific environment variable for clarity
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID")
 
-# Initialize Firestore client only if we're in production (with credentials)
+# Initialize Firestore client
 db = None
 try:
     from google.cloud import firestore
-    db = firestore.Client(project=PROJECT_ID)
-    print("Firestore client initialized for production")
+    if PROJECT_ID:
+        db = firestore.Client(project=PROJECT_ID)
+        print(f"Firestore client initialized for project: {PROJECT_ID}")
+    else:
+        # Fallback for local development where the variable might not be set
+        db = firestore.Client()
+        print("Firestore client initialized with default project.")
 except Exception as e:
-    print(f"Firestore not available (running in development mode): {e}")
+    print(f"Could not initialize Firestore client: {e}")
     db = None
 
 def get_document(collection: str, document_id: str) -> Optional[Dict[str, Any]]:
