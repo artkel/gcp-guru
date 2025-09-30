@@ -18,61 +18,13 @@ class APIError extends Error {
   }
 }
 
-/**
- * Fetch an identity token for authenticating to Cloud Run backend.
- * This only works server-side on Cloud Run using the service account.
- */
-async function getAuthToken(): Promise<string | null> {
-  // Only fetch auth token when running server-side on Cloud Run
-  const isServerSide = typeof window === 'undefined';
-  const isCloudRun = process.env.K_SERVICE !== undefined;
-
-  console.log('[Auth Debug] isServerSide:', isServerSide, 'isCloudRun:', isCloudRun, 'K_SERVICE:', process.env.K_SERVICE);
-
-  if (isServerSide && isCloudRun) {
-    try {
-      // Audience must be the full backend URL without /api suffix
-      const audience = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
-      console.log('[Auth Debug] Fetching token for audience:', audience);
-
-      const metadataServerUrl = `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${audience}`;
-
-      const response = await fetch(metadataServerUrl, {
-        headers: {
-          'Metadata-Flavor': 'Google',
-        },
-      });
-
-      if (response.ok) {
-        const token = await response.text();
-        console.log('[Auth Debug] Successfully fetched token, length:', token.length);
-        return token;
-      } else {
-        console.error('[Auth Error] Failed to fetch auth token:', response.status, response.statusText);
-        const errorText = await response.text().catch(() => '');
-        console.error('[Auth Error] Response:', errorText);
-      }
-    } catch (error) {
-      console.error('[Auth Error] Exception fetching auth token:', error);
-    }
-  } else {
-    console.log('[Auth Debug] Skipping auth token fetch - not in Cloud Run or not server-side');
-  }
-  return null;
-}
-
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   // Ensure we include /api in the path when using full backend URL
   const apiPath = API_BASE_URL.includes('http') ? '/api' : '';
   const url = `${API_BASE_URL}${apiPath}${endpoint}`;
-
-  // Get auth token (only works server-side on Cloud Run)
-  const token = await getAuthToken();
-
   const config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     },
     ...options,
