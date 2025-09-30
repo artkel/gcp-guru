@@ -139,6 +139,31 @@ The backend needs permission to read case study markdown files from the GCS buck
 gsutil iam ch serviceAccount:${BACKEND_SA}:roles/storage.objectViewer gs://${BUCKET_NAME}
 ```
 
+**13. Grant Frontend Permission to Invoke Backend (Service-to-Service Auth)**
+*This critical step allows the frontend to authenticate to the backend service.*
+
+**Important:** This step must be run AFTER the first deployment with authentication enabled.
+
+The backend is now configured to require authentication, so the frontend needs explicit permission to invoke it:
+
+```bash
+# Run this script after deployment
+bash scripts/grant_backend_access.sh
+```
+
+Or manually:
+
+```bash
+# Get the frontend service account
+FRONTEND_SA=$(gcloud run services describe gcp-guru-frontend --region=${REGION} --format='value(spec.template.spec.serviceAccountName)')
+
+# Grant invoker permission
+gcloud run services add-iam-policy-binding gcp-guru-backend \
+  --region=${REGION} \
+  --member="serviceAccount:${FRONTEND_SA}" \
+  --role="roles/run.invoker"
+```
+
 **Your one-time setup is now complete!**
 
 ---

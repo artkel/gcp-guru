@@ -18,13 +18,48 @@ class APIError extends Error {
   }
 }
 
+/**
+ * Fetch an identity token for authenticating to Cloud Run backend.
+ * This only works server-side on Cloud Run using the service account.
+ */
+async function getAuthToken(): Promise<string | null> {
+  // Only fetch auth token when running server-side on Cloud Run
+  if (typeof window === 'undefined' && process.env.K_SERVICE) {
+    try {
+      const audience = API_BASE_URL;
+      const metadataServerUrl = `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${audience}`;
+
+      const response = await fetch(metadataServerUrl, {
+        headers: {
+          'Metadata-Flavor': 'Google',
+        },
+      });
+
+      if (response.ok) {
+        const token = await response.text();
+        return token;
+      } else {
+        console.error('Failed to fetch auth token:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching auth token:', error);
+    }
+  }
+  return null;
+}
+
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   // Ensure we include /api in the path when using full backend URL
   const apiPath = API_BASE_URL.includes('http') ? '/api' : '';
   const url = `${API_BASE_URL}${apiPath}${endpoint}`;
+
+  // Get auth token (only works server-side on Cloud Run)
+  const token = await getAuthToken();
+
   const config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     },
     ...options,
