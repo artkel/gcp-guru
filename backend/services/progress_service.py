@@ -37,7 +37,11 @@ class ProgressService:
                 self._parse_session_history_data(data_doc['history'], "Firestore")
                 return
             else:
-                print("No session history document found in Firestore.")
+                print("No session history document found in Firestore. Initializing empty history.")
+                self.daily_history = []
+                # Create the document in Firestore with empty history
+                self._initialize_session_history_document()
+                return
         except Exception as e:
             print(f"Error loading session history from Firestore: {e}")
 
@@ -53,6 +57,14 @@ class ProgressService:
         except Exception as e:
             print(f"Error loading session history from local file: {e}")
             self.daily_history = []
+
+    def _initialize_session_history_document(self):
+        """Initialize an empty session history document in Firestore."""
+        try:
+            set_document(self.daily_history_collection, self.daily_history_doc_id, {'history': []})
+            print("Initialized empty session history document in Firestore")
+        except Exception as e:
+            print(f"Error initializing session history document: {e}")
 
     def _parse_session_history_data(self, data: List[Dict], source: str):
         """Parse session history data from a list of dicts."""
@@ -101,7 +113,11 @@ class ProgressService:
                 self._parse_individual_sessions_data(data_doc['sessions'], "Firestore")
                 return
             else:
-                print("No individual sessions document found in Firestore.")
+                print("No individual sessions document found in Firestore. Initializing empty sessions.")
+                self.individual_sessions = []
+                # Create the document in Firestore with empty sessions
+                self._initialize_individual_sessions_document()
+                return
         except Exception as e:
             print(f"Error loading individual sessions from Firestore: {e}")
 
@@ -117,6 +133,14 @@ class ProgressService:
         except Exception as e:
             print(f"Error loading individual sessions from local file: {e}")
             self.individual_sessions = []
+
+    def _initialize_individual_sessions_document(self):
+        """Initialize an empty individual sessions document in Firestore."""
+        try:
+            set_document(self.individual_sessions_collection, self.individual_sessions_doc_id, {'sessions': []})
+            print("Initialized empty individual sessions document in Firestore")
+        except Exception as e:
+            print(f"Error initializing individual sessions document: {e}")
 
     def _parse_individual_sessions_data(self, data: List[Dict], source: str):
         """Parse individual sessions data from a list of dicts."""
