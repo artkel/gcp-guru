@@ -102,6 +102,21 @@ python3 backend/scripts/migrate_data.py
     *   **Service Account**: Select the appropriate Cloud Build service account (e.g., `cloud-build-deployer@...` or the default Cloud Build SA).
 4.  Click **"Create"**.
 
+**10. Grant Firestore Permissions to Backend Service Account**
+*This critical step allows the backend to read/write data from Firestore.*
+
+The Cloud Run backend service needs permission to access Firestore. Grant the `datastore.user` role to the backend's service account:
+
+```bash
+# Get the service account name (typically the same as Cloud Build service account)
+BACKEND_SA=$(gcloud run services describe gcp-guru-backend --region=${REGION} --format='value(spec.template.spec.serviceAccountName)')
+
+# Grant Firestore access
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${BACKEND_SA}" \
+    --role="roles/datastore.user"
+```
+
 **Your one-time setup is now complete!**
 
 ---
@@ -125,5 +140,12 @@ Cloud Build will automatically detect the push, build the new container images, 
 ## Troubleshooting
 
 - **Cloud Build Failures**: Check the logs for the specific build run in the Cloud Build history. Common issues include syntax errors in `cloudbuild.yaml` or permission errors for the Cloud Build service account.
+- **Firestore Permissions (CRITICAL)**: If the app loads but shows no data (empty progress page, no questions, no tags), the backend service account lacks Firestore access. Grant the `roles/datastore.user` role:
+  ```bash
+  gcloud projects add-iam-policy-binding PROJECT_ID \
+      --member="serviceAccount:SERVICE_ACCOUNT_EMAIL" \
+      --role="roles/datastore.user"
+  ```
+  This permission change takes effect immediately without requiring redeployment.
 - **GCS Permissions**: If case studies are not loading, ensure the backend's service account has the `Storage Object Viewer` role on your GCS bucket.
 - **Secret Manager Permissions**: If the application fails to start due to API key issues, ensure the backend's service account has the `Secret Manager Secret Accessor` role on the `gemini-api-key` secret.
