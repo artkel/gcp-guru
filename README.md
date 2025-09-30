@@ -139,6 +139,32 @@ The application is deployed on a robust, production-ready GCP architecture.
 
 For a detailed guide on the one-time setup for the cloud environment, see [`documentation/DEPLOYMENT_GUIDE.md`](documentation/DEPLOYMENT_GUIDE.md).
 
+## Adding New Questions to Production
+
+Once your application is deployed, question data lives in **Firestore**, not in JSON files. To add new questions without overwriting user progress (scores, notes, explanations):
+
+1. **Prepare your new questions file** in JSON format (e.g., `data/new_questions.json`)
+2. **Authenticate with Google Cloud:**
+   ```bash
+   gcloud auth application-default login
+   ```
+3. **Run the migration script:**
+   ```bash
+   python backend/scripts/add_new_questions.py data/new_questions.json
+   ```
+
+The script intelligently:
+- ✅ Adds new questions to Firestore
+- ✅ Skips existing questions (preserves all user data)
+- ✅ Shows a clear summary of added/skipped questions
+
+**To update existing questions** while preserving user progress:
+```bash
+python backend/scripts/add_new_questions.py data/new_questions.json --overwrite
+```
+
+This preserves scores, stars, notes, and AI-generated explanations/hints while updating question text and answers.
+
 ## Troubleshooting
 
 ### Common Issues

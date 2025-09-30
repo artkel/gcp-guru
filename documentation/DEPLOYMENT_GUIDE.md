@@ -159,6 +159,66 @@ Cloud Build will automatically detect the push, build the new container images, 
 
 ---
 
+## Part 3: Adding New Questions to Production
+
+Once your application is deployed, question data is stored in **Firestore**, not JSON files. To add new questions without losing user progress (scores, notes, explanations, hints):
+
+### Prerequisites
+
+Ensure you're authenticated with Google Cloud:
+```bash
+gcloud auth application-default login
+```
+
+### Adding New Questions
+
+1. **Create a JSON file with your new questions** (e.g., `data/new_questions.json`):
+   ```json
+   [
+     {
+       "question_number": 301,
+       "question_text": "Your question text...",
+       "answers": {
+         "a": {"answer_text": "Option A", "status": "correct"},
+         "b": {"answer_text": "Option B", "status": "incorrect"}
+       },
+       "tag": ["compute", "networking"],
+       "explanation": "",
+       "hint": "",
+       "score": 0,
+       "starred": false,
+       "note": "",
+       "active": true,
+       "case_study": "",
+       "placeholder_3": ""
+     }
+   ]
+   ```
+
+2. **Run the migration script:**
+   ```bash
+   python backend/scripts/add_new_questions.py data/new_questions.json
+   ```
+
+   The script will:
+   - ✅ Add new questions to Firestore
+   - ✅ Skip existing questions (preserving all user data)
+   - ✅ Show a summary of added/skipped questions
+
+### Updating Existing Questions
+
+To update question text or answers while **preserving user progress** (scores, stars, notes, explanations, hints):
+
+```bash
+python backend/scripts/add_new_questions.py data/new_questions.json --overwrite
+```
+
+This is useful when you want to fix typos or improve question wording without losing user data.
+
+**Important:** The script uses the `question_number` field as the unique identifier. Make sure your new questions have unique numbers that don't conflict with existing questions unless you intend to update them.
+
+---
+
 ## Troubleshooting
 
 - **Cloud Build Failures**: Check the logs for the specific build run in the Cloud Build history. Common issues include syntax errors in `cloudbuild.yaml` or permission errors for the Cloud Build service account.
