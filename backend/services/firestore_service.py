@@ -1,20 +1,21 @@
 import os
 from typing import Any, Dict, List, Optional
 
-# Get project ID from a specific environment variable for clarity
+# Get project and database ID from specific environment variables
 PROJECT_ID = os.environ.get("GCP_PROJECT_ID")
+DATABASE_ID = os.environ.get("GCP_FIRESTORE_DATABASE", "(default)") # Default to '(default)'
 
 # Initialize Firestore client
 db = None
 try:
     from google.cloud import firestore
     if PROJECT_ID:
-        db = firestore.Client(project=PROJECT_ID)
-        print(f"Firestore client initialized for project: {PROJECT_ID}")
+        db = firestore.Client(project=PROJECT_ID, database=DATABASE_ID)
+        print(f"Firestore client initialized for project '{PROJECT_ID}' and database '{DATABASE_ID}'")
     else:
-        # Fallback for local development where the variable might not be set
+        # Fallback for local development
         db = firestore.Client()
-        print("Firestore client initialized with default project.")
+        print("Firestore client initialized with default project and database.")
 except Exception as e:
     print(f"Could not initialize Firestore client: {e}")
     db = None
