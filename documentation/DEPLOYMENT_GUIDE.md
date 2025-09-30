@@ -117,6 +117,18 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --role="roles/datastore.user"
 ```
 
+**11. Grant Secret Manager Permissions to Backend Service Account**
+*This critical step allows the backend to access the Gemini API key for AI features.*
+
+The backend needs permission to read the API key from Secret Manager:
+
+```bash
+# Grant Secret Manager access for the Gemini API key
+gcloud secrets add-iam-policy-binding gemini-api-key \
+    --member="serviceAccount:${BACKEND_SA}" \
+    --role="roles/secretmanager.secretAccessor"
+```
+
 **Your one-time setup is now complete!**
 
 ---
@@ -147,5 +159,11 @@ Cloud Build will automatically detect the push, build the new container images, 
       --role="roles/datastore.user"
   ```
   This permission change takes effect immediately without requiring redeployment.
+- **Secret Manager Permissions (CRITICAL)**: If AI explanations and hints don't generate (no response when clicking "Get Explanation" or "Get Hint"), the backend lacks Secret Manager access. Grant the `roles/secretmanager.secretAccessor` role:
+  ```bash
+  gcloud secrets add-iam-policy-binding gemini-api-key \
+      --member="serviceAccount:SERVICE_ACCOUNT_EMAIL" \
+      --role="roles/secretmanager.secretAccessor"
+  ```
+  This permission change takes effect immediately without requiring redeployment.
 - **GCS Permissions**: If case studies are not loading, ensure the backend's service account has the `Storage Object Viewer` role on your GCS bucket.
-- **Secret Manager Permissions**: If the application fails to start due to API key issues, ensure the backend's service account has the `Secret Manager Secret Accessor` role on the `gemini-api-key` secret.
