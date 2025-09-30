@@ -240,13 +240,13 @@ export function DomainSelectionScreen() {
                 >
                   <div
                     className={cn(
-                      'flex h-5 w-5 items-center justify-center rounded border-2',
+                      'flex h-4 w-4 items-center justify-center rounded border-2 flex-shrink-0',
                       allDomainsSelected
                         ? 'bg-primary border-primary text-primary-foreground'
                         : 'border-muted-foreground'
                     )}
                   >
-                    {allDomainsSelected && <CheckCircle2 className="h-3 w-3" />}
+                    {allDomainsSelected && <CheckCircle2 className="h-2.5 w-2.5" />}
                   </div>
                   <div>
                     <p className="font-medium">All Questions</p>
@@ -273,16 +273,16 @@ export function DomainSelectionScreen() {
                 >
                   <div
                     className={cn(
-                      'flex h-5 w-5 items-center justify-center rounded border-2',
+                      'flex h-4 w-4 items-center justify-center rounded border-2 flex-shrink-0',
                       starredQuestionsSelected
                         ? 'bg-primary border-primary text-primary-foreground'
                         : 'border-muted-foreground'
                     )}
                   >
-                    {starredQuestionsSelected && <CheckCircle2 className="h-3 w-3" />}
+                    {starredQuestionsSelected && <CheckCircle2 className="h-2.5 w-2.5" />}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Star className="h-4 w-4 text-yellow-500" />
+                    <Star className="h-4 w-4 text-yellow-500 flex-shrink-0" />
                     <div>
                       <p className="font-medium">
                         Starred Questions

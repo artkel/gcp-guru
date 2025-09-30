@@ -73,25 +73,29 @@ export function StackedProgressBar({ progress }: StackedProgressBarProps) {
 
       {/* Legend */}
       <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
           <div className="flex items-center space-x-1">
             <div className="w-3 h-3 bg-destructive rounded"></div>
-            <span className="text-muted-foreground">Mistakes ({progress.mistakes_count})</span>
+            <span className="text-muted-foreground hidden sm:inline">Mistakes</span>
+            <span className="text-muted-foreground">({progress.mistakes_count})</span>
           </div>
           <div className="flex items-center space-x-1">
             <div className="w-3 h-3 bg-muted rounded"></div>
-            <span className="text-muted-foreground">Learning ({progress.learning_count})</span>
+            <span className="text-muted-foreground hidden sm:inline">Learning</span>
+            <span className="text-muted-foreground">({progress.learning_count})</span>
           </div>
           <div className="flex items-center space-x-1">
             <div className="w-3 h-3 bg-success rounded"></div>
-            <span className="text-muted-foreground">Mastered ({progress.mastered_count})</span>
+            <span className="text-muted-foreground hidden sm:inline">Mastered</span>
+            <span className="text-muted-foreground">({progress.mastered_count})</span>
           </div>
           <div className="flex items-center space-x-1">
             <div className="w-3 h-3 bg-purple-500 rounded"></div>
-            <span className="text-muted-foreground">Perfected ({progress.perfected_count})</span>
+            <span className="text-muted-foreground hidden sm:inline">Perfected</span>
+            <span className="text-muted-foreground">({progress.perfected_count})</span>
           </div>
         </div>
-        <div className="text-muted-foreground">
+        <div className="text-muted-foreground hidden sm:block whitespace-nowrap">
           Total: {total} questions
         </div>
       </div>
