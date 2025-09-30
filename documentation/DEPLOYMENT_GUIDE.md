@@ -129,6 +129,16 @@ gcloud secrets add-iam-policy-binding gemini-api-key \
     --role="roles/secretmanager.secretAccessor"
 ```
 
+**12. Grant GCS Permissions to Backend Service Account**
+*This critical step allows the backend to read case study files from Cloud Storage.*
+
+The backend needs permission to read case study markdown files from the GCS bucket:
+
+```bash
+# Grant GCS read access for case study files
+gsutil iam ch serviceAccount:${BACKEND_SA}:roles/storage.objectViewer gs://${BUCKET_NAME}
+```
+
 **Your one-time setup is now complete!**
 
 ---
@@ -166,4 +176,8 @@ Cloud Build will automatically detect the push, build the new container images, 
       --role="roles/secretmanager.secretAccessor"
   ```
   This permission change takes effect immediately without requiring redeployment.
-- **GCS Permissions**: If case studies are not loading, ensure the backend's service account has the `Storage Object Viewer` role on your GCS bucket.
+- **GCS Permissions (CRITICAL)**: If case study badges are clickable but show no content or return 404 errors, the backend lacks GCS access. Grant the `roles/storage.objectViewer` role:
+  ```bash
+  gsutil iam ch serviceAccount:SERVICE_ACCOUNT_EMAIL:roles/storage.objectViewer gs://BUCKET_NAME
+  ```
+  This permission change takes effect immediately without requiring redeployment.
