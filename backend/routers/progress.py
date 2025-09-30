@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from pydantic import BaseModel
 from typing import Optional, List
 from models.progress import UserProgress
 from services.progress_service import progress_service
 from services.question_service import question_service
+from services.auth_service import verify_token
 
 class ResetOptions(BaseModel):
     scores: bool = True
@@ -15,29 +16,35 @@ class ResetOptions(BaseModel):
 router = APIRouter()
 
 @router.get("/progress", response_model=UserProgress)
-async def get_progress():
+async def get_progress(token: dict = Depends(verify_token)):
     """Get user progress and analytics"""
     return progress_service.get_user_progress()
 
 @router.get("/progress/session")
-async def get_session_summary():
+async def get_session_summary(token: dict = Depends(verify_token)):
     """Get current session summary"""
     return progress_service.get_session_summary()
 
 @router.get("/progress/status")
-async def get_progress_status(tags: Optional[List[str]] = Query(None)):
+async def get_progress_status(
+    tags: Optional[List[str]] = Query(None),
+    token: dict = Depends(verify_token)
+):
     """Check if all questions for the given tags are already mastered."""
     all_mastered = progress_service.are_all_questions_mastered_for_tags(tags)
     return {"all_mastered": all_mastered}
 
 @router.post("/progress/session/start")
-async def start_new_session():
+async def start_new_session(token: dict = Depends(verify_token)):
     """Start a new learning session"""
     progress_service.start_new_session()
     return {"success": True, "message": "New session started"}
 
 @router.post("/progress/reset")
-async def reset_progress(options: Optional[ResetOptions] = None):
+async def reset_progress(
+    options: Optional[ResetOptions] = None,
+    token: dict = Depends(verify_token)
+):
     """Reset selected progress data"""
     if options is None:
         # Default behavior: reset everything for backward compatibility
@@ -47,7 +54,7 @@ async def reset_progress(options: Optional[ResetOptions] = None):
     return {"success": True, "message": "Selected progress has been reset"}
 
 @router.post("/progress/clear-explanations")
-async def clear_explanations():
+async def clear_explanations(token: dict = Depends(verify_token)):
     """Clear all explanations from all questions"""
     success = question_service.clear_all_explanations()
     if success:
@@ -56,7 +63,7 @@ async def clear_explanations():
         return {"success": False, "message": "Failed to clear explanations"}
 
 @router.post("/progress/clear-hints")
-async def clear_hints():
+async def clear_hints(token: dict = Depends(verify_token)):
     """Clear all hints from all questions"""
     success = question_service.clear_all_hints()
     if success:

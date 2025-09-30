@@ -1,4 +1,5 @@
 import { Question, QuestionResponse, AnswerSubmission, UserProgress, CaseStudyResponse, ShuffledQuestion, AnswerSubmissionWithMapping, ShuffledQuestionResponse } from '@/types';
+import { auth } from '@/lib/firebase';
 
 // For production, use the backend URL directly; for development, use relative path
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -22,9 +23,22 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   // Ensure we include /api in the path when using full backend URL
   const apiPath = API_BASE_URL.includes('http') ? '/api' : '';
   const url = `${API_BASE_URL}${apiPath}${endpoint}`;
+
+  // Get Firebase auth token
+  const user = auth.currentUser;
+  let token = '';
+  if (user) {
+    try {
+      token = await user.getIdToken();
+    } catch (error) {
+      console.error('Failed to get Firebase token:', error);
+    }
+  }
+
   const config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,

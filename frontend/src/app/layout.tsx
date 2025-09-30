@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { SWRProvider } from '@/components/providers/SWRProvider';
 import { ErrorBoundary } from '@/components/providers/ErrorBoundary';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -40,9 +41,11 @@ export default function RootLayout({
         <ErrorBoundary>
           <ThemeProvider>
             <SWRProvider>
-              <div className="relative flex min-h-screen flex-col">
-                {children}
-              </div>
+              <AuthProvider>
+                <div className="relative flex min-h-screen flex-col">
+                  {children}
+                </div>
+              </AuthProvider>
             </SWRProvider>
           </ThemeProvider>
         </ErrorBoundary>

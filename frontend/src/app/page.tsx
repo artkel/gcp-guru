@@ -9,6 +9,7 @@ import { ProgressScreen } from '@/components/screens/ProgressScreen';
 import { BrowseScreen } from '@/components/screens/BrowseScreen';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useAppStore } from '@/lib/store';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 export default function Home() {
   const { currentScreen, restoreSessionTimer } = useAppStore();
@@ -47,11 +48,11 @@ export default function Home() {
   };
 
   return (
-    <>
+    <AuthGuard>
       <Header />
       <main className="flex-1 flex flex-col">
         {renderScreen()}
       </main>
-    </>
+    </AuthGuard>
   );
 }
