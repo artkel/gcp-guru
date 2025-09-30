@@ -24,9 +24,17 @@ class APIError extends Error {
  */
 async function getAuthToken(): Promise<string | null> {
   // Only fetch auth token when running server-side on Cloud Run
-  if (typeof window === 'undefined' && process.env.K_SERVICE) {
+  const isServerSide = typeof window === 'undefined';
+  const isCloudRun = process.env.K_SERVICE !== undefined;
+
+  console.log('[Auth Debug] isServerSide:', isServerSide, 'isCloudRun:', isCloudRun, 'K_SERVICE:', process.env.K_SERVICE);
+
+  if (isServerSide && isCloudRun) {
     try {
-      const audience = API_BASE_URL;
+      // Audience must be the full backend URL without /api suffix
+      const audience = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
+      console.log('[Auth Debug] Fetching token for audience:', audience);
+
       const metadataServerUrl = `http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=${audience}`;
 
       const response = await fetch(metadataServerUrl, {
@@ -37,13 +45,18 @@ async function getAuthToken(): Promise<string | null> {
 
       if (response.ok) {
         const token = await response.text();
+        console.log('[Auth Debug] Successfully fetched token, length:', token.length);
         return token;
       } else {
-        console.error('Failed to fetch auth token:', response.status, response.statusText);
+        console.error('[Auth Error] Failed to fetch auth token:', response.status, response.statusText);
+        const errorText = await response.text().catch(() => '');
+        console.error('[Auth Error] Response:', errorText);
       }
     } catch (error) {
-      console.error('Error fetching auth token:', error);
+      console.error('[Auth Error] Exception fetching auth token:', error);
     }
+  } else {
+    console.log('[Auth Debug] Skipping auth token fetch - not in Cloud Run or not server-side');
   }
   return null;
 }
