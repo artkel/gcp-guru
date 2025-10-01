@@ -99,6 +99,7 @@ export function TrainingScreen() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [caseStudyData, setCaseStudyData] = useState<CaseStudyResponse | null>(null);
   const [originalMapping, setOriginalMapping] = useState<Record<string, string>>({});
+  const [sessionActiveDuration, setSessionActiveDuration] = useState<number>(0);
 
   // Confirmation dialog hook
   const { showConfirm, ConfirmDialog } = useConfirmDialog();
@@ -351,6 +352,9 @@ export function TrainingScreen() {
       confirmText: 'End Session',
       variant: 'info',
       onConfirm: () => {
+        // CRITICAL: Calculate and store active duration BEFORE stopping timer
+        const activeDurationMs = getActiveDuration();
+        setSessionActiveDuration(activeDurationMs);
         stopSessionTimer();
         setShowSessionComplete(true);
       },
@@ -358,8 +362,8 @@ export function TrainingScreen() {
   };
 
   const handleSessionCompleteClose = async () => {
-    const activeDurationMs = getActiveDuration();
-    await startNewSession(activeDurationMs);
+    // Use the stored active duration (calculated before timer was stopped)
+    await startNewSession(sessionActiveDuration);
     resetSessionStats();
     setCurrentScreen('start');
   };
