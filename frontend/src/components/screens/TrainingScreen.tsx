@@ -496,23 +496,30 @@ export function TrainingScreen() {
                   </div>
 
                   {showExplanation && explanation && (
-                    <div className="mt-4 p-4 bg-background/50 rounded border">
+                    <div
+                      className="mt-4 p-4 bg-background/50 rounded border"
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <h4 className="font-medium mb-2">Explanation:</h4>
-                      <div className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert select-text">
+                      <div
+                        className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert select-text cursor-text"
+                        style={{ userSelect: 'text', WebkitUserSelect: 'text' } as React.CSSProperties}
+                      >
                         <ReactMarkdown
                           components={{
                             strong: ({ children }) => (
-                              <strong className="font-semibold text-gray-900 dark:text-gray-100 select-text">
+                              <strong className="font-semibold text-gray-900 dark:text-gray-100">
                                 {children}
                               </strong>
                             ),
                             em: ({ children }) => (
-                              <em className="italic text-gray-800 dark:text-gray-200 select-text">
+                              <em className="italic text-gray-800 dark:text-gray-200">
                                 {children}
                               </em>
                             ),
                             p: ({ children }) => (
-                              <p className="mb-2 select-text">
+                              <p className="mb-2">
                                 {children}
                               </p>
                             ),
@@ -590,7 +597,7 @@ export function TrainingScreen() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Add your note..."
-              className="w-full h-32 p-3 border rounded-md resize-none"
+              className="w-full h-32 p-3 border rounded-md resize-none bg-background text-foreground placeholder:text-muted-foreground"
             />
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setShowNoteModal(false)}>
