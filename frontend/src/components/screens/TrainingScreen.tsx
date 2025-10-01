@@ -498,21 +498,21 @@ export function TrainingScreen() {
                   {showExplanation && explanation && (
                     <div className="mt-4 p-4 bg-background/50 rounded border">
                       <h4 className="font-medium mb-2">Explanation:</h4>
-                      <div className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert">
+                      <div className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert select-text">
                         <ReactMarkdown
                           components={{
                             strong: ({ children }) => (
-                              <strong className="font-semibold text-gray-900 dark:text-gray-100">
+                              <strong className="font-semibold text-gray-900 dark:text-gray-100 select-text">
                                 {children}
                               </strong>
                             ),
                             em: ({ children }) => (
-                              <em className="italic text-gray-800 dark:text-gray-200">
+                              <em className="italic text-gray-800 dark:text-gray-200 select-text">
                                 {children}
                               </em>
                             ),
                             p: ({ children }) => (
-                              <p className="mb-2">
+                              <p className="mb-2 select-text">
                                 {children}
                               </p>
                             ),

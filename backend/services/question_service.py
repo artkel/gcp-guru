@@ -61,26 +61,29 @@ class QuestionService:
         try:
             # Sort data by question_number to ensure consistent order
             data.sort(key=lambda x: x.get("question_number", 0))
-            
+
             parsed_questions = []
             for item in data:
                 # Convert answers to the expected format
-                answers = {}
-                for key, answer_data in item.get("answers", {}).items():
+                # IMPORTANT: Sort answers by key (a, b, c, d, etc.) to ensure correct order
+                answers_dict = {}
+                sorted_answer_keys = sorted(item.get("answers", {}).keys())
+                for key in sorted_answer_keys:
+                    answer_data = item.get("answers", {})[key]
                     if isinstance(answer_data, dict):
-                        answers[key] = Answer(
+                        answers_dict[key] = Answer(
                             answer_text=answer_data.get("answer_text", ""),
                             status=answer_data.get("status", "incorrect")
                         )
                     else:
                         # Handle legacy format
-                        answers[key] = Answer(answer_text=str(answer_data), status="incorrect")
+                        answers_dict[key] = Answer(answer_text=str(answer_data), status="incorrect")
 
-                # Create Question object
+                # Create Question object with sorted answers
                 question = Question(
                     question_number=item.get("question_number", 0),
                     question_text=item.get("question_text", ""),
-                    answers=answers,
+                    answers=answers_dict,
                     tag=item.get("tag", []),
                     explanation=item.get("explanation", ""),
                     hint=item.get("hint", ""),
