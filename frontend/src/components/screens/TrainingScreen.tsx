@@ -24,6 +24,48 @@ import { api, APIError } from '@/lib/api';
 import { Question, QuestionResponse, CaseStudyResponse, ShuffledQuestion, ShuffledQuestionResponse } from '@/types';
 import { cn, formatSessionTimer } from '@/lib/utils';
 
+// Separate memoized component for explanation to prevent re-renders from clearing text selection
+const ExplanationDisplay = React.memo(({ explanation }: { explanation: string }) => {
+  return (
+    <div
+      className="mt-4 p-4 bg-background/50 rounded border"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <h4 className="font-medium mb-2">Explanation:</h4>
+      <div
+        className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert cursor-text"
+        style={{ userSelect: 'text', WebkitUserSelect: 'text', MozUserSelect: 'text' } as React.CSSProperties}
+      >
+        <ReactMarkdown
+          components={{
+            strong: ({ children }) => (
+              <strong className="font-semibold text-gray-900 dark:text-gray-100">
+                {children}
+              </strong>
+            ),
+            em: ({ children }) => (
+              <em className="italic text-gray-800 dark:text-gray-200">
+                {children}
+              </em>
+            ),
+            p: ({ children }) => (
+              <p className="mb-2">
+                {children}
+              </p>
+            ),
+          }}
+        >
+          {explanation}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
+});
+
+ExplanationDisplay.displayName = 'ExplanationDisplay';
+
 export function TrainingScreen() {
   const {
     currentQuestion,
@@ -496,39 +538,7 @@ export function TrainingScreen() {
                   </div>
 
                   {showExplanation && explanation && (
-                    <div
-                      className="mt-4 p-4 bg-background/50 rounded border"
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <h4 className="font-medium mb-2">Explanation:</h4>
-                      <div
-                        className="text-lg leading-relaxed prose prose-lg max-w-none dark:prose-invert select-text cursor-text"
-                        style={{ userSelect: 'text', WebkitUserSelect: 'text' } as React.CSSProperties}
-                      >
-                        <ReactMarkdown
-                          components={{
-                            strong: ({ children }) => (
-                              <strong className="font-semibold text-gray-900 dark:text-gray-100">
-                                {children}
-                              </strong>
-                            ),
-                            em: ({ children }) => (
-                              <em className="italic text-gray-800 dark:text-gray-200">
-                                {children}
-                              </em>
-                            ),
-                            p: ({ children }) => (
-                              <p className="mb-2">
-                                {children}
-                              </p>
-                            ),
-                          }}
-                        >
-                          {explanation}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
+                    <ExplanationDisplay explanation={explanation} />
                   )}
                 </div>
               )}
