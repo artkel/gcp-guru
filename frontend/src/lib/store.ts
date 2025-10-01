@@ -18,6 +18,7 @@ export const useAppStore = create<AppState>()(
         sessionStart: Date.now(),
       },
       sessionTimer: 0,
+      sessionTimerIntervalId: null as number | null,
       isTimerPaused: false,
       accumulatedTime: 0,
 
@@ -74,6 +75,7 @@ export const useAppStore = create<AppState>()(
           sessionStats: { ...state.sessionStats, sessionStart },
           isTimerPaused: false,
           accumulatedTime: 0,
+          sessionTimer: 0,
         }));
 
         // Start timer interval
@@ -84,15 +86,15 @@ export const useAppStore = create<AppState>()(
               sessionTimer: Date.now() - state.sessionStats.sessionStart,
             });
           }
-        }, 1000);
+        }, 1000) as unknown as number;
 
-        // Store interval ID for cleanup
-        set({ sessionTimer: interval as any });
+        // Store interval ID separately
+        set({ sessionTimerIntervalId: interval });
       },
 
       pauseSessionTimer: () => {
-        const { sessionTimer, sessionStats } = get();
-        if (sessionTimer && !get().isTimerPaused) {
+        const { sessionStats, isTimerPaused } = get();
+        if (!isTimerPaused) {
           // Calculate accumulated time before pausing
           const currentElapsed = Date.now() - sessionStats.sessionStart;
           set({
@@ -103,8 +105,8 @@ export const useAppStore = create<AppState>()(
       },
 
       resumeSessionTimer: () => {
-        const { accumulatedTime } = get();
-        if (get().isTimerPaused) {
+        const { accumulatedTime, isTimerPaused } = get();
+        if (isTimerPaused) {
           // Adjust sessionStart to account for paused time
           const newSessionStart = Date.now() - accumulatedTime;
           set((state) => ({
@@ -115,10 +117,15 @@ export const useAppStore = create<AppState>()(
       },
 
       stopSessionTimer: () => {
-        const { sessionTimer } = get();
-        if (sessionTimer) {
-          clearInterval(sessionTimer as any);
-          set({ sessionTimer: 0, isTimerPaused: false, accumulatedTime: 0 });
+        const { sessionTimerIntervalId } = get();
+        if (sessionTimerIntervalId) {
+          clearInterval(sessionTimerIntervalId);
+          set({
+            sessionTimer: 0,
+            sessionTimerIntervalId: null,
+            isTimerPaused: false,
+            accumulatedTime: 0
+          });
         }
       },
 
@@ -131,6 +138,7 @@ export const useAppStore = create<AppState>()(
             sessionStart: Date.now(),
           },
           sessionTimer: 0,
+          sessionTimerIntervalId: null,
           isTimerPaused: false,
           accumulatedTime: 0,
           selectedAnswers: new Set(),
@@ -143,11 +151,14 @@ export const useAppStore = create<AppState>()(
         // Only restore timer if we're in training mode and have an active session
         if (currentScreen === 'training' && sessionStats.total > 0) {
           const interval = setInterval(() => {
-            set((state) => ({
-              sessionTimer: Date.now() - state.sessionStats.sessionStart,
-            }));
-          }, 1000);
-          set({ sessionTimer: interval as any });
+            const state = get();
+            if (!state.isTimerPaused) {
+              set({
+                sessionTimer: Date.now() - state.sessionStats.sessionStart,
+              });
+            }
+          }, 1000) as unknown as number;
+          set({ sessionTimerIntervalId: interval });
         }
       },
     }),

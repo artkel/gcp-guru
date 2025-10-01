@@ -116,6 +116,7 @@ export interface AppState {
   selectedAnswers: Set<string>;
   sessionStats: SessionStats;
   sessionTimer: number;
+  sessionTimerIntervalId: number | null;
   isTimerPaused: boolean;
   accumulatedTime: number;
 

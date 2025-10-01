@@ -425,21 +425,21 @@ export function TrainingScreen() {
                 End Session
               </Button>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={isTimerPaused ? resumeSessionTimer : pauseSessionTimer}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                aria-label={isTimerPaused ? "Resume timer" : "Pause timer"}
-              >
-                {isTimerPaused ? (
-                  <Play className="h-4 w-4" />
-                ) : (
-                  <Pause className="h-4 w-4" />
-                )}
-              </button>
-              <div className="text-right text-sm text-muted-foreground">
-                <div>Questions: {sessionStats.total} | Correct: {sessionStats.correct} | Accuracy: {sessionStats.accuracy}%</div>
-                <div>Time: {formatSessionTimer(sessionStats.sessionStart)}</div>
+            <div className="text-right text-sm text-muted-foreground">
+              <div>Questions: {sessionStats.total} | Correct: {sessionStats.correct} | Accuracy: {sessionStats.accuracy}%</div>
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={isTimerPaused ? resumeSessionTimer : pauseSessionTimer}
+                  className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  aria-label={isTimerPaused ? "Resume timer" : "Pause timer"}
+                >
+                  {isTimerPaused ? (
+                    <Play className="h-3.5 w-3.5" />
+                  ) : (
+                    <Pause className="h-3.5 w-3.5" />
+                  )}
+                </button>
+                <span>Time: {formatSessionTimer(sessionStats.sessionStart)}</span>
               </div>
             </div>
           </div>
