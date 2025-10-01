@@ -182,13 +182,22 @@ class ProgressService:
         except Exception as e:
             print(f"Error saving individual sessions to local file: {e}")
 
-    def start_new_session(self):
-        """Start a new learning session"""
+    def start_new_session(self, active_duration_minutes=None):
+        """Start a new learning session
+
+        Args:
+            active_duration_minutes: Optional active time in minutes (excluding paused time).
+                                    If None, calculates from session_start to now.
+        """
         if self.current_session.total_questions > 0:
             self.save_current_session_to_daily()
 
             session_end = datetime.now()
-            session_duration = (session_end - self.current_session.session_start).total_seconds() / 60
+            # Use provided active duration if available, otherwise calculate from timestamps
+            if active_duration_minutes is not None:
+                session_duration = active_duration_minutes
+            else:
+                session_duration = (session_end - self.current_session.session_start).total_seconds() / 60
 
             individual_session = IndividualSession(
                 session_start=self.current_session.session_start,

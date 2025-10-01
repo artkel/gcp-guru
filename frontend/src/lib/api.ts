@@ -220,9 +220,10 @@ export const api = {
       return request<any>('/progress/session');
     },
 
-    startNewSession: async (): Promise<{ success: boolean; message: string }> => {
+    startNewSession: async (activeDurationMs?: number): Promise<{ success: boolean; message: string }> => {
       return request<{ success: boolean; message: string }>('/progress/session/start', {
         method: 'POST',
+        body: activeDurationMs ? JSON.stringify({ active_duration_ms: activeDurationMs }) : undefined,
       });
     },
 

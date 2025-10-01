@@ -312,6 +312,17 @@ export function TrainingScreen() {
     }
   };
 
+  const getActiveDuration = (): number => {
+    // Calculate active duration excluding paused time
+    if (isTimerPaused) {
+      // If currently paused, use accumulated time
+      return accumulatedTime;
+    } else {
+      // If running, calculate current elapsed time
+      return Date.now() - sessionStats.sessionStart;
+    }
+  };
+
   const handleBackToStart = async () => {
     if (sessionStats.total > 0) {
       showConfirm({
@@ -320,8 +331,9 @@ export function TrainingScreen() {
         confirmText: 'End Session',
         variant: 'warning',
         onConfirm: async () => {
+          const activeDurationMs = getActiveDuration();
           stopSessionTimer();
-          await startNewSession();
+          await startNewSession(activeDurationMs);
           resetSessionStats();
           setCurrentScreen('start');
         },
@@ -346,7 +358,8 @@ export function TrainingScreen() {
   };
 
   const handleSessionCompleteClose = async () => {
-    await startNewSession();
+    const activeDurationMs = getActiveDuration();
+    await startNewSession(activeDurationMs);
     resetSessionStats();
     setCurrentScreen('start');
   };

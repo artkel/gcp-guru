@@ -34,10 +34,19 @@ async def get_progress_status(
     all_mastered = progress_service.are_all_questions_mastered_for_tags(tags)
     return {"all_mastered": all_mastered}
 
+class SessionStartRequest(BaseModel):
+    active_duration_ms: Optional[int] = None  # Active time in milliseconds (excluding paused time)
+
 @router.post("/progress/session/start")
-async def start_new_session(token: dict = Depends(verify_token)):
+async def start_new_session(
+    request: Optional[SessionStartRequest] = None,
+    token: dict = Depends(verify_token)
+):
     """Start a new learning session"""
-    progress_service.start_new_session()
+    active_duration_minutes = None
+    if request and request.active_duration_ms:
+        active_duration_minutes = request.active_duration_ms / 60000  # Convert ms to minutes
+    progress_service.start_new_session(active_duration_minutes)
     return {"success": True, "message": "New session started"}
 
 @router.post("/progress/reset")
