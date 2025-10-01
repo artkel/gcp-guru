@@ -190,15 +190,17 @@ class ProgressService:
                                     If None, calculates from session_start to now.
         """
         if self.current_session.total_questions > 0:
-            self.save_current_session_to_daily()
-
+            # Calculate session duration once (for both daily history and individual session)
             session_end = datetime.now()
-            # Use provided active duration if available, otherwise calculate from timestamps
             if active_duration_minutes is not None:
                 session_duration = active_duration_minutes
             else:
                 session_duration = (session_end - self.current_session.session_start).total_seconds() / 60
 
+            # Save to daily history with the correct duration
+            self.save_current_session_to_daily(session_duration)
+
+            # Create individual session record with the same duration
             individual_session = IndividualSession(
                 session_start=self.current_session.session_start,
                 session_end=session_end,
@@ -206,7 +208,7 @@ class ProgressService:
                 correct_answers=self.current_session.correct_answers,
                 incorrect_answers=self.current_session.incorrect_answers,
                 accuracy=self.current_session.accuracy,
-                duration_minutes=session_duration,
+                duration_minutes=session_duration,  # Use the same calculated duration
                 tags=list(self.current_session_tags)
             )
             self.individual_sessions.append(individual_session)
@@ -220,21 +222,23 @@ class ProgressService:
         self.current_session_questions = set()
         self.current_session_tags = set()
 
-    def save_current_session_to_daily(self):
-        """Save current session data to daily history"""
+    def save_current_session_to_daily(self, session_duration_minutes):
+        """Save current session data to daily history
+
+        Args:
+            session_duration_minutes: Active session duration in minutes (excluding paused time)
+        """
         if self.current_session.total_questions == 0:
             return
 
         today = date.today()
         existing_entry = next((entry for entry in self.daily_history if entry.date == today), None)
 
-        session_duration = (datetime.now() - self.current_session.session_start).total_seconds() / 60
-
         if existing_entry:
             existing_entry.total_questions += self.current_session.total_questions
             existing_entry.correct_answers += self.current_session.correct_answers
             existing_entry.incorrect_answers += self.current_session.incorrect_answers
-            existing_entry.duration_minutes += session_duration
+            existing_entry.duration_minutes += session_duration_minutes
             existing_entry.tags = list(set(existing_entry.tags + list(self.current_session_tags)))
             if existing_entry.total_questions > 0:
                 existing_entry.accuracy = (existing_entry.correct_answers / existing_entry.total_questions) * 100
@@ -245,7 +249,7 @@ class ProgressService:
                 correct_answers=self.current_session.correct_answers,
                 incorrect_answers=self.current_session.incorrect_answers,
                 accuracy=self.current_session.accuracy,
-                duration_minutes=session_duration,
+                duration_minutes=session_duration_minutes,
                 tags=list(self.current_session_tags)
             )
             self.daily_history.append(new_entry)
