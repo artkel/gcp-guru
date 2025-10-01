@@ -22,7 +22,7 @@ import {
 } from '@/hooks/useApi';
 import { api, APIError } from '@/lib/api';
 import { Question, QuestionResponse, CaseStudyResponse, ShuffledQuestion, ShuffledQuestionResponse } from '@/types';
-import { cn, formatSessionTimer } from '@/lib/utils';
+import { cn, formatElapsedTime } from '@/lib/utils';
 
 // Separate memoized component for explanation to prevent re-renders from clearing text selection
 const ExplanationDisplay = React.memo(({ explanation }: { explanation: string }) => {
@@ -82,6 +82,7 @@ export function TrainingScreen() {
     pauseSessionTimer,
     resumeSessionTimer,
     isTimerPaused,
+    accumulatedTime,
     resetSessionStats,
     useShuffledQuestions,
   } = useAppStore();
@@ -439,7 +440,9 @@ export function TrainingScreen() {
                     <Pause className="h-3.5 w-3.5" />
                   )}
                 </button>
-                <span>Time: {formatSessionTimer(sessionStats.sessionStart)}</span>
+                <span>
+                  Time: {isTimerPaused ? formatElapsedTime(accumulatedTime) : formatElapsedTime(Date.now() - sessionStats.sessionStart)}
+                </span>
               </div>
             </div>
           </div>
@@ -566,17 +569,18 @@ export function TrainingScreen() {
                     <Button
                       variant="outline"
                       onClick={handleSkipQuestion}
+                      disabled={isTimerPaused}
                       className="text-muted-foreground"
                     >
                       <SkipForward className="h-4 w-4 mr-2" />
-                      Skip
+                      {isTimerPaused ? 'Paused' : 'Skip'}
                     </Button>
                     <Button
                       onClick={handleSubmitAnswer}
-                      disabled={selectedAnswers.size === 0}
+                      disabled={selectedAnswers.size === 0 || isTimerPaused}
                       size="lg"
                     >
-                      Submit Answer
+                      {isTimerPaused ? 'Timer Paused - Resume to Continue' : 'Submit Answer'}
                     </Button>
                   </>
                 )}

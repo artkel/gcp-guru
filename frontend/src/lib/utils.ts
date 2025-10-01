@@ -32,6 +32,12 @@ export function formatSessionTimer(startTime: number): string {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+export function formatElapsedTime(milliseconds: number): string {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
 export function getMasteryClass(percentage: number): string {
   if (percentage >= 95) return 'text-purple-600 font-semibold';
   if (percentage >= 70) return 'text-green-600 font-semibold';
