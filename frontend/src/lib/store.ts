@@ -18,6 +18,8 @@ export const useAppStore = create<AppState>()(
         sessionStart: Date.now(),
       },
       sessionTimer: 0,
+      isTimerPaused: false,
+      accumulatedTime: 0,
 
       // UI state
       theme: 'light',
@@ -70,24 +72,53 @@ export const useAppStore = create<AppState>()(
         const sessionStart = Date.now();
         set((state) => ({
           sessionStats: { ...state.sessionStats, sessionStart },
+          isTimerPaused: false,
+          accumulatedTime: 0,
         }));
 
         // Start timer interval
         const interval = setInterval(() => {
-          set((state) => ({
-            sessionTimer: Date.now() - state.sessionStats.sessionStart,
-          }));
+          const state = get();
+          if (!state.isTimerPaused) {
+            set({
+              sessionTimer: Date.now() - state.sessionStats.sessionStart,
+            });
+          }
         }, 1000);
 
         // Store interval ID for cleanup
         set({ sessionTimer: interval as any });
       },
 
+      pauseSessionTimer: () => {
+        const { sessionTimer, sessionStats } = get();
+        if (sessionTimer && !get().isTimerPaused) {
+          // Calculate accumulated time before pausing
+          const currentElapsed = Date.now() - sessionStats.sessionStart;
+          set({
+            isTimerPaused: true,
+            accumulatedTime: currentElapsed,
+          });
+        }
+      },
+
+      resumeSessionTimer: () => {
+        const { accumulatedTime } = get();
+        if (get().isTimerPaused) {
+          // Adjust sessionStart to account for paused time
+          const newSessionStart = Date.now() - accumulatedTime;
+          set((state) => ({
+            sessionStats: { ...state.sessionStats, sessionStart: newSessionStart },
+            isTimerPaused: false,
+          }));
+        }
+      },
+
       stopSessionTimer: () => {
         const { sessionTimer } = get();
         if (sessionTimer) {
           clearInterval(sessionTimer as any);
-          set({ sessionTimer: 0 });
+          set({ sessionTimer: 0, isTimerPaused: false, accumulatedTime: 0 });
         }
       },
 
@@ -100,6 +131,8 @@ export const useAppStore = create<AppState>()(
             sessionStart: Date.now(),
           },
           sessionTimer: 0,
+          isTimerPaused: false,
+          accumulatedTime: 0,
           selectedAnswers: new Set(),
           currentQuestion: null,
         }),

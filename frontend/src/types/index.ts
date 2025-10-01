@@ -116,6 +116,8 @@ export interface AppState {
   selectedAnswers: Set<string>;
   sessionStats: SessionStats;
   sessionTimer: number;
+  isTimerPaused: boolean;
+  accumulatedTime: number;
 
   // UI state
   theme: 'light' | 'dark';
@@ -143,6 +145,8 @@ export interface AppState {
   setUserProgress: (progress: UserProgress | null) => void;
   setQuestionsList: (questions: Question[]) => void;
   startSessionTimer: () => void;
+  pauseSessionTimer: () => void;
+  resumeSessionTimer: () => void;
   stopSessionTimer: () => void;
   resetSessionStats: () => void;
   restoreSessionTimer: () => void;
