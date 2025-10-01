@@ -96,8 +96,8 @@ export function useSkipQuestion() {
 }
 
 export function useStartNewSession() {
-  return async () => {
-    return api.progress.startNewSession();
+  return async (activeDurationMs?: number) => {
+    return api.progress.startNewSession(activeDurationMs);
   };
 }
 
