@@ -1,14 +1,18 @@
 import json
 import os
 from datetime import datetime, date, timedelta
+from zoneinfo import ZoneInfo
 from typing import List, Dict
 from models.progress import SessionStats, TagProgress, OverallProgress, UserProgress, DailySessionHistory, IndividualSession
 from services.question_service import question_service
 from services.firestore_service import get_document, set_document
 
+# User's timezone - change this to match your location
+USER_TIMEZONE = ZoneInfo("Europe/Berlin")
+
 class ProgressService:
     def __init__(self):
-        self.current_session = SessionStats(session_start=datetime.now())
+        self.current_session = SessionStats(session_start=datetime.now(USER_TIMEZONE))
         self.daily_history: List[DailySessionHistory] = []
         self.individual_sessions: List[IndividualSession] = []
         
@@ -191,7 +195,7 @@ class ProgressService:
         """
         if self.current_session.total_questions > 0:
             # Calculate session duration once (for both daily history and individual session)
-            session_end = datetime.now()
+            session_end = datetime.now(USER_TIMEZONE)
             if active_duration_minutes is not None:
                 session_duration = active_duration_minutes
             else:
@@ -218,7 +222,7 @@ class ProgressService:
 
             self.save_individual_sessions()
 
-        self.current_session = SessionStats(session_start=datetime.now())
+        self.current_session = SessionStats(session_start=datetime.now(USER_TIMEZONE))
         self.current_session_questions = set()
         self.current_session_tags = set()
 
@@ -231,7 +235,7 @@ class ProgressService:
         if self.current_session.total_questions == 0:
             return
 
-        today = date.today()
+        today = datetime.now(USER_TIMEZONE).date()
         existing_entry = next((entry for entry in self.daily_history if entry.date == today), None)
 
         if existing_entry:
@@ -404,7 +408,7 @@ class ProgressService:
         self.individual_sessions = []
         self.save_session_history()
         self.save_individual_sessions()
-        self.current_session = SessionStats(session_start=datetime.now())
+        self.current_session = SessionStats(session_start=datetime.now(USER_TIMEZONE))
 
     def reset_selective_progress(self, options: dict):
         """Reset selected progress data based on options (only active questions)"""
@@ -428,7 +432,7 @@ class ProgressService:
             self.save_session_history()
 
         if any(options.values()):
-            self.current_session = SessionStats(session_start=datetime.now())
+            self.current_session = SessionStats(session_start=datetime.now(USER_TIMEZONE))
             self.current_session_questions = set()
             self.current_session_tags = set()
 
@@ -439,7 +443,7 @@ class ProgressService:
             "correct_answers": self.current_session.correct_answers,
             "incorrect_answers": self.current_session.incorrect_answers,
             "accuracy_percentage": round(self.current_session.accuracy, 1),
-            "session_duration_minutes": round((datetime.now() - self.current_session.session_start).total_seconds() / 60, 1)
+            "session_duration_minutes": round((datetime.now(USER_TIMEZONE) - self.current_session.session_start).total_seconds() / 60, 1)
         }
 
 # Global instance
