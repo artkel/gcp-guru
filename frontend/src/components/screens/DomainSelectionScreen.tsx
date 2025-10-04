@@ -77,19 +77,12 @@ export function DomainSelectionScreen() {
     setLocalSelectedMasteryLevels(['mistakes', 'learning', 'mastered', 'perfected']); // Reset mastery levels
 
     const checkStarredQuestions = async () => {
-      console.log('Checking for starred questions...'); // Debug log
-
       try {
         const questions = await api.questions.getList();
-        console.log(`Total questions loaded: ${questions.length}`); // Debug log
-
         const starredQuestions = questions.filter(q => q.starred);
-        console.log(`Starred questions found: ${starredQuestions.length}`); // Debug log
-        console.log('Starred question IDs:', starredQuestions.map(q => q.question_number)); // Debug log
 
         if (!isCancelled) {
           setHasStarredQuestions(starredQuestions.length > 0);
-          console.log(`Setting hasStarredQuestions to: ${starredQuestions.length > 0}`); // Debug log
         }
       } catch (error) {
         console.error('Failed to check starred questions:', error);
@@ -100,12 +93,12 @@ export function DomainSelectionScreen() {
     };
 
     checkStarredQuestions();
-    updateAvailableMasteryLevels(); // Update available mastery levels on mount
 
     return () => {
       isCancelled = true;
     };
-  }, [setSelectedDomains, updateAvailableMasteryLevels]); // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   // Update available mastery levels when domain selection changes
   useEffect(() => {
