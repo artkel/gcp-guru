@@ -304,11 +304,11 @@ export function DomainSelectionScreen() {
                     <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg z-50">
                       <div className="p-2 space-y-1">
                         {[
-                          { id: 'mistakes', label: 'Mistakes', colorClass: 'bg-red-500 hover:bg-red-600 text-white' },
-                          { id: 'learning', label: 'Learning', colorClass: 'bg-gray-500 hover:bg-gray-600 text-white' },
-                          { id: 'mastered', label: 'Mastered', colorClass: 'bg-blue-500 hover:bg-blue-600 text-white' },
-                          { id: 'perfected', label: 'Perfected', colorClass: 'bg-green-500 hover:bg-green-600 text-white' }
-                        ].map(({ id, label, colorClass }) => {
+                          { id: 'mistakes', label: 'Mistakes', selectedClass: 'bg-destructive text-white', hoverClass: 'hover:bg-destructive/90' },
+                          { id: 'learning', label: 'Learning', selectedClass: 'bg-muted text-muted-foreground', hoverClass: 'hover:bg-muted/90' },
+                          { id: 'mastered', label: 'Mastered', selectedClass: 'bg-success text-white', hoverClass: 'hover:bg-success/90' },
+                          { id: 'perfected', label: 'Perfected', selectedClass: 'bg-purple-500 text-white', hoverClass: 'hover:bg-purple-600' }
+                        ].map(({ id, label, selectedClass, hoverClass }) => {
                           const isSelected = localSelectedMasteryLevels.includes(id);
                           const isAvailable = availableMasteryLevels[id];
 
@@ -319,7 +319,8 @@ export function DomainSelectionScreen() {
                               disabled={!isAvailable}
                               className={cn(
                                 'w-full px-3 py-2 rounded-md text-sm font-medium transition-all text-left',
-                                isSelected && isAvailable && colorClass,
+                                isSelected && isAvailable && selectedClass,
+                                isSelected && isAvailable && hoverClass,
                                 !isSelected && isAvailable && 'border border-border hover:bg-accent',
                                 !isAvailable && 'opacity-30 cursor-not-allowed border border-border'
                               )}
