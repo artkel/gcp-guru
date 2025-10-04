@@ -75,6 +75,7 @@ export function TrainingScreen() {
     sessionStats,
     updateSessionStats,
     selectedDomains,
+    selectedMasteryLevels,
     setCurrentScreen,
     isLoading,
     setIsLoading,
@@ -122,8 +123,8 @@ export function TrainingScreen() {
     setIsLoading(true);
     try {
       const question = useShuffledQuestions
-        ? await api.questions.getRandomShuffled(selectedDomains || undefined)
-        : await api.questions.getRandom(selectedDomains || undefined);
+        ? await api.questions.getRandomShuffled(selectedDomains || undefined, selectedMasteryLevels)
+        : await api.questions.getRandom(selectedDomains || undefined, selectedMasteryLevels);
 
       setCurrentQuestion(question);
 
@@ -154,6 +155,7 @@ export function TrainingScreen() {
     setIsLoading,
     useShuffledQuestions,
     selectedDomains,
+    selectedMasteryLevels,
     setCurrentQuestion,
     setOriginalMapping,
     setSelectedAnswers,

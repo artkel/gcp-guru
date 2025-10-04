@@ -40,14 +40,15 @@ async def get_questions(
 @router.get("/questions/random", response_model=Question)
 async def get_random_question(
     tags: Optional[List[str]] = Query(None),
+    mastery_levels: Optional[List[str]] = Query(None),
     token: dict = Depends(verify_token)
 ):
-    """Get a random question, optionally filtered by tags"""
-    question = question_service.get_random_question(tags)
+    """Get a random question, optionally filtered by tags and mastery levels"""
+    question = question_service.get_random_question(tags, mastery_levels)
     if not question:
         # Check why no question was returned
         from services.progress_service import progress_service
-        available = progress_service.get_available_questions_for_tags(tags)
+        available = progress_service.get_available_questions_for_tags(tags, mastery_levels)
 
         if len(available) == 0:
             # Check if all questions for these tags are mastered
@@ -63,14 +64,15 @@ async def get_random_question(
 @router.get("/questions/random-shuffled", response_model=ShuffledQuestion)
 async def get_random_shuffled_question(
     tags: Optional[List[str]] = Query(None),
+    mastery_levels: Optional[List[str]] = Query(None),
     token: dict = Depends(verify_token)
 ):
     """Get a random question with shuffled answers"""
-    shuffled_question = question_service.get_random_shuffled_question(tags)
+    shuffled_question = question_service.get_random_shuffled_question(tags, mastery_levels)
     if not shuffled_question:
         # Check why no question was returned (reuse existing logic)
         from services.progress_service import progress_service
-        available = progress_service.get_available_questions_for_tags(tags)
+        available = progress_service.get_available_questions_for_tags(tags, mastery_levels)
 
         if len(available) == 0:
             # Check if all questions for these tags are mastered

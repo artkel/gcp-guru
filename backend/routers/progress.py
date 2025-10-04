@@ -34,6 +34,15 @@ async def get_progress_status(
     all_mastered = progress_service.are_all_questions_mastered_for_tags(tags)
     return {"all_mastered": all_mastered}
 
+@router.get("/progress/available-mastery-levels")
+async def get_available_mastery_levels(
+    tags: Optional[List[str]] = Query(None),
+    token: dict = Depends(verify_token)
+):
+    """Get which mastery levels have questions available for the given tags."""
+    availability = progress_service.get_available_mastery_levels_for_tags(tags)
+    return {"mastery_levels": availability}
+
 class SessionStartRequest(BaseModel):
     active_duration_ms: Optional[int] = None  # Active time in milliseconds (excluding paused time)
 

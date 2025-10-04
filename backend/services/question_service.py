@@ -144,11 +144,11 @@ class QuestionService:
                 return q
         return None
 
-    def get_random_question(self, tags: Optional[List[str]] = None) -> Optional[Question]:
+    def get_random_question(self, tags: Optional[List[str]] = None, mastery_levels: Optional[List[str]] = None) -> Optional[Question]:
         """Get a random question using sophisticated probability-based selection"""
         from services.progress_service import progress_service
 
-        available_questions = progress_service.get_available_questions_for_tags(tags)
+        available_questions = progress_service.get_available_questions_for_tags(tags, mastery_levels)
 
         if not available_questions:
             return None
@@ -162,9 +162,9 @@ class QuestionService:
 
         return selected_question
 
-    def get_random_shuffled_question(self, tags: Optional[List[str]] = None) -> Optional[ShuffledQuestion]:
+    def get_random_shuffled_question(self, tags: Optional[List[str]] = None, mastery_levels: Optional[List[str]] = None) -> Optional[ShuffledQuestion]:
         """Get a random question with shuffled answers"""
-        base_question = self.get_random_question(tags)
+        base_question = self.get_random_question(tags, mastery_levels)
         if not base_question:
             return None
 

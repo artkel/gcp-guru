@@ -64,26 +64,30 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   // Question endpoints
   questions: {
-    getRandom: async (tags?: string[]): Promise<Question> => {
-      let params = '';
+    getRandom: async (tags?: string[], masteryLevels?: string[]): Promise<Question> => {
+      const urlParams = new URLSearchParams();
       if (tags && tags.length > 0) {
-        const urlParams = new URLSearchParams();
         tags.forEach(tag => urlParams.append('tags', tag));
-        params = `?${urlParams.toString()}`;
       }
+      if (masteryLevels && masteryLevels.length > 0) {
+        masteryLevels.forEach(level => urlParams.append('mastery_levels', level));
+      }
+      const params = urlParams.toString();
       const cacheBuster = params ? `&_t=${Date.now()}` : `?_t=${Date.now()}`;
-      return request<Question>(`/questions/random${params}${cacheBuster}`);
+      return request<Question>(`/questions/random${params ? '?' + params : ''}${cacheBuster}`);
     },
 
-    getRandomShuffled: async (tags?: string[]): Promise<ShuffledQuestion> => {
-      let params = '';
+    getRandomShuffled: async (tags?: string[], masteryLevels?: string[]): Promise<ShuffledQuestion> => {
+      const urlParams = new URLSearchParams();
       if (tags && tags.length > 0) {
-        const urlParams = new URLSearchParams();
         tags.forEach(tag => urlParams.append('tags', tag));
-        params = `?${urlParams.toString()}`;
       }
+      if (masteryLevels && masteryLevels.length > 0) {
+        masteryLevels.forEach(level => urlParams.append('mastery_levels', level));
+      }
+      const params = urlParams.toString();
       const cacheBuster = params ? `&_t=${Date.now()}` : `?_t=${Date.now()}`;
-      return request<ShuffledQuestion>(`/questions/random-shuffled${params}${cacheBuster}`);
+      return request<ShuffledQuestion>(`/questions/random-shuffled${params ? '?' + params : ''}${cacheBuster}`);
     },
 
     getList: async (filters: {
@@ -214,6 +218,14 @@ export const api = {
         tags.forEach(tag => params.append('tags', tag));
       }
       return request<{ all_mastered: boolean }>(`/progress/status?${params.toString()}`);
+    },
+
+    getAvailableMasteryLevels: async (tags?: string[]): Promise<{ mastery_levels: Record<string, boolean> }> => {
+      const params = new URLSearchParams();
+      if (tags) {
+        tags.forEach(tag => params.append('tags', tag));
+      }
+      return request<{ mastery_levels: Record<string, boolean> }>(`/progress/available-mastery-levels?${params.toString()}`);
     },
 
     getSessionSummary: async (): Promise<any> => {

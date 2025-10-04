@@ -288,8 +288,13 @@ class ProgressService:
         """Check if question has already been shown in current session"""
         return question_id in self.current_session_questions
 
-    def get_available_questions_for_tags(self, tags: List[str] = None) -> List:
-        """Get all unseen and active questions for the current session, filtered by tags."""
+    def get_available_questions_for_tags(self, tags: List[str] = None, mastery_levels: List[str] = None) -> List:
+        """Get all unseen and active questions for the current session, filtered by tags and mastery levels.
+
+        Args:
+            tags: List of tags to filter by (can include 'starred')
+            mastery_levels: List of mastery level names ('mistakes', 'learning', 'mastered', 'perfected')
+        """
         all_questions = question_service.get_all_questions()
         if tags:
             filtered_questions = []
@@ -316,7 +321,91 @@ class ProgressService:
             filtered_questions = unique_filtered_questions
         else:
             filtered_questions = all_questions
+
+        # Apply mastery level filtering if specified
+        if mastery_levels:
+            filtered_questions = self._filter_by_mastery_levels(filtered_questions, mastery_levels)
+
         return [q for q in filtered_questions if not self.is_question_shown_in_session(q.question_number) and q.active]
+
+    def _filter_by_mastery_levels(self, questions: List, mastery_levels: List[str]) -> List:
+        """Filter questions by mastery levels.
+
+        Mastery levels map to scores as follows:
+        - mistakes: score == -1
+        - learning: score in [0, 1]
+        - mastered: score in [2, 3]
+        - perfected: score >= 4
+        """
+        filtered = []
+        for question in questions:
+            score = question.score
+            if 'mistakes' in mastery_levels and score == -1:
+                filtered.append(question)
+            elif 'learning' in mastery_levels and 0 <= score <= 1:
+                filtered.append(question)
+            elif 'mastered' in mastery_levels and 2 <= score <= 3:
+                filtered.append(question)
+            elif 'perfected' in mastery_levels and score >= 4:
+                filtered.append(question)
+        return filtered
+
+    def get_available_mastery_levels_for_tags(self, tags: List[str] = None) -> Dict[str, bool]:
+        """Get which mastery levels have questions available for given tags.
+
+        Returns a dict with mastery level names as keys and boolean availability as values.
+        Only considers active questions.
+        """
+        all_questions = question_service.get_all_questions()
+        if tags:
+            filtered_questions = []
+            starred_included = 'starred' in tags
+            regular_tags = [tag for tag in tags if tag != 'starred']
+
+            # Get questions matching regular tags
+            if regular_tags:
+                tag_filtered_questions = [q for q in all_questions if any(tag in q.tag for tag in regular_tags)]
+                filtered_questions.extend(tag_filtered_questions)
+
+            # Get starred questions
+            if starred_included:
+                starred_questions = [q for q in all_questions if q.starred]
+                filtered_questions.extend(starred_questions)
+
+            # Remove duplicates while preserving order
+            seen = set()
+            unique_filtered_questions = []
+            for question in filtered_questions:
+                if question.question_number not in seen:
+                    seen.add(question.question_number)
+                    unique_filtered_questions.append(question)
+            filtered_questions = unique_filtered_questions
+        else:
+            filtered_questions = all_questions
+
+        # Only consider active questions
+        active_questions = [q for q in filtered_questions if q.active]
+
+        # Check which mastery levels have questions
+        availability = {
+            'mistakes': False,
+            'learning': False,
+            'mastered': False,
+            'perfected': False
+        }
+
+        for question in active_questions:
+            score = question.score
+            if score == -1:
+                availability['mistakes'] = True
+            elif 0 <= score <= 1:
+                availability['learning'] = True
+            elif 2 <= score <= 3:
+                availability['mastered'] = True
+            elif score >= 4:
+                availability['perfected'] = True
+
+        return availability
 
     def are_all_questions_mastered_for_tags(self, tags: List[str] = None) -> bool:
         """Check if all active questions for given tags are mastered (score >= 4)"""

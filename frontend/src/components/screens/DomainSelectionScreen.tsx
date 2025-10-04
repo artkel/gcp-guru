@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, CheckCircle2, Shuffle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -23,6 +23,7 @@ export function DomainSelectionScreen() {
     startSessionTimer,
     useShuffledQuestions,
     setUseShuffledQuestions,
+    setSelectedMasteryLevels,
   } = useAppStore();
 
   const { data: tagsData, isLoading: tagsLoading } = useAvailableTags();
@@ -34,6 +35,36 @@ export function DomainSelectionScreen() {
   const [starredQuestionsSelected, setStarredQuestionsSelected] = useState(false);
   const [hasStarredQuestions, setHasStarredQuestions] = useState(false);
   const [starredQuestionsLoading, setStarredQuestionsLoading] = useState(false);
+  const [availableMasteryLevels, setAvailableMasteryLevels] = useState<Record<string, boolean>>({
+    mistakes: true,
+    learning: true,
+    mastered: true,
+    perfected: true
+  });
+  const [localSelectedMasteryLevels, setLocalSelectedMasteryLevels] = useState<string[]>([
+    'mistakes', 'learning', 'mastered', 'perfected'
+  ]);
+
+  const updateAvailableMasteryLevels = useCallback(async () => {
+    try {
+      let tags = undefined;
+      if (allDomainsSelected) {
+        tags = undefined;
+      } else {
+        tags = [...localSelectedDomains];
+        if (starredQuestionsSelected) {
+          tags.push('starred');
+        }
+        if (tags.length === 0) {
+          tags = undefined;
+        }
+      }
+      const result = await api.progress.getAvailableMasteryLevels(tags);
+      setAvailableMasteryLevels(result.mastery_levels);
+    } catch (error) {
+      console.error('Failed to get available mastery levels:', error);
+    }
+  }, [allDomainsSelected, localSelectedDomains, starredQuestionsSelected]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -43,6 +74,7 @@ export function DomainSelectionScreen() {
     setAllDomainsSelected(false);
     setStarredQuestionsSelected(false);
     setSelectedDomains(null); // Explicitly clear global state too
+    setLocalSelectedMasteryLevels(['mistakes', 'learning', 'mastered', 'perfected']); // Reset mastery levels
 
     const checkStarredQuestions = async () => {
       console.log('Checking for starred questions...'); // Debug log
@@ -68,11 +100,17 @@ export function DomainSelectionScreen() {
     };
 
     checkStarredQuestions();
+    updateAvailableMasteryLevels(); // Update available mastery levels on mount
 
     return () => {
       isCancelled = true;
     };
-  }, [setSelectedDomains]); // Only run once on mount
+  }, [setSelectedDomains, updateAvailableMasteryLevels]); // Only run once on mount
+
+  // Update available mastery levels when domain selection changes
+  useEffect(() => {
+    updateAvailableMasteryLevels();
+  }, [updateAvailableMasteryLevels]);
 
   const handleDomainToggle = (domain: string) => {
     if (allDomainsSelected) {
@@ -103,6 +141,16 @@ export function DomainSelectionScreen() {
     if (!starredQuestionsSelected) {
       setAllDomainsSelected(false);
     }
+  };
+
+  const handleMasteryLevelToggle = (level: string) => {
+    setLocalSelectedMasteryLevels(prev => {
+      if (prev.includes(level)) {
+        return prev.filter(l => l !== level);
+      } else {
+        return [...prev, level];
+      }
+    });
   };
 
   const refreshStarredQuestions = async () => {
@@ -138,6 +186,7 @@ export function DomainSelectionScreen() {
         }
       }
       setSelectedDomains(domains);
+      setSelectedMasteryLevels(localSelectedMasteryLevels.length > 0 ? localSelectedMasteryLevels : ['mistakes', 'learning', 'mastered', 'perfected']);
       resetSessionStats();
       startSessionTimer();
       setCurrentScreen('training');
@@ -193,7 +242,7 @@ export function DomainSelectionScreen() {
     }
   };
 
-  const canStartTraining = allDomainsSelected || starredQuestionsSelected || localSelectedDomains.length > 0;
+  const canStartTraining = (allDomainsSelected || starredQuestionsSelected || localSelectedDomains.length > 0) && localSelectedMasteryLevels.length > 0;
 
   if (tagsLoading) {
     return (
@@ -225,7 +274,40 @@ export function DomainSelectionScreen() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Training Topics</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Training Topics</CardTitle>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>Mastery Level:</span>
+                  <div className="flex gap-1">
+                    {['mistakes', 'learning', 'mastered', 'perfected'].map((level) => {
+                      const isSelected = localSelectedMasteryLevels.includes(level);
+                      const isAvailable = availableMasteryLevels[level];
+                      const levelLabels: Record<string, string> = {
+                        mistakes: 'Mistakes',
+                        learning: 'Learning',
+                        mastered: 'Mastered',
+                        perfected: 'Perfected'
+                      };
+                      return (
+                        <button
+                          key={level}
+                          onClick={() => isAvailable && handleMasteryLevelToggle(level)}
+                          disabled={!isAvailable}
+                          className={cn(
+                            'px-3 py-1.5 rounded-md border text-xs font-medium transition-colors',
+                            isSelected && isAvailable && 'bg-primary text-primary-foreground border-primary',
+                            !isSelected && isAvailable && 'bg-background hover:bg-accent border-border',
+                            !isAvailable && 'opacity-30 cursor-not-allowed'
+                          )}
+                          title={!isAvailable ? `No ${level} questions available for selected tags` : ''}
+                        >
+                          {levelLabels[level]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Top Row: All Questions and Starred Questions */}

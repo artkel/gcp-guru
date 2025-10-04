@@ -128,6 +128,7 @@ export interface AppState {
   selectedDomains: string[] | null;
   availableTags: string[];
   useShuffledQuestions: boolean;
+  selectedMasteryLevels: string[];
 
   // User data
   userProgress: UserProgress | null;
@@ -143,6 +144,7 @@ export interface AppState {
   setSelectedDomains: (domains: string[] | null) => void;
   setAvailableTags: (tags: string[]) => void;
   setUseShuffledQuestions: (useShuffled: boolean) => void;
+  setSelectedMasteryLevels: (levels: string[]) => void;
   setUserProgress: (progress: UserProgress | null) => void;
   setQuestionsList: (questions: Question[]) => void;
   startSessionTimer: () => void;

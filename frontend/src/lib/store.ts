@@ -30,6 +30,7 @@ export const useAppStore = create<AppState>()(
       selectedDomains: null,
       availableTags: [],
       useShuffledQuestions: true,
+      selectedMasteryLevels: ['mistakes', 'learning', 'mastered', 'perfected'], // Default: all levels selected
 
       // User data
       userProgress: null,
@@ -64,6 +65,8 @@ export const useAppStore = create<AppState>()(
       setAvailableTags: (tags) => set({ availableTags: tags }),
 
       setUseShuffledQuestions: (useShuffled) => set({ useShuffledQuestions: useShuffled }),
+
+      setSelectedMasteryLevels: (levels) => set({ selectedMasteryLevels: levels }),
 
       setUserProgress: (progress) => set({ userProgress: progress }),
 
@@ -186,6 +189,7 @@ export const useAppStore = create<AppState>()(
         sessionStats: state.sessionStats,
         selectedDomains: state.selectedDomains,
         useShuffledQuestions: state.useShuffledQuestions,
+        selectedMasteryLevels: state.selectedMasteryLevels,
         currentQuestion: state.currentQuestion,
         selectedAnswers: state.selectedAnswers, // Will be converted by replacer
       }),
