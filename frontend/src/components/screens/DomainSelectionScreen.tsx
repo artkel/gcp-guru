@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, CheckCircle2, Shuffle, Star } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowLeft, CheckCircle2, Shuffle, Star, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -44,6 +44,8 @@ export function DomainSelectionScreen() {
   const [localSelectedMasteryLevels, setLocalSelectedMasteryLevels] = useState<string[]>([
     'mistakes', 'learning', 'mastered', 'perfected'
   ]);
+  const [showMasteryDropdown, setShowMasteryDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const updateAvailableMasteryLevels = useCallback(async () => {
     try {
@@ -104,6 +106,23 @@ export function DomainSelectionScreen() {
   useEffect(() => {
     updateAvailableMasteryLevels();
   }, [updateAvailableMasteryLevels]);
+
+  // Handle clicking outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowMasteryDropdown(false);
+      }
+    };
+
+    if (showMasteryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMasteryDropdown]);
 
   const handleDomainToggle = (domain: string) => {
     if (allDomainsSelected) {
@@ -267,38 +286,52 @@ export function DomainSelectionScreen() {
 
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <CardTitle>Training Topics</CardTitle>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>Mastery Level:</span>
-                  <div className="flex gap-1">
-                    {['mistakes', 'learning', 'mastered', 'perfected'].map((level) => {
-                      const isSelected = localSelectedMasteryLevels.includes(level);
-                      const isAvailable = availableMasteryLevels[level];
-                      const levelLabels: Record<string, string> = {
-                        mistakes: 'Mistakes',
-                        learning: 'Learning',
-                        mastered: 'Mastered',
-                        perfected: 'Perfected'
-                      };
-                      return (
-                        <button
-                          key={level}
-                          onClick={() => isAvailable && handleMasteryLevelToggle(level)}
-                          disabled={!isAvailable}
-                          className={cn(
-                            'px-3 py-1.5 rounded-md border text-xs font-medium transition-colors',
-                            isSelected && isAvailable && 'bg-primary text-primary-foreground border-primary',
-                            !isSelected && isAvailable && 'bg-background hover:bg-accent border-border',
-                            !isAvailable && 'opacity-30 cursor-not-allowed'
-                          )}
-                          title={!isAvailable ? `No ${level} questions available for selected tags` : ''}
-                        >
-                          {levelLabels[level]}
-                        </button>
-                      );
-                    })}
-                  </div>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowMasteryDropdown(!showMasteryDropdown)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md border border-border bg-background hover:bg-accent transition-colors"
+                  >
+                    <span>Mastery</span>
+                    <ChevronDown className={cn(
+                      "h-4 w-4 transition-transform",
+                      showMasteryDropdown && "rotate-180"
+                    )} />
+                  </button>
+
+                  {showMasteryDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg z-50">
+                      <div className="p-2 space-y-1">
+                        {[
+                          { id: 'mistakes', label: 'Mistakes', colorClass: 'bg-red-500 hover:bg-red-600 text-white' },
+                          { id: 'learning', label: 'Learning', colorClass: 'bg-gray-500 hover:bg-gray-600 text-white' },
+                          { id: 'mastered', label: 'Mastered', colorClass: 'bg-blue-500 hover:bg-blue-600 text-white' },
+                          { id: 'perfected', label: 'Perfected', colorClass: 'bg-green-500 hover:bg-green-600 text-white' }
+                        ].map(({ id, label, colorClass }) => {
+                          const isSelected = localSelectedMasteryLevels.includes(id);
+                          const isAvailable = availableMasteryLevels[id];
+
+                          return (
+                            <button
+                              key={id}
+                              onClick={() => isAvailable && handleMasteryLevelToggle(id)}
+                              disabled={!isAvailable}
+                              className={cn(
+                                'w-full px-3 py-2 rounded-md text-sm font-medium transition-all text-left',
+                                isSelected && isAvailable && colorClass,
+                                !isSelected && isAvailable && 'border border-border hover:bg-accent',
+                                !isAvailable && 'opacity-30 cursor-not-allowed border border-border'
+                              )}
+                              title={!isAvailable ? `No ${id} questions available for selected tags` : ''}
+                            >
+                              {label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardHeader>
