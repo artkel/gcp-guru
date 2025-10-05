@@ -126,6 +126,13 @@ export function TrainingScreen() {
         ? await api.questions.getRandomShuffled(selectedDomains || undefined, selectedMasteryLevels)
         : await api.questions.getRandom(selectedDomains || undefined, selectedMasteryLevels);
 
+      // Clear state before setting new question to avoid flash of old selection
+      setSelectedAnswers(new Set());
+      setQuestionAnswered(false);
+      setAnswerResult(null);
+      setExplanation('');
+      setShowExplanation(false);
+
       setCurrentQuestion(question);
 
       // Store original mapping if using shuffled questions
@@ -135,11 +142,6 @@ export function TrainingScreen() {
         setOriginalMapping({});
       }
 
-      setSelectedAnswers(new Set());
-      setQuestionAnswered(false);
-      setAnswerResult(null);
-      setExplanation('');
-      setShowExplanation(false);
       setNote(question.note || '');
     } catch (error) {
       if (error instanceof APIError && error.status === 410) {
