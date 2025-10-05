@@ -599,7 +599,14 @@ export function TrainingScreen() {
                       disabled={selectedAnswers.size === 0 || isTimerPaused}
                       size="lg"
                     >
-                      {isTimerPaused ? 'Timer Paused - Resume to Continue' : 'Submit Answer'}
+                      {isTimerPaused ? (
+                        <>
+                          <span className="hidden sm:inline">Timer Paused - Resume to Continue</span>
+                          <span className="sm:hidden">Resume Timer to Continue</span>
+                        </>
+                      ) : (
+                        'Submit Answer'
+                      )}
                     </Button>
                   </>
                 )}
