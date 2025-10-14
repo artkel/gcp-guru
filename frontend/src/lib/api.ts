@@ -190,6 +190,15 @@ export const api = {
         }
       );
     },
+
+    reloadQuestions: async (): Promise<{ success: boolean; message: string; questions_count: number; }> => {
+      return request<{ success: boolean; message: string; questions_count: number; }>(
+        `/questions/reload`,
+        {
+          method: 'POST',
+        }
+      );
+    },
   },
 
   // Tags endpoint

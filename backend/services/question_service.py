@@ -281,5 +281,25 @@ class QuestionService:
             print(f"Error clearing hints: {e}")
             return False
 
+    def reload_questions(self) -> Dict:
+        """Reload all questions from Firestore, refreshing the in-memory cache"""
+        try:
+            # Reset the loaded flag to force a fresh load
+            self._questions_loaded = False
+            # Load questions from Firestore
+            self.load_questions()
+            return {
+                "success": True,
+                "message": f"Successfully reloaded {len(self.questions)} questions from Firestore",
+                "questions_count": len(self.questions)
+            }
+        except Exception as e:
+            print(f"Error reloading questions: {e}")
+            return {
+                "success": False,
+                "message": f"Failed to reload questions: {str(e)}",
+                "questions_count": 0
+            }
+
 # Global instance
 question_service = QuestionService()

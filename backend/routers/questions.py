@@ -294,6 +294,12 @@ async def skip_question(question_id: int, token: dict = Depends(verify_token)):
     return {"success": True, "skipped": True}
 
 
+@router.post("/questions/reload")
+async def reload_questions(token: dict = Depends(verify_token)):
+    """Reload all questions from Firestore, refreshing the in-memory cache"""
+    result = question_service.reload_questions()
+    return result
+
 @router.get("/tags")
 async def get_available_tags(token: dict = Depends(verify_token)):
     """Get all available question tags (only from active questions)"""

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Search, Star, FileText, Filter } from 'lucide-react';
+import { ArrowLeft, Search, Star, FileText, Filter, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Modal, ModalContent, ModalHeader, ModalTitle } from '@/components/ui/Modal';
 import { useAppStore } from '@/lib/store';
-import { useQuestions, useAvailableTags } from '@/hooks/useApi';
+import { useQuestions, useAvailableTags, useReloadQuestions } from '@/hooks/useApi';
 import { Question } from '@/types';
 import { cn, debounce } from '@/lib/utils';
 import { useSWRConfig } from 'swr';
@@ -25,6 +25,7 @@ export function BrowseScreen() {
   const [sortBy, setSortBy] = useState<'question_number' | 'score'>('question_number');
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [isReloading, setIsReloading] = useState(false);
 
   const { data: tagsData } = useAvailableTags();
   const { data: questions, isLoading, mutate: mutateQuestions } = useQuestions({
@@ -32,6 +33,7 @@ export function BrowseScreen() {
     tags: selectedTag ? [selectedTag] : undefined,
     starred_only: starredOnly,
   });
+  const reloadQuestions = useReloadQuestions();
 
   const handleToggleStar = async (e: React.MouseEvent, questionNumber: number, currentStarredStatus: boolean) => {
     e.stopPropagation(); // Prevent card click event
@@ -73,6 +75,19 @@ export function BrowseScreen() {
   const handleQuestionClick = (question: Question) => {
     setSelectedQuestion(question);
     setShowQuestionModal(true);
+  };
+
+  const handleReloadQuestions = async () => {
+    setIsReloading(true);
+    try {
+      await reloadQuestions();
+      await mutateQuestions(); // Refresh the questions list
+      await mutate(['questions', searchTerm, selectedTag, starredOnly]); // Also refresh SWR cache
+    } catch (error) {
+      console.error('Failed to reload questions:', error);
+    } finally {
+      setIsReloading(false);
+    }
   };
 
   const sortedQuestions = questions?.sort((a, b) => {
@@ -177,15 +192,27 @@ export function BrowseScreen() {
       <div className="flex-1 p-6">
         <div className="mx-auto max-w-6xl space-y-6">
           {/* Header */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setCurrentScreen('start')}
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h2 className="text-2xl font-bold">Browse Questions</h2>
+            </div>
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setCurrentScreen('start')}
+              variant="secondary"
+              size="sm"
+              onClick={handleReloadQuestions}
+              disabled={isReloading}
+              className="flex items-center space-x-2"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <RefreshCw className={cn("h-4 w-4", isReloading && "animate-spin")} />
+              <span>{isReloading ? 'Reloading...' : 'Reload Questions'}</span>
             </Button>
-            <h2 className="text-2xl font-bold">Browse Questions</h2>
           </div>
 
           {/* Filters */}

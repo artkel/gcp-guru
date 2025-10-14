@@ -124,3 +124,9 @@ export function useClearHints() {
     return api.progress.clearHints();
   };
 }
+
+export function useReloadQuestions() {
+  return async () => {
+    return api.questions.reloadQuestions();
+  };
+}
