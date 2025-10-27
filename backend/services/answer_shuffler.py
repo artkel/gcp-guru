@@ -17,8 +17,8 @@ class AnswerShuffler:
         shuffled_original_keys = original_keys.copy()
         random.shuffle(shuffled_original_keys)  # Shuffle the original keys order
 
-        # Keep letters in alphabetical order, supporting up to 6 answers
-        display_keys = ['A', 'B', 'C', 'D', 'E', 'F'][:len(original_keys)]
+        # Keep letters in alphabetical order, supporting up to 8 answers
+        display_keys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][:len(original_keys)]
 
         # Create new answers dict with alphabetical letters but shuffled content
         shuffled_answers = {}
